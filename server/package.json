@@ -1,0 +1,12 @@
+{
+  "name": "groupaphil-srv",
+  "version": "1.0.0",
+  "description": "Backend of the groupaphil project",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "author": "groupaphil",
+  "license": "ISC"
+}
