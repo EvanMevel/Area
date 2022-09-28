@@ -1,0 +1,1 @@
+docker-compose -p phil up -d

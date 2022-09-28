@@ -1,5 +1,5 @@
 POUR START:
-docker-compose -dp phil up
+docker-compose -p phil up -d
 
 
 Pour aller dans le sh interractif

@@ -1,0 +1,1 @@
+docker exec -it phil-server-1 sh

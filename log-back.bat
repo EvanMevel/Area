@@ -1,0 +1,1 @@
+docker logs --follow -n 20 phil-server-1
