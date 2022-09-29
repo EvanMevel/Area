@@ -3,10 +3,10 @@ version: "3.8"
 services:
   server:
     image: node:18-alpine
-    #command: npm start
-    stdin_open: true # docker run -i
+    command: npm run start
     ports:
-      - 3000:3000
+      - 8080:8080
+      - 9229:9229
     working_dir: /app
     volumes:
       - ./server/:/app
