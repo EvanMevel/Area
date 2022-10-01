@@ -21,7 +21,9 @@ async function closeGracefully() {
 process.on('SIGTERM', closeGracefully);
 process.on('SIGINT', closeGracefully);
 
-areaBase.connect();
+areaBase.connect().then(() => {
+    areaBase.createTables();
+});
 
 async function handleRequest(req, res) {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
