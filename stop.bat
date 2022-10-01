@@ -1,2 +1,3 @@
-docker stop phil-server-1
-docker stop phil-mysql-1
+docker stop area-server
+docker stop area-pma
+docker stop area-mysql

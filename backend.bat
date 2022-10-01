@@ -1,1 +1,1 @@
-docker exec -it phil-server-1 sh
+docker exec -it area-server sh
