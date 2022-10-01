@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "Backend of the groupaphil project",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "test",
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "mysql": "^2.18.1"
   },
   "author": "groupaphil",
   "license": "ISC"
