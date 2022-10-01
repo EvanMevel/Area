@@ -1,6 +1,13 @@
+Tout les scripts sont cross platform (normalement)
+
 POUR START:
-docker-compose -p phil up -d
+./start.bat
 
+POUR STOP:
+./stop.bat
 
-Pour aller dans le sh interractif
-docker exec -it phil_server_1 sh
+POUR VOIR LES LOGS BACK:
+./log-back.bat
+
+POUR INTERAGIR AU CLI DU BACK:
+./backend.bat
