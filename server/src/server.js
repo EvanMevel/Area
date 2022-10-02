@@ -12,15 +12,15 @@ let server = null;
 let areaBase = new AreaBase();
 
 async function closeGracefully() {
-    console.log("Stopping server...");
     areaBase.stop();
     if (server != null) {
+        console.log("Stopping server...");
         server.close();
     }
+    process.exit(0);
 }
 
 process.on('SIGTERM', closeGracefully);
-process.on('SIGINT', closeGracefully);
 
 areaBase.connect().then(() => {
     areaBase.createTables();

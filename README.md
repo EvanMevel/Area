@@ -4,9 +4,9 @@
 
 ## Scripts
 
-**start.bat**: start all docker containers
-**stop.bat**: stop all docker containers
-**log-back.bat**: show logs from backend server
+**start.bat**: start all docker containers\
+**stop.bat**: stop all docker containers\
+**log-back.bat**: show logs from backend server\
 **backend.bat**: start cli in docker backend server
 
 ## Doc
