@@ -13,3 +13,6 @@
 
 You can see API doc by starting the server and going to the url http://localhost:8080/api-docs/
 
+## Database
+
+Database is accessible with phpmyadmin at http://localhost:8081
