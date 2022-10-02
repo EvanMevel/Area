@@ -1,7 +1,8 @@
 'use strict';
 
 const express = require('express');
-const AreaBase = require("./areabase")
+const AreaBase = require("./areabase");
+const swaggerUi = require("swagger-ui-express");
 
 // Constants
 const PORT = 8080;
@@ -35,7 +36,11 @@ async function handleRequest(req, res) {
 
 // App
 const app = express();
-app.get('/', handleRequest);
+app.get('/api/test', handleRequest);
+
+const swaggerDocument = require("./docs/swagger.js");
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 server = app.listen(PORT, HOST, () => {
     console.log(`Running on http://${HOST}:${PORT}`);
