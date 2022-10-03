@@ -6,14 +6,14 @@ const test = require("./swagger-test.js");
 module.exports = {
     "openapi": "3.0.3",
     "info": {
-        "title": "Schood Backend API",
-        "description": "Documentation of Schood Backend API",
+        "title": "Phil Backend API",
+        "description": "Documentation of Phil Backend API",
         "version": "1.0.0"
     },
     "servers": [
         {
             "url": "http://localhost:8080",
-            "description": "Schood Backend Server"
+            "description": "Phil Backend Server"
         }
     ],
     "tags": [
