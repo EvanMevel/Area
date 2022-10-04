@@ -3,6 +3,7 @@
 const express = require('express');
 const AreaBase = require("./areabase");
 const swaggerUi = require("swagger-ui-express");
+const about = require("./about");
 
 // Constants
 const PORT = 8080;
@@ -41,6 +42,10 @@ app.get('/api/test', handleRequest);
 const swaggerDocument = require("./docs/swagger.js");
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.use("/about.json", function (req, res) {
+    about(areaBase, req, res);
+});
 
 server = app.listen(PORT, HOST, () => {
     console.log(`Running on http://${HOST}:${PORT}`);
