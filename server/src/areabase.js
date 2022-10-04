@@ -22,25 +22,23 @@ class AreaBase {
 
     async createTables() {
         const services = "CREATE TABLE if not exists Services (" +
-            "id VARCHAR(30) PRIMARY KEY," +
-            "name VARCHAR(30)" +
+            "name VARCHAR(30) PRIMARY KEY," +
+            "displayName VARCHAR(30) NOT NULL," +
+            "oauth BOOLEAN NOT NULL" +
             ")";
         this.con.query(services);
-        const actions = "CREATE TABLE if not exists Actions (" +
-            "id VARCHAR(30) PRIMARY KEY," +
-            "name VARCHAR(30)," +
-            "description VARCHAR(30)," +
-            "service VARCHAR(30)," +
-            "FOREIGN KEY (service) REFERENCES Services (id)" +
-            ") DEFAULT CHARSET = latin1";
+        const elements = "(" +
+            "name VARCHAR(30) PRIMARY KEY," +
+            "displayName VARCHAR(30) NOT NULL," +
+            "description VARCHAR(70) NOT NULL," +
+            "service VARCHAR(30) NOT NULL," +
+            "FOREIGN KEY (service) REFERENCES Services (name)" +
+            ")";
+        const actions = "CREATE TABLE if not exists Actions " +
+            elements;
         this.con.query(actions);
-        const reactions = "CREATE TABLE if not exists Reactions (" +
-            "id VARCHAR(30) PRIMARY KEY," +
-            "name VARCHAR(30)," +
-            "description VARCHAR(30)," +
-            "service VARCHAR(30)," +
-            "FOREIGN KEY (service) REFERENCES Services (id)" +
-            ") DEFAULT CHARSET = latin1";
+        const reactions = "CREATE TABLE if not exists Reactions " +
+            elements;
         this.con.query(reactions);
     }
 
@@ -51,9 +49,19 @@ class AreaBase {
         console.log("Disconnected to " + process.env.MYSQL_DB + "!");
     }
 
-    async getTest() {
-        let response = await this.con.query("SELECT * FROM test");
-        return response[0];
+    async getServices() {
+        const [rows, fields] = await this.con.query("SELECT * FROM Services");
+        return rows;
+    }
+
+    async getActions() {
+        const [rows, fields] = await this.con.query("SELECT * FROM Actions");
+        return rows;
+    }
+
+    async getReactions() {
+        const [rows, fields] = await this.con.query("SELECT * FROM Reactions");
+        return rows;
     }
 }
 
