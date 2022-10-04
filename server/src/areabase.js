@@ -49,11 +49,6 @@ class AreaBase {
         console.log("Disconnected to " + process.env.MYSQL_DB + "!");
     }
 
-    async getTest() {
-        let response = await this.con.query("SELECT * FROM test");
-        return response[0];
-    }
-
     async getServices() {
         const [rows, fields] = await this.con.query("SELECT * FROM Services");
         return rows;

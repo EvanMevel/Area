@@ -27,17 +27,8 @@ areaBase.connect().then(() => {
     areaBase.createTables();
 });
 
-async function handleRequest(req, res) {
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    console.log("Received from the ip " + ip);
-
-    const arr = await areaBase.getTest();
-    res.send(arr);
-}
-
 // App
 const app = express();
-app.get('/api/test', handleRequest);
 
 const swaggerDocument = require("./docs/swagger.js");
 
