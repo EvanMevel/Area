@@ -55,7 +55,7 @@ services:
     container_name: area-web
     working_dir: /app
     volumes:
-      - ./server/:/app
+      - ./web/:/app
     stdin_open: true
 
 volumes:
