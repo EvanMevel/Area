@@ -1,9 +1,10 @@
 'use strict';
 
 const express = require('express');
-const AreaBase = require("./areabase");
 const swaggerUi = require("swagger-ui-express");
+const AreaBase = require("./areabase");
 const about = require("./about");
+const workers = require("./workers");
 
 // Constants
 const PORT = 8080;
@@ -23,8 +24,10 @@ async function closeGracefully() {
 
 process.on('SIGTERM', closeGracefully);
 
-areaBase.connect().then(() => {
-    areaBase.createTables();
+areaBase.connect().then(async () => {
+    await areaBase.createTables();
+    await workers.loadAll(areaBase);
+    await workers.tickAll();
 });
 
 // App

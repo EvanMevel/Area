@@ -1,4 +1,4 @@
-﻿# SCHOOD
+﻿# AREA
 
 # Backend
 

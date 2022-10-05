@@ -40,6 +40,23 @@ class AreaBase {
         const reactions = "CREATE TABLE if not exists Reactions " +
             elements;
         this.con.query(reactions);
+
+        const actionReaction = "CREATE TABLE if not exists ActionReactions (" +
+            "id INT NOT NULL PRIMARY KEY AUTO_INCREMENT," +
+            "userId INT NOT NULL," +
+            "actionId VARCHAR(30) NOT NULL," +
+            "reactionId VARCHAR(30) NOT NULL," +
+            "FOREIGN KEY (actionId) REFERENCES Actions (name)," +
+            "FOREIGN KEY (reactionId) REFERENCES Reactions (name)" +
+            ")";
+        this.con.query(actionReaction);
+
+        const actionData = "CREATE TABLE if not exists ActionsData (" +
+            "actionReactionId INT NOT NULL PRIMARY KEY," +
+            "data BLOB," +
+            "FOREIGN KEY (actionReactionId) REFERENCES ActionReactions (id)" +
+            ")";
+        this.con.query(actionData);
     }
 
     stop() {
@@ -61,6 +78,27 @@ class AreaBase {
 
     async getReactions() {
         const [rows, fields] = await this.con.query("SELECT * FROM Reactions");
+        return rows;
+    }
+
+    async getActionReactions() {
+        const [rows, fields] = await this.con.query("SELECT * FROM ActionReactions");
+        return rows;
+    }
+
+    async removeAREA(id) {
+        const [rows, fields] = await this.con.query("DELETE FROM ActionReaction WHERE 'id' = " + id);
+        return rows;
+    }
+
+    async getActionData(areId) {
+        const [rows, fields] = await this.con.query("SELECT data FROM ActionsData WHERE actionReactionId = " + areId);
+        return rows;
+    }
+
+    async setActionData(areId, data) {
+        const [rows, fields] = await this.con.query("REPLACE INTO ActionsData (actionReactionId, data) VALUES " +
+            "(" + areId  + ", " + data + ")");
         return rows;
     }
 }
