@@ -2,11 +2,20 @@
 const Action = require("./action");
 const FB_L_POST = require("./fb_listen_post");
 
-function findAction(actionId, areaId, userId) {
-    if (actionId === "facebook_action_post") {
-        return new FB_L_POST(areaId, userId);
-    }
-    return new Action(areaId, userId);
+let actions = {};
+
+function addAction(id, reac) {
+    actions[id] = reac;
 }
+
+function findAction(actionId, areaId, userId) {
+    let ac = actions[actionId];
+    if (ac == null) {
+        ac = Action;
+    }
+    return new ac(areaId, userId);
+}
+
+addAction("facebook_action_post", FB_L_POST);
 
 module.exports.findAction = findAction;

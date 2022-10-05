@@ -24,11 +24,11 @@ async function closeGracefully() {
 
 process.on('SIGTERM', closeGracefully);
 
-areaBase.connect().then(() => {
-    areaBase.createTables();
-    workers.loadAll(areaBase);
+areaBase.connect().then(async () => {
+    await areaBase.createTables();
+    await workers.loadAll(areaBase);
+    await workers.tickAll();
 });
-
 
 // App
 const app = express();
@@ -44,13 +44,3 @@ app.use("/about.json", function (req, res) {
 server = app.listen(PORT, HOST, () => {
     console.log(`Running on http://${HOST}:${PORT}`);
 });
-
-const start = async function() {
-    console.log("OUAIS");
-    const delay = ms => new Promise(res => setTimeout(res, ms));
-    await delay(5000);
-    console.log("5s");
-    await workers.tickAll();
-}
-
-start();

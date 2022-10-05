@@ -17,8 +17,7 @@ class ActionReaction {
 
     async tick() {
         let events = await this.action.events();
-
-        for (let event in events) {
+        for (let event of events) {
             await this.reaction.ingest(event);
         }
     }

@@ -8,7 +8,8 @@ class FB_L_POST extends Action {
     }
 
     async events() {
-        console.log("TICK FB " + this.id + " > " + this.userId)
+        console.log("TICK FB " + this.areaId + " > " + this.userId);
+        return ["ahah"];
     }
 }
 

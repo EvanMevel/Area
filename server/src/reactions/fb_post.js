@@ -7,9 +7,11 @@ class FB_POST extends Reaction {
         super(areaId, userId);
     }
 
-    async events() {
-        console.log("TICK FB POST " + this.id + " > " + this.userId)
+    async ingest(event) {
+        console.log("TICK FB POST " + this.areaId + " > " + this.userId);
+        console.log("Event is " + event);
     }
+
 }
 
 module.exports = FB_POST;
