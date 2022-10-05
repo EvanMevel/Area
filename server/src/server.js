@@ -1,8 +1,8 @@
 'use strict';
 
 const express = require('express');
-const AreaBase = require("./areabase");
 const swaggerUi = require("swagger-ui-express");
+const AreaBase = require("./areabase");
 const about = require("./about");
 
 // Constants
