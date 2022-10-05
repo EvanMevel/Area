@@ -4,6 +4,7 @@ const express = require('express');
 const swaggerUi = require("swagger-ui-express");
 const AreaBase = require("./areabase");
 const about = require("./about");
+const workers = require("./workers");
 
 // Constants
 const PORT = 8080;
@@ -25,7 +26,9 @@ process.on('SIGTERM', closeGracefully);
 
 areaBase.connect().then(() => {
     areaBase.createTables();
+    workers.loadAll(areaBase);
 });
+
 
 // App
 const app = express();
@@ -41,3 +44,13 @@ app.use("/about.json", function (req, res) {
 server = app.listen(PORT, HOST, () => {
     console.log(`Running on http://${HOST}:${PORT}`);
 });
+
+const start = async function() {
+    console.log("OUAIS");
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    await delay(5000);
+    console.log("5s");
+    await workers.tickAll();
+}
+
+start();

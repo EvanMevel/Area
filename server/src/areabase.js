@@ -54,7 +54,7 @@ class AreaBase {
         const actionData = "CREATE TABLE if not exists ActionsData (" +
             "actionReactionId INT NOT NULL PRIMARY KEY," +
             "data BLOB," +
-            "FOREIGN KEY (actionReactionId) REFERENCES ActionReaction (id)," +
+            "FOREIGN KEY (actionReactionId) REFERENCES ActionReactions (id)" +
             ")";
         this.con.query(actionData);
     }
@@ -83,6 +83,11 @@ class AreaBase {
 
     async getActionReactions() {
         const [rows, fields] = await this.con.query("SELECT * FROM ActionReactions");
+        return rows;
+    }
+
+    async removeAREA(id) {
+        const [rows, fields] = await this.con.query("DELETE FROM ActionReaction WHERE 'id' = " + id);
         return rows;
     }
 

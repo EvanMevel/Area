@@ -3,14 +3,16 @@ const ActionList = require("./actions/actionList");
 const ReactionList = require("./reactions/reactionList");
 
 class ActionReaction {
+    id;
     action;
     reaction;
     userId;
 
-    constructor(userId, actionId, reactionId) {
+    constructor(id, userId, actionId, reactionId) {
+        this.id = id;
         this.userId = userId;
-        this.action = ActionList.findAction(actionId, userId)
-        this.reaction = ReactionList.findReaction(reactionId, userId);
+        this.action = ActionList.findAction(actionId, id, userId)
+        this.reaction = ReactionList.findReaction(reactionId, id, userId);
     }
 
     async tick() {
