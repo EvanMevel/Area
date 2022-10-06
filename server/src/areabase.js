@@ -2,6 +2,10 @@
 
 const mysql = require('mysql2/promise');
 
+function q(text) {
+    return "'" + text + "'";
+}
+
 class AreaBase {
 
     con;
@@ -86,8 +90,39 @@ class AreaBase {
         return rows;
     }
 
+    async getUserActionReactions(userId) {
+        const [rows, fields] = await this.con.query("SELECT * FROM ActionReactions WHERE userId = " + userId);
+        return rows;
+    }
+
+    async createActionReaction(area) {
+        const sql = "INSERT INTO ActionReactions (userId, actionId, reactionId) VALUES (" +
+            q(area.userId) + ", " +
+            q(area.actionId) + ", " +
+            q(area.reactionId) +
+            ")";
+        const [rows, fields] = await this.con.query(sql);
+        return rows;
+    }
+
+    async editActionReaction(area) {
+        let sql = "UPDATE ActionReactions SET ";
+        if (area.actionId != null) {
+            sql += "actionId = " + q(area.actionId);
+        }
+        if (area.reactionId != null) {
+            if (area.actionId != null) {
+                sql += ", ";
+            }
+            sql += "reactionId = " + q(area.reactionId);
+        }
+        sql += " WHERE ActionReactions.id = " + area.id;
+        const [rows, fields] = await this.con.query(sql);
+        return rows;
+    }
+
     async removeAREA(id) {
-        const [rows, fields] = await this.con.query("DELETE FROM ActionReaction WHERE 'id' = " + id);
+        const [rows, fields] = await this.con.query("DELETE FROM ActionReactions WHERE ActionReactions.id = " + id);
         return rows;
     }
 

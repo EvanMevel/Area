@@ -2,6 +2,7 @@
 //https://levelup.gitconnected.com/how-to-add-swagger-ui-to-existing-node-js-and-express-js-project-2c8bad9364ce
 
 const about = require("./swagger-about");
+const area = require("./swagger-actionReaction");
 
 module.exports = {
     "openapi": "3.0.3",
@@ -20,9 +21,15 @@ module.exports = {
         {
             "name": "Phil",
             "description": "Phil"
+        },
+        {
+            "name": "ActionReaction",
+            "description": "Action Reaction"
         }
     ],
     "paths": {
-        "/about.json": about
+        "/about.json": about,
+        "/api/action-reaction-list": area.list,
+        "/api/action_reaction": area.area
     }
 }
