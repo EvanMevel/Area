@@ -5,7 +5,7 @@ const swaggerUi = require("swagger-ui-express");
 const AreaBase = require("./areabase");
 const about = require("./about");
 const workers = require("./workers");
-const action_reaction = require("./action_reaction");
+const action_reaction = require("./area");
 
 // Constants
 const PORT = 8080;
@@ -36,31 +36,30 @@ const app = express();
 
 app.use(express.json());
 
+const router = express.Router();
+
+// Swagger
 const swaggerDocument = require("./docs/swagger.js");
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use("/about.json", function (req, res) {
-    about(areaBase, req, res);
-});
+// Api routes
 
-const router = express.Router();
+function callBase(func) {
+    return function (req, res)  {
+        func(req, res, areaBase, workers);
+    }
+}
 
-router.get("/action-reaction-list", function (req, res) {
-    action_reaction.get(areaBase, req, res);
-});
+app.use("/about.json", callBase(about));
 
-router.post("/action_reaction", function (req, res) {
-    action_reaction.post(areaBase, workers, req, res);
-});
+router.get("/area_list", callBase(action_reaction.get));
 
-router.put("/action_reaction", function (req, res) {
-    action_reaction.put(areaBase, workers, req, res);
-});
+router.post("/area", callBase(action_reaction.post));
 
-router.delete("/action_reaction", function (req, res) {
-    action_reaction.del(areaBase, workers, req, res);
-});
+router.put("/area", callBase(action_reaction.put));
+
+router.delete("/area", callBase(action_reaction.del));
 
 app.use("/api", router);
 

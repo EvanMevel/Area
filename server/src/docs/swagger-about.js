@@ -106,7 +106,7 @@ const about = {
 module.exports = {
     "get": {
         "tags": [
-            "Phil"
+            "Info"
         ],
         "description": "Returns informations about this area project",
         "operationId": 'about.json',

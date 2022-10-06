@@ -31,7 +31,7 @@ async function getServices(areaBase) {
     return serviceArray;
 }
 
-module.exports = async function (areaBase, req, res) {
+module.exports = async function (req, res, areaBase) {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const time = Math.floor(new Date().getTime() / 1000);
     const services = await getServices(areaBase);

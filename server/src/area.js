@@ -1,3 +1,4 @@
+const workers = require("./workers");
 
 function errorMessage(res, msg) {
     res.status(400);
@@ -32,7 +33,7 @@ function parseResp(req) {
     return resp;
 }
 
-async function put(areabase, workers, req, res) {
+async function put(req, res, areabase, workers) {
     const area = parseResp(req, res);
     if (!checkFieldExist(res, area, "id")) {
         return;
@@ -51,7 +52,7 @@ async function put(areabase, workers, req, res) {
     }
 }
 
-async function post(areabase, workers, req, res) {
+async function post(req, res, areabase, workers) {
     const area = parseResp(req, res);
     if (!checkFieldExist(res, area, "userId")) {
         return;
@@ -73,7 +74,7 @@ async function post(areabase, workers, req, res) {
     }
 }
 
-async function del(areabase, workers, req, res) {
+async function del(req, res, areabase, workers) {
     const id = req.query.id || null;
 
     if (id == null) {
@@ -95,7 +96,7 @@ async function del(areabase, workers, req, res) {
     }
 }
 
-async function get(areabase, req, res) {
+async function get(req, res, areabase) {
     const userId = req.query.userId || null;
 
     if (userId == null) {
