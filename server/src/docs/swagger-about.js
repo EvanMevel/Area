@@ -109,6 +109,7 @@ module.exports = {
             "Info"
         ],
         "description": "Returns informations about this area project",
+        "summary": "Returns informations about areas",
         "operationId": 'about.json',
         "responses": {
             "200": {

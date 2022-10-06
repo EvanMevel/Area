@@ -79,7 +79,8 @@ module.exports.area = {
             "ActionReaction"
         ],
         "description": "Create an action reaction",
-        "operationId": 'post-action-reaction',
+        "summary": "Create an action reaction",
+        "operationId": 'area-create',
         "consumes":[
             "application/json"
         ],
@@ -106,7 +107,8 @@ module.exports.area = {
             "ActionReaction"
         ],
         "description": "Delete an action reaction",
-        "operationId": 'delete-action-reaction',
+        "summary": "Delete an action reaction",
+        "operationId": 'area-delete',
         "responses": {
             "200": {
                 "description": "Deleted",
@@ -136,8 +138,9 @@ module.exports.list = {
         "tags": [
             "ActionReaction"
         ],
-        "description": "Returns informations about this area project",
-        "operationId": 'action-reaction-list',
+        "summary": "Returns the list of all area of a user",
+        "description": "Returns the list of all area of a user",
+        "operationId": 'area-list',
         "responses": {
             "200": {
                 "description": "OK",
