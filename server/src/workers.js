@@ -3,7 +3,7 @@ const ActionReaction = require("./actionReaction");
 
 let AREAS = {};
 
-async function loadAREA(areaO) {
+function loadAREA(areaO) {
     AREAS[areaO.id] = new ActionReaction(areaO.id, areaO.userId, areaO.actionId, areaO.reactionId);
 }
 
@@ -25,10 +25,11 @@ async function tickAll() {
     setTimeout(tickAll, waiting);
 }
 
-async function removeAREA(areaBase, id) {
+function removeAREA(id) {
     delete AREAS[id];
-    await areaBase.removeAREA(id);
 }
+
+module.exports.loadAREA = loadAREA;
 
 module.exports.loadAll = loadAll;
 
