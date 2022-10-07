@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import axios from "axios"
 
 const theme = {
   blue: {
@@ -32,7 +33,40 @@ Button.defaultProps = {
   theme: "blue"
 };
 
+/*export default class HomePage extends React.Component {
+
+  state = {
+    posts: []
+   }
+  
+   componentDidMount() {
+    axios.get("https://schood.fr/")
+   .then(res => {
+      const posts = res.data;
+      this.setState({ posts });
+     })
+   }
+  
+   render() {
+    return (
+     <ul>
+      { this.state.posts.map(post => <li>{post.title}</li>)}
+     </ul>
+    )
+   }
+}*/
+
 export default function App() {
+  state = {
+    posts: []
+  }
+  componentDidMount() {
+    axios.get("https://schood.fr/")
+   .then(res => {
+      const posts = res.data;
+      this.setState({ posts });
+     })
+  }
   return (
     <>
       <a href="https://www.twitter.com/" target="_blank">
@@ -50,6 +84,9 @@ export default function App() {
       <a href="https://www.spotify.com/" target="_blank">
         <Button>Spotify</Button>
       </a>
+     <ul>
+      { this.state.posts.map(post => <li>{post.title}</li>)}
+     </ul>
     </>
   );
 }
