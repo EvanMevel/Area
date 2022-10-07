@@ -14,15 +14,17 @@ async function loadAll(areaBase) {
     }
 }
 
-async function tickAll() {
+async function tickAll(areabase) {
     const start = Date.now();
     for (let [id, v] in AREAS) {
         let aa = AREAS[id];
-        await aa.tick();
+        await aa.tick(areabase);
     }
     const elapsed = Date.now() - start;
     const waiting = Math.max(20000 - elapsed, 10000);
-    setTimeout(tickAll, waiting);
+    setTimeout(function() {
+        tickAll(areabase);
+    }, waiting);
 }
 
 function removeAREA(id) {

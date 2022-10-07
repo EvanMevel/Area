@@ -1,6 +1,7 @@
 
 const Action = require("./action");
 const FB_L_POST = require("./fb_listen_post");
+const SPOTIFY_LIKE = require("./spotify_action_like");
 
 let actions = {};
 
@@ -17,5 +18,5 @@ function findAction(actionId, areaId, userId) {
 }
 
 addAction("facebook_action_post", FB_L_POST);
-
+addAction("spotify_action_like", SPOTIFY_LIKE);
 module.exports.findAction = findAction;

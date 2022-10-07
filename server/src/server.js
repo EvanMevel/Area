@@ -28,7 +28,7 @@ process.on('SIGTERM', closeGracefully);
 areaBase.connect().then(async () => {
     await areaBase.createTables();
     await workers.loadAll(areaBase);
-    //await workers.tickAll();
+    await workers.tickAll(areaBase);
 });
 
 // App

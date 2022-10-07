@@ -131,9 +131,16 @@ class AreaBase {
         return rows;
     }
 
+    async getActionDataString(areId) {
+        let data = await this.getActionData(areId);
+        var buffer = Buffer.from(data[0].data, "binary");
+        var bufferBase64 = buffer.toString();
+        return bufferBase64;
+    }
+
     async setActionData(areId, data) {
         const [rows, fields] = await this.con.query("REPLACE INTO ActionsData (actionReactionId, data) VALUES " +
-            "(" + areId  + ", " + data + ")");
+            "(" + areId  + ", " + q(data) + ")");
         return rows;
     }
 }
