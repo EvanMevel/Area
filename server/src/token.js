@@ -8,9 +8,9 @@ function generateToken() {
 }
 
 async function obtainToken(areabase, id) {
-    await areabase.removeToken(id);
+    await areabase.tokens.removeToken(id);
     let newToken = generateToken();
-    await areabase.setToken(newToken, id, 1);
+    await areabase.tokens.setToken(newToken, id, 1);
     return newToken;
 }
 
@@ -22,7 +22,7 @@ async function sendToken(areabase, id, res) {
 }
 
 async function getUser(areabase, token) {
-    const userId = await areabase.getTokenUser(token) || null;
+    const userId = await areabase.tokens.getTokenUser(token) || null;
     if (userId == null) {
         return null;
     }

@@ -4,10 +4,14 @@ const Services = require("./services");
 const AR = require("./ar");
 const AREA = require("./area");
 const ActionData = require("./actionData");
+const Users = require("./users");
+const Tokens = require("./tokens");
 
 class Base {
 
     con;
+    users = new Users();
+    tokens = new Tokens();
     services = new Services();
     actions = new AR("Actions");
     reactions = new AR("Reactions");
@@ -26,6 +30,8 @@ class Base {
         });
         console.log("Connected to " + process.env.MYSQL_DB + "!");
 
+        await this.users.connect(this.con);
+        await this.tokens.connect(this.con);
         await this.services.connect(this.con);
         await this.actions.connect(this.con);
         await this.reactions.connect(this.con);

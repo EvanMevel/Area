@@ -3,8 +3,6 @@ const swaggerUi = require("swagger-ui-express");
 const Base = require("./base/base");
 const Workers = require("./workers");
 const endpoints = require("./endpoints/endpoints")
-const login = require("./login");
-const register = require("./register");
 const tokens = require("./token");
 
 // Constants
@@ -15,7 +13,8 @@ let httpServer = null;
 
 let server = {
     base: new Base(),
-    workers: new Workers()
+    workers: new Workers(),
+    tokens: tokens
 }
 
 async function closeGracefully() {
@@ -44,10 +43,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.get("/", function (req, res) {
     res.redirect("/api-docs");
 });
-
-router.post("/login", callBase(login));
-
-router.post("/register", callBase(register));
 
 // API endpoints
 endpoints(app, server);

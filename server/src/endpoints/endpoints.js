@@ -1,6 +1,8 @@
 const express = require("express");
 const about = require("./about");
 const action_reaction = require("./area");
+const login = require("./login");
+const register = require("./register");
 
 function call(server, endpoint) {
     return function (req, res)  {
@@ -21,6 +23,10 @@ function registerRoutes(app, server) {
     router.put("/area", call(server, action_reaction.modify));
 
     router.delete("/area", call(server, action_reaction.delete));
+
+    router.post("/login", call(server, login));
+
+    router.post("/register", call(server, register));
 
     app.use("/api", router);
 }
