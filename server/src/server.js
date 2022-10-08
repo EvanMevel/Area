@@ -2,7 +2,7 @@ const express = require('express');
 const swaggerUi = require("swagger-ui-express");
 const Base = require("./base/base");
 const Workers = require("./workers");
-const endpoints = require("./endpoints/endpoints")
+const endpoints = require("./endpoints/endpoints");
 const tokens = require("./token");
 
 // Constants

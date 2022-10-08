@@ -29,7 +29,10 @@ class Register extends Endpoint {
             this.message(res, "Server error!", 500);
             return;
         }
-        server.tokens.sendToken(server.base, resp.insertId, res);
+        const token = server.tokens.generate(resp.insertId);
+        res.json({
+            token: token
+        });
     }
 }
 

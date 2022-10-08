@@ -21,10 +21,27 @@ const area = {
 const createAREA = {
     "type": "object",
     "properties": {
-        "userId": {
-            "type": "integer",
-            "description": "id of user",
-            "uniqueItems": true
+        "actionId": {
+            "type": "string",
+            "description": "id of the action"
+        },
+        "reactionId": {
+            "type": "string",
+            "description": "id of the action"
+        }
+    },
+    "example": {
+        "actionId": "fb_test",
+        "reactionId": "fb_test_t"
+    }
+}
+
+const modifyAREA = {
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "id",
+            "description": "id of the area"
         },
         "actionId": {
             "type": "string",
@@ -36,7 +53,7 @@ const createAREA = {
         }
     },
     "example": {
-        "userId": 1,
+        "id": 1,
         "actionId": "fb_test",
         "reactionId": "fb_test_t"
     }
@@ -102,6 +119,34 @@ module.exports.area = {
             }
         }
     },
+    "put": {
+        "tags": [
+            "ActionReaction"
+        ],
+        "description": "Modify an action reaction",
+        "summary": "Modify an action reaction",
+        "operationId": 'area-modify',
+        "consumes":[
+            "application/json"
+        ],
+        "responses": {
+            "200": {
+                "description": "Modified",
+                "content": {
+                    "application/json": {
+                        "schema": createAnswer
+                    }
+                }
+            }
+        },
+        "requestBody" : {
+            "content": {
+                "application/json": {
+                    "schema": modifyAREA
+                }
+            }
+        }
+    },
     "delete": {
         "tags": [
             "ActionReaction"
@@ -157,17 +202,6 @@ module.exports.list = {
                     }
                 }
             }
-        },
-        "parameters": [
-            {
-                "in": "query",
-                "name": "userId",
-                "description": "Id of user",
-                "required": true,
-                "schema": {
-                    "type": "integer"
-                }
-            }
-        ]
+        }
     }
 }

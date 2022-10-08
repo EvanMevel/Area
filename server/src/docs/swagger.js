@@ -27,9 +27,20 @@ module.exports = {
             "description": "Action Reaction"
         }
     ],
+    "components": {
+        "securitySchemes": {
+            "Bearer": {
+                "type": "http",
+                "description": "JWT access token",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+    },
     "paths": {
         "/about.json": about,
         "/api/area_list": area.list,
         "/api/area": area.area
-    }
+    },
+    "security": [ { "Bearer": [] } ]
 }

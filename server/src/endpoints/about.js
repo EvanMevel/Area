@@ -49,7 +49,7 @@ class About extends Endpoint {
                 "services": services
             }
         }
-        res.send(resp);
+        res.json(resp);
     }
 }
 

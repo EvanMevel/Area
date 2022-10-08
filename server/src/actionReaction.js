@@ -9,12 +9,16 @@ let reactionList = new ReactionList();
 class ActionReaction {
     id;
     action;
+    actionId;
     reaction;
+    reactionId;
     userId;
 
     constructor(id, userId, actionId, reactionId) {
         this.id = id;
         this.userId = userId;
+        this.actionId = actionId;
+        this.reactionId = reactionId;
         this.action = actionList.find(actionId, id, userId)
         this.reaction = reactionList.find(reactionId, id, userId);
     }

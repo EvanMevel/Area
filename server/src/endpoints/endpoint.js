@@ -10,7 +10,7 @@ class Endpoint {
             status = 200;
         }
         res.status(status);
-        res.send({
+        res.json({
             "message": msg
         });
     }

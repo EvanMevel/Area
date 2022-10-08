@@ -27,18 +27,20 @@ class AREA extends Table {
         return rows;
     }
 
-    async create(area) {
+    async create(userId, actionId, reactionId) {
         const sql = "INSERT INTO ActionReactions (userId, actionId, reactionId) VALUES (" +
-            q(area.userId) + ", " +
-            q(area.actionId) + ", " +
-            q(area.reactionId) +
+            q(userId) + ", " +
+            q(actionId) + ", " +
+            q(reactionId) +
             ")";
         const [rows, fields] = await this.con.query(sql);
         return rows;
     }
 
-    async delete(id) {
-        const [rows, fields] = await this.con.query("DELETE FROM ActionReactions WHERE ActionReactions.id = " + id);
+    async delete(id, userId) {
+        const [rows, fields] = await this.con.query("DELETE FROM ActionReactions WHERE " +
+            "ActionReactions.id = " + id + " AND " +
+            "ActionReactions.userId = " + userId);
         return rows;
     }
 
@@ -55,6 +57,13 @@ class AREA extends Table {
         }
         sql += " WHERE ActionReactions.id = " + area.id;
         const [rows, fields] = await this.con.query(sql);
+        return rows;
+    }
+
+    async hasPermission(id, userId) {
+        const [rows, fields] = await this.con.query("SELECT id FROM ActionReactions WHERE " +
+            "userId = " + userId + " AND " +
+            "id = " + id);
         return rows;
     }
 }

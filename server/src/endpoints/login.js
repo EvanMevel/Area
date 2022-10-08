@@ -12,7 +12,10 @@ class Login extends Endpoint {
             return;
         }
         const id = resp[0].id;
-        server.tokens.sendToken(server.base, id, res);
+        const token = server.tokens.generate(id);
+        res.json({
+            token: token
+        });
     }
 }
 

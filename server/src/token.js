@@ -1,34 +1,19 @@
+const jwt = require('jsonwebtoken');
+const secret = "8ybH2bbjeniaP8HNupR75m9bhFVBC5%&mwzBDZKhuS6S7C3A^Zo8vax^jP&BmzERLNW#ZjT4oFjf5ayX&Rq38YCauDJfrpBRiXpikeFaSaB!VNSN2WajzSmTV4VZmHYA"
 
-function rand() {
-    return Math.random().toString(36).substring(2); // remove `0.`
+function generate(userId) {
+    return jwt.sign({user: userId}, secret);
 }
 
-function generateToken() {
-    return rand() + rand(); // to make it longer
-}
-
-async function obtainToken(areabase, id) {
-    await areabase.tokens.removeToken(id);
-    let newToken = generateToken();
-    await areabase.tokens.setToken(newToken, id, 1);
-    return newToken;
-}
-
-async function sendToken(areabase, id, res) {
-    const token = await obtainToken(areabase, id);
-    res.send({
-        "token": token
-    });
-}
-
-async function getUser(areabase, token) {
-    const userId = await areabase.tokens.getTokenUser(token) || null;
-    if (userId == null) {
+function verify(token) {
+    try {
+        let decoded = jwt.verify(token, secret);
+        return decoded.user;
+    } catch(err) {
         return null;
     }
-    return userId;
 }
 
-module.exports.sendToken = sendToken;
+module.exports.generate = generate;
 
-module.exports.getUser = getUser;
+module.exports.verify = verify;

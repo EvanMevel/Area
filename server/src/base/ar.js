@@ -34,6 +34,13 @@ class AR extends Table {
         const [rows, fields] = await this.con.query(sql);
         return rows;
     }
+
+    async exists(name) {
+        const [rows, fields] = await this.con.query("SELECT name FROM " + this.table +
+            " WHERE " + this.table + ".name = " + q(name));
+        return rows;
+    }
+
 }
 
 module.exports = AR;
