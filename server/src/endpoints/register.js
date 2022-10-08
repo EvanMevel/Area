@@ -4,7 +4,6 @@ const Endpoint = require("./endpoint");
 class Register extends Endpoint {
 
     alreadyExist(exists, res, fieldName) {
-        console.log(JSON.stringify(exists));
         if (exists.length !== 0) {
             this.message(res, "User with this " + fieldName + " already exists!", 400);
             return true;
@@ -26,7 +25,6 @@ class Register extends Endpoint {
             return
         }
         let resp = await server.base.users.register(req.body.name, req.body.email, req.body.password);
-        console.log(JSON.stringify(resp));
         if (resp.affectedRows !== 1) {
             this.message(res, "Server error!", 500);
             return;

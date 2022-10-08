@@ -7,7 +7,6 @@ class Login extends Endpoint {
         this.checkFieldsExist(res, req.body, ["name", "password"]);
 
         let resp = await server.base.users.login(req.body.name);
-        console.log(JSON.stringify(resp) + " " + resp.length + " " + (resp));
         if (!resp.length || resp[0].password !== req.body.password) {
             this.message(res, "Invalid name or password!", 400);
             return;
