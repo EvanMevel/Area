@@ -1,21 +1,14 @@
 
+const ARList = require("../ARList");
 const Reaction = require("./reaction");
 const FB_POST = require("./fb_post");
 
-let reactions = {};
+class ReactionList extends ARList {
 
-function addReaction(id, reac) {
-    reactions[id] = reac;
-}
-
-function findReaction(reactionId, areaId, userId) {
-    let reac = reactions[reactionId];
-    if (reac == null) {
-        reac = Reaction;
+    constructor() {
+        super("reactions", Reaction);
+        this.add(FB_POST, "facebook_reaction_post", "Facebook Post", "Post a facebook post", "facebook");
     }
-    return new reac(areaId, userId);
 }
 
-addReaction("facebook_reaction_post", FB_POST);
-
-module.exports.findReaction = findReaction;
+module.exports = ReactionList;
