@@ -1,6 +1,10 @@
 
 const ActionList = require("./actions/actionList");
 const ReactionList = require("./reactions/reactionList");
+const registerServices = require("./services");
+
+let actionList = new ActionList();
+let reactionList = new ReactionList();
 
 class ActionReaction {
     id;
@@ -11,8 +15,8 @@ class ActionReaction {
     constructor(id, userId, actionId, reactionId) {
         this.id = id;
         this.userId = userId;
-        this.action = ActionList.findAction(actionId, id, userId)
-        this.reaction = ReactionList.findReaction(reactionId, id, userId);
+        this.action = actionList.find(actionId, id, userId)
+        this.reaction = reactionList.find(reactionId, id, userId);
     }
 
     async tick() {
@@ -23,4 +27,12 @@ class ActionReaction {
     }
 }
 
+async function registerAREA(areabase) {
+    await registerServices(areabase);
+    await actionList.register(areabase);
+    await reactionList.register(areabase);
+}
+
 module.exports = ActionReaction;
+
+module.exports.registerAREA = registerAREA;

@@ -1,21 +1,14 @@
 
+const ARList = require("../ARList");
 const Action = require("./action");
 const FB_L_POST = require("./fb_listen_post");
 
-let actions = {};
+class ActionList extends ARList {
 
-function addAction(id, reac) {
-    actions[id] = reac;
-}
-
-function findAction(actionId, areaId, userId) {
-    let ac = actions[actionId];
-    if (ac == null) {
-        ac = Action;
+    constructor() {
+        super("actions", Action);
+        this.add(FB_L_POST, "facebook_action_post", "Facebook Listen Post", "Listen to a facebook post", "facebook");
     }
-    return new ac(areaId, userId);
 }
 
-addAction("facebook_action_post", FB_L_POST);
-
-module.exports.findAction = findAction;
+module.exports = ActionList;
