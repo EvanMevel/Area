@@ -6,6 +6,9 @@ const AreaBase = require("./areabase");
 const about = require("./about");
 const workers = require("./workers");
 const action_reaction = require("./area");
+const login = require("./login");
+const register = require("./register");
+const tokens = require("./token");
 
 // Constants
 const PORT = 8080;
@@ -47,7 +50,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 function callBase(func) {
     return function (req, res)  {
-        func(req, res, areaBase, workers);
+        func(req, res, areaBase, workers, tokens);
     }
 }
 
@@ -60,6 +63,10 @@ router.post("/area", callBase(action_reaction.post));
 router.put("/area", callBase(action_reaction.put));
 
 router.delete("/area", callBase(action_reaction.del));
+
+router.post("/login", callBase(login));
+
+router.post("/register", callBase(register));
 
 app.use("/api", router);
 
