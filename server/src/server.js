@@ -28,7 +28,7 @@ process.on('SIGTERM', closeGracefully);
 
 server.base.connect().then(async () => {
     await server.workers.loadAll(server.base);
-    //await workers.tickAll();
+    await server.workers.tickAll(server);
 });
 
 // App

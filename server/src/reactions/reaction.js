@@ -9,8 +9,7 @@ class Reaction {
         this.userId = userId;
     }
 
-    async ingest(event) {
-        throw new Error("Method should be implemented");
+    async ingest(event, areabase) {
     }
 }
 
