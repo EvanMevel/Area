@@ -19,6 +19,12 @@ class ActionData extends Table {
         return rows;
     }
 
+    async getString(areId) {
+        let data = await this.get(areId);
+        var buffer = Buffer.from(data[0].data, "binary");
+        return buffer.toString();
+    }
+
     async set(areaId, data) {
         const [rows, fields] = await this.con.query("REPLACE INTO ActionsData (actionReactionId, data) VALUES (" +
             q(areaId)  + ", " +
