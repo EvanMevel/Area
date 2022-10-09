@@ -19,15 +19,15 @@ class Workers {
         }
     }
 
-    async tickAll() {
+    async tickAll(areabase) {
         const start = Date.now();
         for (let [id, v] in this.AREAS) {
             let aa = this.AREAS[id];
-            await aa.tick();
+            await aa.tick(areabase);
         }
         const elapsed = Date.now() - start;
         const waiting = Math.max(20000 - elapsed, 10000);
-        setTimeout(this.tickAll, waiting);
+        setTimeout(this.tickAll(areabase), waiting);
     }
 
     removeAREA(id) {
