@@ -23,7 +23,7 @@ class AREA extends Table {
     }
 
     async getUser(userId) {
-        const [rows, fields] = await this.con.query("SELECT * FROM ActionReactions WHERE userId = " + userId);
+        const [rows, fields] = await this.con.query("SELECT id, actionId, reactionId FROM ActionReactions WHERE userId = " + userId);
         return rows;
     }
 

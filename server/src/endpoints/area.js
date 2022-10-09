@@ -16,9 +16,6 @@ class List extends TokenEndpoint {
 
     async authCalled(req, res, server, id) {
         let userAREA = await server.base.area.getUser(id);
-        userAREA.forEach(function (area) {
-            delete area["userId"];
-        });
         res.json(userAREA);
     }
 }

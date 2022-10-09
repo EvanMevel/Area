@@ -3,6 +3,7 @@ const about = require("./about");
 const action_reaction = require("./area");
 const login = require("./login");
 const register = require("./register");
+const accounts = require("./accounts");
 
 function call(server, endpoint) {
     return function (req, res)  {
@@ -27,6 +28,12 @@ function registerRoutes(app, server) {
     router.post("/login", call(server, login));
 
     router.post("/register", call(server, register));
+
+    router.get("/accounts", call(server, accounts.list));
+
+    router.delete("/accounts", call(server, accounts.delete));
+
+    router.post("/accounts", call(server, accounts.create));
 
     app.use("/api", router);
 }

@@ -5,6 +5,7 @@ const AR = require("./ar");
 const AREA = require("./area");
 const ActionData = require("./actionData");
 const Users = require("./users");
+const Accounts = require("./accounts");
 
 class Base {
 
@@ -15,6 +16,7 @@ class Base {
     reactions = new AR("Reactions");
     area = new AREA();
     actionData = new ActionData();
+    accounts = new Accounts();
 
     constructor() {
     }
@@ -34,6 +36,7 @@ class Base {
         await this.reactions.connect(this.con);
         await this.area.connect(this.con);
         await this.actionData.connect(this.con);
+        await this.accounts.connect(this.con);
 
         console.log("Loaded all tables!");
     }
