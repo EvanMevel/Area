@@ -7,7 +7,7 @@ class FB_POST extends Reaction {
         super(areaId, userId);
     }
 
-    async ingest(event) {
+    async ingest(event, areabase) {
         console.log("TICK FB POST " + this.areaId + " > " + this.userId);
         console.log("Event is " + event);
     }

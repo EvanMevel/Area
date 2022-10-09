@@ -26,7 +26,7 @@ class ActionReaction {
     async tick(areabase) {
         let events = await this.action.events(areabase);
         for (let event of events) {
-            await this.reaction.ingest(event);
+            await this.reaction.ingest(event, areabase);
         }
     }
 }

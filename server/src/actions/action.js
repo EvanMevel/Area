@@ -9,7 +9,7 @@ class Action {
     }
 
     async events(areabase) {
-        throw new Error("Method should be implemented");
+        return [];
     }
 }
 
