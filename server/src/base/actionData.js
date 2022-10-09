@@ -21,6 +21,9 @@ class ActionData extends Table {
 
     async getString(areId) {
         let data = await this.get(areId);
+        if (data == null || data[0] == null) {
+            return null;
+        }
         var buffer = Buffer.from(data[0].data, "binary");
         return buffer.toString();
     }
@@ -28,7 +31,7 @@ class ActionData extends Table {
     async set(areaId, data) {
         const [rows, fields] = await this.con.query("REPLACE INTO ActionsData (actionReactionId, data) VALUES (" +
             q(areaId)  + ", " +
-            data +
+            q(data) +
             ")");
         return rows;
     }
