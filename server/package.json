@@ -12,6 +12,8 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
     "nodemon": "^2.0.20",
+    "querystring": "^0.2.1",
+    "request-promise": "^4.2.6",
     "swagger-ui-express": "^4.5.0"
   },
   "author": "groupaphil",
