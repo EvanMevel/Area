@@ -1,5 +1,4 @@
 
-
 class Action {
     areaId;
     userId;
@@ -9,7 +8,7 @@ class Action {
         this.userId = userId;
     }
 
-    async events() {
+    async events(areabase) {
         throw new Error("Method should be implemented");
     }
 }

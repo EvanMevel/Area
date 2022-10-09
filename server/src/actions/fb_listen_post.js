@@ -7,7 +7,7 @@ class FB_L_POST extends Action {
         super(areaId, userId);
     }
 
-    async events() {
+    async events(areabase) {
         console.log("TICK FB " + this.areaId + " > " + this.userId);
         return ["ahah"];
     }
