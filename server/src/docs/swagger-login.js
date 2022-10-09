@@ -27,7 +27,7 @@ const login = {
     }
 }
 
-module.exports.login = {
+module.exports = {
     "post": {
         "tags": [
             "Login"

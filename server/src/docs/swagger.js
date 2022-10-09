@@ -3,8 +3,9 @@
 
 const about = require("./swagger-about");
 const area = require("./swagger-area");
-const login = require("./login");
-const register = require("./register");
+const login = require("./swagger-login");
+const register = require("./swagger-register");
+const accounts = require("./swagger-accounts");
 
 module.exports = {
     "openapi": "3.0.3",
@@ -31,6 +32,10 @@ module.exports = {
         {
             "name": "ActionReaction",
             "description": "Action Reaction"
+        },
+        {
+            "name": "Accounts",
+            "description": "Accounts"
         }
     ],
     "components": {
@@ -45,10 +50,11 @@ module.exports = {
     },
     "paths": {
         "/about.json": about,
-        "/api/login": login.login,
-        "/api/register": register.register,
+        "/api/login": login,
+        "/api/register": register,
         "/api/area_list": area.list,
-        "/api/area": area.area
+        "/api/area": area.area,
+        "/api/accounts": accounts
     },
     "security": [ { "Bearer": [] } ]
 }

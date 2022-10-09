@@ -32,7 +32,7 @@ const register = {
     }
 }
 
-module.exports.register = {
+module.exports = {
     "post": {
         "tags": [
             "Login"
