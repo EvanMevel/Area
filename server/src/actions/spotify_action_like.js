@@ -67,11 +67,11 @@ class SPOTIFY_LIKE extends Action {
     }
 
     async events(areabase) {
-        var track = await getSong();
-        var oui = await areabase.getActionDataString(this.areaId);
-        if (track.id !== oui) {
-            var sentence = getSentence(track);
-            await areabase.setActionData(this.areaId, track.id);
+        let track = await getSong();
+        const oldLiked = await areabase.actionData.getString(this.areaId);
+        if (track.id !== oldLiked) {
+            const sentence = getSentence(track);
+            await areabase.actionData.set(this.areaId, track.id);
             return [sentence];
         } else
             return [];
