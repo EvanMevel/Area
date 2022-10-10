@@ -25,8 +25,7 @@ class DEEZER_LIKE extends Reaction {
     }
 
     async ingest(event, areabase) {
-        await likeASong("Gitano kendji girac");
-        console.log("deezer like: " + event);
+        await likeASong(event);
     }
 
 }
