@@ -2,12 +2,16 @@ package com.example.myarea
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.android.volley.Request
-import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.myarea.databinding.FragmentFirstBinding
@@ -16,7 +20,7 @@ import kotlinx.serialization.json.*
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class FirstFragment : Fragment(), OnItemSelectedListener {
     private var lastResponse : String = "";
 
     private var _binding: FragmentFirstBinding? = null
@@ -24,6 +28,7 @@ class FirstFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
 
     fun getRequest(){
         // Instantiate the RequestQueue.
@@ -33,13 +38,13 @@ class FirstFragment : Fragment() {
 // Request a string response from the provided URL.
         val stringRequest = StringRequest(
             Request.Method.GET, url,
-            Response.Listener<String> { response ->
+            { response ->
                 //
                 println("GET Request : ${response}")
                 lastResponse = response;
                 MyParse(lastResponse);
             },
-            Response.ErrorListener { println( "That didn't work!" )})
+            { println( "That didn't work!" )})
 
 // Add the request to the RequestQueue.
         queue.add(stringRequest)
@@ -49,21 +54,20 @@ class FirstFragment : Fragment() {
         var response = Json.parseToJsonElement(string);
         var server = response.jsonObject.get("server");
         var time = server?.jsonObject?.get("current_time");
-        if (time != null) {
-            println("ICI LE TEMPS : " + time.jsonPrimitive.int)
-        }else {
-            println("AHZIUEOV DAVRUYOEZV OUYV")
-        }
         var services = server?.jsonObject?.get("services")?.jsonArray;
         var serList : List<JsonObject> = listOf();
-        var serviceList = serList.toMutableList()
-        for (i in 0 until services?.size!!) {
+        var serviceList = serList.toMutableList();
+        var serNameList : List<String> = listOf();
+        var serviceNameList = serNameList.toMutableList();
+            for (i in 0 until services?.size!!) {
             var service = services.get(i).jsonObject;
             serviceList.add(service);
-            println(service.get("name")?.jsonPrimitive.toString())
+            var displayName = serviceList[i].get("displayName")?.jsonPrimitive.toString()
+                serviceNameList.add(displayName);
         }
-        for (i in 0 until serviceList.size) {
-            println("ma liste :" + serviceList[i])
+
+        for (i in 0 until serviceNameList.size) {
+            println("ma liste :" + serviceNameList[i])
         }
     }
 
@@ -79,16 +83,23 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.buttonFirst.setOnClickListener {
-            //findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
             Log.d("TAG", "tbleubleublue ca me parait etre un bon quoi feur")
-            getRequest()
+
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+        println("AHHEIUZIUEBIZA");
+    }
+
+    override fun onNothingSelected(p0: AdapterView<*>?) {
+        println("EJOZIABE IUZAB PE A");
     }
 }

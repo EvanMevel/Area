@@ -9,4 +9,5 @@
 
     <string name="hello_first_fragment">Vous n avez aucune Action Réaction pour l instant</string>
     <string name="hello_second_fragment">Aucune option disponible. Arg: %1$s</string>
+    <string name="spinner_test">Spinner Test</string>
 </resources>
