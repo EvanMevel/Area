@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios"
 
-const theme = {
+/*const theme = {
   blue: {
     default: "#3f51b5",
     hover: "#283593"
@@ -31,22 +31,22 @@ const Button = styled.button`
 
 Button.defaultProps = {
   theme: "blue"
-};
+};*/
 
-/*export default class HomePage extends React.Component {
+export default class HomePage extends React.Component {
 
   state = {
     posts: []
    }
-  
+
    componentDidMount() {
-    axios.get("https://schood.fr/")
+    axios.get("https://jsonplaceholder.typicode.com/posts")
    .then(res => {
       const posts = res.data;
       this.setState({ posts });
      })
    }
-  
+
    render() {
     return (
      <ul>
@@ -54,13 +54,12 @@ Button.defaultProps = {
      </ul>
     )
    }
-}*/
+}
 
-export default function App() {
-  state = {
-    posts: []
-  }
-  componentDidMount() {
+/*export default function App extends React.Component {
+
+  state = { posts: [] }
+  componentDidMount(); {
     axios.get("https://schood.fr/")
    .then(res => {
       const posts = res.data;
@@ -89,4 +88,4 @@ export default function App() {
      </ul>
     </>
   );
-}
+}*/
