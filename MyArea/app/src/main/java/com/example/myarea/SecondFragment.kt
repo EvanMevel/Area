@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import androidx.core.view.get
 import androidx.core.view.isInvisible
 import androidx.navigation.fragment.findNavController
 import com.android.volley.Request
@@ -81,7 +82,7 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
             println("adapter : " + adapter.getItem(i))
         }*/
         services = Services(string);
-        adapter.addAll(services.getServicesName());
+        adapter.addAll(services.getServicesNames());
         spinner.setAdapter(adapter);
         spinner.isInvisible = false;
     }
@@ -117,16 +118,16 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+        var service = spinner.selectedItem;
+        var serviceAction = services.getServiceAction(
+            service as String
+        );
+        println(serviceAction)
+
         actionSpinner = view!!.findViewById(R.id.action);
-        actionAdapter = ArrayAdapter<String>(view!!.context, android.R.layout.simple_spinner_item, arrayListOf("eeeeeee"));
+        actionAdapter = ArrayAdapter<String>(view!!.context, android.R.layout.simple_spinner_item, serviceAction);
         actionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        actionSpinner.adapter = actionAdapter;
-        services = Services(lastResponse);
-        adapter.addAll(services.getServiceAction());
-        spinner.setAdapter(adapter);
-        spinner.isInvisible = false;
-        //actionSpinner.setOnItemSelectedListener(this);
-        //actionSpinner.isInvisible = true;
+        actionSpinner.setAdapter(actionAdapter);
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

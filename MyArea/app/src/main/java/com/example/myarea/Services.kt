@@ -12,11 +12,11 @@ class Services {
         val srvs = server?.jsonObject?.get("services")?.jsonArray;
 
         for (i in 0 until srvs?.size!!) {
-            services.add(services.get(i).jsonObject);
+            services.add(srvs.get(i).jsonObject);
         }
     }
 
-    fun getServicesName() : MutableList<String> {
+    fun getServicesNames() : MutableList<String> {
         var servicesNames : MutableList<String> = arrayListOf();
 
         for (i in 0 until services.size) {
@@ -27,24 +27,42 @@ class Services {
         return servicesNames;
     }
 
-    fun getServiceAction() : MutableList<String> {
+    fun getServiceAction(serviceName : String) : MutableList<String> {
         var serviceAction : MutableList<String> = arrayListOf();
 
         for (i in 0 until services.size) {
-            var action = services.get(i).jsonObject;
-            var displayAction = action.get("displayName")?.jsonPrimitive.toString()
-            serviceAction.add(displayAction);
+            var service = services.get(i).jsonObject;
+            var displayName = service.get("displayName")?.jsonPrimitive.toString()
+            println("displayName: " + displayName);
+            if (displayName == serviceName) {
+                println("serviceName: " + serviceName);
+                var displayAction = service.get("actions")?.jsonArray
+                println(displayAction);
+                for (j in 0 until displayAction!!.size) {
+                    var action = displayAction.get(j).jsonObject;
+                    var description = action.get("description")?.jsonPrimitive.toString()
+                    serviceAction.add(description)
+                }
+                return serviceAction;
+            }
         }
         return serviceAction;
     }
 
-    fun getServiceReaction() : MutableList<String> {
+    fun getServiceReaction(serviceName : String) : MutableList<String> {
         var serviceReaction : MutableList<String> = arrayListOf();
 
         for (i in 0 until services.size) {
-            var reaction = services.get(i).jsonObject;
-            var displayReaction = reaction.get("displayName")?.jsonPrimitive.toString()
-            serviceReaction.add(displayReaction);
+            var service = services.get(i).jsonObject;
+            var displayName = service.get("displayName")?.jsonPrimitive.toString()
+            if (displayName == serviceName) {
+                var displayRection = service.get("reactions")?.jsonArray
+                for (i in 0 until displayRection!!.size) {
+                    var action = displayRection.get(i).jsonObject;
+                    var description = action.get("description")?.jsonPrimitive.toString()
+                    serviceReaction.add((description))
+                }
+            }
         }
         return serviceReaction;
     }
