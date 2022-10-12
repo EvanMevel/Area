@@ -1,61 +1,44 @@
 const Action = require("./action");
-const request = require('request-promise');
-const querystring = require('querystring');
 
 const client_id = 'eab7cdc09f6346bbacd253f46f157a9b';
 const client_secret = '3ee4d175c21a444998315efed44f3677';
 const redirect_uri = 'http://localhost:8080/callback';
 const refresh_token = 'AQAKjgeZbLUYBrkQgHIHgrHd7nyiApbd-upxZK7Kca1oh9T11zickgzydL0Z1NmILBAiJlJBetJ_8ftQkGAyTOzzEgTEHnVSfQfCGa9eg-wBq1XB6SiXwtCa_GiBVVX84a0';
 
-function getAuthOptions() {
-    var form =  {
+async function apiToken(server) {
+    let form = {
         refresh_token: refresh_token,
         redirect_uri: redirect_uri,
         grant_type: 'refresh_token'
     };
-
-    let formData = querystring.stringify(form);
-    let length = formData.length;
-
-    let authOptions = {
-        url: 'https://accounts.spotify.com/api/token',
-        method: 'POST',
+    return await server.request.post("https://accounts.spotify.com/api/token", {
         headers: {
-            'Authorization': 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64')),
-            'Content-Length': length,
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Authorization': 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64'))
         },
-        body: formData,
-        json: true
-    };
-    return authOptions;
+        form: form
+    }).json();
 }
 
-async function getToken() {
-    const authOptions = getAuthOptions();
-    let body = await request(authOptions);
+async function getAccessToken(server) {
+    const body = await apiToken(server);
     return body.access_token;
 }
 
-async function getSong() {
-    let token = await getToken()
-    let get_saved_track = {
-        url: 'https://api.spotify.com/v1/me/tracks',
-        method: 'GET',
+async function getSong(server) {
+    let token = await getAccessToken(server)
+    let body = await server.request.get("https://api.spotify.com/v1/me/tracks", {
         headers: {
             'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json'
-        },
-        json: true
-    };
-    let body = await request(get_saved_track);
+        }
+    }).json();
     return body.items[0].track;
 }
 
 function getSentence(track) {
     let song_name = track.name;
     let song_artist = track.artists[0].name;
-    let song_link = track.external_urls.spotify;
+    //let song_link = track.external_urls.spotify;
     return (song_name + " " + song_artist);
 }
 
@@ -65,12 +48,12 @@ class SPOTIFY_LIKE extends Action {
         super(areaId, userId);
     }
 
-    async events(areabase) {
-        let track = await getSong();
-        const oldLiked = await areabase.actionData.getString(this.areaId);
+    async events(server) {
+        let track = await getSong(server);
+        const oldLiked = await server.base.actionData.getString(this.areaId);
         if (track.id !== oldLiked) {
             const sentence = getSentence(track);
-            await areabase.actionData.set(this.areaId, track.id);
+            await server.base.actionData.set(this.areaId, track.id);
             return [sentence];
         } else
             return [];
