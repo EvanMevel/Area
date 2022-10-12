@@ -56,6 +56,24 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
         var idAction = services.getActionId(desAction)
         var idReaction = services.getActionId(desReaction)
 
+        val queue = Volley.newRequestQueue(MainActivity.instance)
+        val url = "http://10.0.2.2:8080/api/action-reaction"
+        var map = Map<String, Object>();
+        map.put("actionId", idAction);
+        map.put("reactionId", idReaction);
+        map.put("userId", 1);
+        var json = JSONObject(map);
+        val stringRequest = JsonRequest(
+            Request.Method.POST, url, json,
+            { response ->
+                //
+                println("GET Request : ${response}")
+                lastResponse = response;
+                myParse(lastResponse);
+            },
+            { println( "That didn't work!" )})
+        queue.add(stringRequest)
+        
     }
 
     fun myParse(string: String) {
