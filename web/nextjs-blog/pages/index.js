@@ -49,6 +49,7 @@ export default class HomePage extends React.Component {
 
    render() {
     return (
+      <button onClick={handleClick}>Make request</button>
      <ul>
       { this.state.posts.map(post => <li>{post.title}</li>)}
      </ul>
