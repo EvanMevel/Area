@@ -11,9 +11,11 @@ import android.widget.Spinner
 import androidx.core.view.isInvisible
 import androidx.navigation.fragment.findNavController
 import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.myarea.databinding.FragmentSecondBinding
+import org.json.JSONObject
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -53,27 +55,23 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
     fun postRequest() {
         var desAction = actionSpinner.selectedItem.toString().split("-")[1].trim();
         var desReaction = reactionSpinner.selectedItem.toString().split("-")[1].trim();
-        var idAction = services.getActionId(desAction)
-        var idReaction = services.getActionId(desReaction)
+        var idAction = services.getActionId(desAction).replace("\"", "")
+        var idReaction = services.getReactionId(desReaction).replace("\"", "")
 
         val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "http://10.0.2.2:8080/api/action-reaction"
-        var map = Map<String, Object>();
-        map.put("actionId", idAction);
-        map.put("reactionId", idReaction);
-        map.put("userId", 1);
-        var json = JSONObject(map);
-        val stringRequest = JsonRequest(
+        val url = "http://10.0.2.2:8080/api/area"
+        var json = JSONObject();
+        json.put("actionId", idAction);
+        json.put("reactionId", idReaction);
+        json.put("userId", 1);
+        val jsonPostRequest = JsonObjectRequest(
             Request.Method.POST, url, json,
             { response ->
                 //
-                println("GET Request : ${response}")
-                lastResponse = response;
-                myParse(lastResponse);
+                println("POST Request : ${response}")
             },
             { println( "That didn't work!" )})
-        queue.add(stringRequest)
-        
+        queue.add(jsonPostRequest)
     }
 
     fun myParse(string: String) {
