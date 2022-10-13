@@ -1,11 +1,12 @@
 
 const spot = require("./spotifyService");
+const deez = require("./deezerService");
 
 function callLogin(server, connect) {
     return function (req, res) {
         let userId = req.query.userId;
         if (userId == null) {
-            res.code(400).send({
+            res.status(400).send({
                 message: "Add userId to request"
             })
         }
@@ -31,6 +32,7 @@ function registerServicesRoutes(app, express, server)
     const callback = express.Router();
 
     registerRoute(login, callback, "/spotify", server, spot);
+    registerRoute(login, callback, "/deezer", server, deez);
 
     app.use("/api/services/login", login)
     app.use("/api/services/callback", callback)

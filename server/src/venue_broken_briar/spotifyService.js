@@ -23,8 +23,7 @@ class SpotifyService extends ConnectServices {
     async callback(req, res, server) {
         const code = req.query.code;
         const userId = req.query.state;
-        console.log(userId);
-        console.log(code);
+
         let authOptions = {
             form: {
                 code: code,
