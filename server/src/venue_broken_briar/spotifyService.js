@@ -12,7 +12,8 @@ class SpotifyService extends ConnectServices {
             response_type: 'code',
             client_id: appid,
             scope: scope,
-            redirect_uri: redirect_uri + "?userid=" + userId
+            state: userId,
+            redirect_uri: redirect_uri
         }
 
         const searchParams = new URLSearchParams(data);
@@ -21,21 +22,27 @@ class SpotifyService extends ConnectServices {
 
     async callback(req, res, server) {
         const code = req.query.code;
-        const userId = req.query.userid;
-
+        const userId = req.query.state;
+        console.log(userId);
+        console.log(code);
         let authOptions = {
             form: {
                 code: code,
-                redirect_uri: redirect_uri + "?userid=" + userId,
+                redirect_uri: redirect_uri,
                 grant_type: 'authorization_code'
             },
             headers: {
-                'Authorization': 'Basic ' + (Buffer.from(userId + ':' + clientSecret).toString('base64'))
+                'Authorization': 'Basic ' + (Buffer.from(appid + ':' + clientSecret).toString('base64'))
             }
         };
         let body = await server.request.post("https://accounts.spotify.com/api/token", authOptions).json();
-        console.log(JSON.stringify(body))
-        res.send("GZJAFCEDYL")
+        try {
+            console.log(JSON.stringify(body));
+        } catch(error) {
+            console.log(error.response.body);
+        }
+        server.base.accounts.create(userId, "spotify", body.refresh_token)
+        res.send("ahaha");
     }
 }
 
