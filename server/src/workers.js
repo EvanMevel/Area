@@ -40,7 +40,7 @@ class Workers {
         const start = Date.now();
         for (let id in this.AREAS) {
             let aa = this.AREAS[id];
-            await aa.tick(server.base);
+            await aa.tick(server);
         }
         const elapsed = Date.now() - start;
         const waiting = Math.max(20000 - elapsed, 10000);

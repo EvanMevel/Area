@@ -1,9 +1,15 @@
+const before = Date.now();
+
 const express = require('express');
 const swaggerUi = require("swagger-ui-express");
+const got = require('got');
 const Base = require("./base/base");
 const Workers = require("./workers");
 const endpoints = require("./endpoints/endpoints");
 const tokens = require("./token");
+const endpoints = require("./endpoints/endpoints");
+
+console.log("Loaded dependencies in " + (Math.round((Date.now() - before) / 100) / 10) + "s")
 
 // Constants
 const PORT = 8080;
@@ -15,6 +21,8 @@ let server = {
     base: new Base(),
     workers: new Workers(),
     tokens: tokens
+    workers: new Workers(),
+    request: got
 }
 
 async function closeGracefully() {
