@@ -19,10 +19,10 @@ class ActionReaction {
         this.reaction = reactionList.find(reactionId, id, userId);
     }
 
-    async tick(areabase) {
-        let events = await this.action.events(areabase);
+    async tick(server) {
+        let events = await this.action.events(server);
         for (let event of events) {
-            await this.reaction.ingest(event, areabase);
+            await this.reaction.ingest(event, server);
         }
     }
 }
