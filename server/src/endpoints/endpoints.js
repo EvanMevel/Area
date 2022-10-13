@@ -4,6 +4,7 @@ const action_reaction = require("./area");
 const login = require("./login");
 const register = require("./register");
 const accounts = require("./accounts");
+const registerServicesRoutes = require("../venue_broken_briar/servicesRoutes")
 
 function call(server, endpoint) {
     return function (req, res)  {
@@ -36,6 +37,8 @@ function registerRoutes(app, server) {
     router.post("/accounts", call(server, accounts.create));
 
     app.use("/api", router);
+
+    registerServicesRoutes(app, express, server);
 }
 
 module.exports = registerRoutes;
