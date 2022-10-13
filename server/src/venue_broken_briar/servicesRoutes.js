@@ -30,10 +30,16 @@ function registerServicesRoutes(app, express, server)
     const login = express.Router();
     const callback = express.Router();
 
-    registerRoute(login, callback, spot);
+    registerRoute(login, callback, "/spotify", server, spot);
 
-    app.use("services/login", login)
-    app.use("services/callback", callback)
+    app.use("/api/services/login", login)
+    app.use("/api/services/callback", callback)
+
+    login.stack.forEach(function(r){
+        if (r.route && r.route.path){
+            console.log(r.route.path)
+        }
+    })
 }
 
 module.exports = registerServicesRoutes;
