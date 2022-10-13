@@ -7,7 +7,6 @@ const Base = require("./base/base");
 const Workers = require("./workers");
 const endpoints = require("./endpoints/endpoints");
 const tokens = require("./token");
-const endpoints = require("./endpoints/endpoints");
 
 console.log("Loaded dependencies in " + (Math.round((Date.now() - before) / 100) / 10) + "s")
 
@@ -20,8 +19,7 @@ let httpServer = null;
 let server = {
     base: new Base(),
     workers: new Workers(),
-    tokens: tokens
-    workers: new Workers(),
+    tokens: tokens,
     request: got
 }
 
