@@ -1,4 +1,5 @@
 const Action = require("./action");
+const EventType = require("../events/EventType");
 
 const client_id = 'eab7cdc09f6346bbacd253f46f157a9b';
 const client_secret = '3ee4d175c21a444998315efed44f3677';
@@ -39,7 +40,12 @@ function getSentence(track) {
     let song_name = track.name;
     let song_artist = track.artists[0].name;
     //let song_link = track.external_urls.spotify;
-    return (song_name + " " + song_artist);
+    return {
+        type: EventType.Song,
+        name: song_name,
+        artist: song_artist,
+        string: "I Liked the track " + song_artist + " - " + song_name + " on Spotify!"
+    }
 }
 
 class SPOTIFY_LIKE extends Action {

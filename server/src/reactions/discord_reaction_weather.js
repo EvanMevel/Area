@@ -8,8 +8,8 @@ class DISCORD_WEATHER extends Reaction {
     }
 
     async ingest(event, areabase) {
-        console.log(event);
-        await discord.writeMessage(event);
+        console.log(JSON.stringify(event));
+        await discord.writeMessage(event.string);
     }
 
 }

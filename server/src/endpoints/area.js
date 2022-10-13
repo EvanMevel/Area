@@ -38,8 +38,9 @@ class Create extends Endpoint {
             return;
         }
         const resp = await server.base.area.create(req.body);
-        await server.workers.loadAREA(req.body);
         if (resp.affectedRows === 1) {
+            req.body.id = resp.insertId;
+            await server.workers.loadAREA(req.body);
             res.status(201);
             res.send({
                 "message": "Created AREA with success",
