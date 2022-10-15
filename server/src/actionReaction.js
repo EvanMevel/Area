@@ -1,10 +1,16 @@
 
-const ActionList = require("./actions/actionList");
-const ReactionList = require("./reactions/reactionList");
 const registerServices = require("./services");
 
-let actionList = new ActionList();
-let reactionList = new ReactionList();
+let actionList;
+let reactionList;
+
+async function loadAll() {
+    const ActionList = require("./actions/actionList");
+    const ReactionList = require("./reactions/reactionList");
+
+    actionList = new ActionList();
+    reactionList = new ReactionList();
+}
 
 class ActionReaction {
     id;
@@ -26,7 +32,8 @@ class ActionReaction {
     async tick(server) {
         let events = await this.action.events(server);
         for (let event of events) {
-            await this.reaction.ingest(event, server);
+            console.log("[AREA] events in " + this.id);
+            this.reaction.ingest(event, server);
         }
     }
 }
@@ -40,3 +47,5 @@ async function registerAREA(areabase) {
 module.exports = ActionReaction;
 
 module.exports.registerAREA = registerAREA;
+
+module.exports.loadAll = loadAll;

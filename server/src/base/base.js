@@ -1,5 +1,4 @@
 
-const mysql = require("mysql2/promise");
 const Services = require("./services");
 const AR = require("./ar");
 const AREA = require("./area");
@@ -22,13 +21,15 @@ class Base {
     }
 
     async connect() {
+        console.log("[BASE] Loading base...");
+        const mysql = require("mysql2/promise");
         this.con = await mysql.createConnection({
             host: process.env.MYSQL_HOST,
             user: process.env.MYSQL_USER,
             password: process.env.MYSQL_PASSWORD,
             database: process.env.MYSQL_DB
         });
-        console.log("Connected to " + process.env.MYSQL_DB + "!");
+        console.log("[BASE] Connected to " + process.env.MYSQL_DB + "!");
 
         await this.users.connect(this.con);
         await this.services.connect(this.con);
@@ -38,14 +39,14 @@ class Base {
         await this.actionData.connect(this.con);
         await this.accounts.connect(this.con);
 
-        console.log("Loaded all tables!");
+        console.log("[BASE] Loaded all tables!");
     }
 
     stop() {
         if (this.con != null) {
             this.con.end();
         }
-        console.log("Disconnected to " + process.env.MYSQL_DB + "!");
+        console.log("[BASE] Disconnected to " + process.env.MYSQL_DB + "!");
     }
 
 }

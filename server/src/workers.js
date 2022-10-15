@@ -26,7 +26,11 @@ class Workers {
         });
     }
 
-    async loadAll(areaBase) {
+    async loadAll() {
+        await ActionReaction.loadAll();
+    }
+
+    async loadBase(areaBase) {
 
         await ActionReaction.registerAREA(areaBase);
 
@@ -40,7 +44,7 @@ class Workers {
         const start = Date.now();
         for (let id in this.AREAS) {
             let aa = this.AREAS[id];
-            await aa.tick(server);
+            aa.tick(server);
         }
         const elapsed = Date.now() - start;
         const waiting = Math.max(20000 - elapsed, 10000);

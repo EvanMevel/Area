@@ -103,7 +103,6 @@ class Modify extends TokenEndpoint {
                 "areaId": req.body.id
             });
         } else {
-            console.log(JSON.stringify(resp));
             res.json({
                 "message": "Nothing updated",
                 "areaId": req.body.id

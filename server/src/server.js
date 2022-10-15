@@ -1,58 +1,66 @@
-const before = Date.now();
 
-const express = require('express');
-const swaggerUi = require("swagger-ui-express");
-const got = require('got');
-const Base = require("./base/base");
-const Workers = require("./workers");
-const endpoints = require("./endpoints/endpoints");
-const tokens = require("./token");
-
-console.log("Loaded dependencies in " + (Math.round((Date.now() - before) / 100) / 10) + "s")
-
-// Constants
-const PORT = 8080;
-const HOST = '0.0.0.0';
-
-let httpServer = null;
+const httpSrv = require("./httpServer");
 
 let server = {
-    base: new Base(),
-    workers: new Workers(),
-    tokens: tokens,
-    request: got
 }
 
 async function closeGracefully() {
-    server.base.stop();
-    if (httpServer != null) {
-        console.log("Stopping server...");
-        httpServer.close();
+    if (server.base != null) {
+        await server.base.stop();
     }
+    await httpSrv.stop();
     process.exit(0);
 }
 
 process.on('SIGTERM', closeGracefully);
 
-server.base.connect().then(async () => {
-    await server.workers.loadAll(server.base);
+async function loadBase() {
+    const Base = require("./base/base");
+    server.base = new Base();
+
+    await server.base.connect();
+}
+
+async function loadBaseWorkers() {
+    const Workers = require("./workers");
+    server.workers = new Workers();
+
+    await server.workers.loadAll();
+}
+
+async function loadWorkers() {
+    await server.workers.loadBase(server.base);
     await server.workers.tickAll(server);
-});
+}
 
-// App
-const app = express();
-app.use(express.json());
+async function loadTokens() {
+    server.tokens = await require("./token");
+    console.log("[TOKENS] Loaded tokens");
+}
 
-// Swagger
-const swaggerDocument = require("./docs/swagger.js");
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.get("/", function (req, res) {
-    res.redirect("/api-docs");
-});
+async function loadGot() {
+    server.request = require('got');
+    console.log("[GOT] Loaded got");
+}
 
-// API endpoints
-endpoints(app, server);
+async function loadWorkersLogic() {
+    await Promise.all([
+        loadBaseWorkers(),
+        loadBase(),
+        loadGot()
+    ]);
+    await loadWorkers();
+}
 
-httpServer = app.listen(PORT, HOST, () => {
-    console.log(`Running on http://${HOST}:${PORT}`);
-});
+async function loadAll() {
+    const before = Date.now();
+    Promise.all([
+        loadTokens(),
+        httpSrv.loadAll(server),
+        loadWorkersLogic()
+    ]).then(() => {
+        console.log("----- Loaded all in " + (Math.round((Date.now() - before) / 100) / 10) + "s" + "-----");
+    });
+}
+
+loadAll();

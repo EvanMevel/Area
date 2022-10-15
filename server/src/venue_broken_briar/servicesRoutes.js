@@ -36,12 +36,6 @@ function registerServicesRoutes(app, express, server)
 
     app.use("/api/services/login", login)
     app.use("/api/services/callback", callback)
-
-    login.stack.forEach(function(r){
-        if (r.route && r.route.path){
-            console.log(r.route.path)
-        }
-    })
 }
 
 module.exports = registerServicesRoutes;

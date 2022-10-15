@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+
 const secret = "8ybH2bbjeniaP8HNupR75m9bhFVBC5%&mwzBDZKhuS6S7C3A^Zo8vax^jP&BmzERLNW#ZjT4oFjf5ayX&Rq38YCauDJfrpBRiXpikeFaSaB!VNSN2WajzSmTV4VZmHYA"
 
 function generate(userId) {
