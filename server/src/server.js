@@ -1,15 +1,14 @@
 
 const httpSrv = require("./httpServer");
 
-let server = {
-}
+let server = {}
 
 async function closeGracefully() {
     if (server.base != null) {
         await server.base.stop();
     }
-    if (server.workers != null) {
-        server.workers.stop();
+    if (server.areas != null) {
+        server.areas.stop();
     }
     await httpSrv.stop();
     process.exit(0);
@@ -21,19 +20,19 @@ async function loadBase() {
     const Base = require("./base/base");
     server.base = new Base();
 
-    await server.base.connect();
+    return server.base.connect();
 }
 
-async function loadBaseWorkers() {
-    const Workers = require("./workers");
-    server.workers = new Workers();
+async function loadBaseAREAS() {
+    const AREAList = require("./areaList");
+    server.areas = new AREAList();
 
-    await server.workers.loadAll();
+    await server.areas.loadAll();
 }
 
 async function loadWorkers() {
-    await server.workers.loadBase(server.base);
-    await server.workers.tickAll(server);
+    await server.areas.loadBase(server.base);
+    await server.areas.tickAll(server);
 }
 
 async function loadTokens() {
@@ -46,9 +45,9 @@ async function loadGot() {
     console.log("[GOT] Loaded got");
 }
 
-async function loadWorkersLogic() {
+async function loadAREALogic() {
     await Promise.all([
-        loadBaseWorkers(),
+        loadBaseAREAS(),
         loadBase(),
         loadGot()
     ]);
@@ -60,9 +59,9 @@ async function loadAll() {
     Promise.all([
         loadTokens(),
         httpSrv.loadAll(server),
-        loadWorkersLogic()
+        loadAREALogic()
     ]).then(() => {
-        console.log("----- Loaded all in " + (Math.round((Date.now() - before) / 100) / 10) + "s" + "-----");
+        console.log("----- Loaded all in " + (Math.round((Date.now() - before) / 100) / 10) + "s -----");
     });
 }
 

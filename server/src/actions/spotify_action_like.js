@@ -1,5 +1,5 @@
 const Action = require("./action");
-const EventType = require("../events/EventType");
+const EventType = require("../eventType");
 
 const client_id = 'eab7cdc09f6346bbacd253f46f157a9b';
 const client_secret = '3ee4d175c21a444998315efed44f3677';

@@ -1,38 +1,34 @@
 
 const Endpoint = require("./endpoint");
+const BadRequest = require("./badRequest");
 
 class Register extends Endpoint {
 
-    alreadyExist(exists, res, fieldName) {
+    alreadyExist(fieldName, exists) {
         if (exists.length !== 0) {
-            this.message(res, "User with this " + fieldName + " already exists!", 400);
-            return true;
+            throw new BadRequest("User with this " + fieldName + " already exists!");
         }
-        return false;
     }
 
     async called(req, res, server) {
-        this.checkFieldsExist(res, req.body, ["name", "email", "password"]);
+        this.checkFieldsExist(req.body, ["name", "email", "password"]);
 
-        if (this.alreadyExist(
-            await server.base.users.nameAlreadyExist(req.body.name),
-            res, "name")) {
-            return
-        }
-        if (this.alreadyExist(
-            await server.base.users.emailAlreadyExist(req.body.email),
-            res, "email")) {
-            return
-        }
+        this.alreadyExist("name",
+            await server.base.users.nameAlreadyExist(req.body.name))
+
+        this.alreadyExist("email",
+            await server.base.users.emailAlreadyExist(req.body.email))
+
         let resp = await server.base.users.register(req.body.name, req.body.email, req.body.password);
         if (resp.affectedRows !== 1) {
-            this.message(res, "Server error!", 500);
-            return;
+            throw new Error("User registration sql should respond with a result, got an empty response instead!")
         }
         const token = server.tokens.generate(resp.insertId);
-        res.json({
-            token: token
-        });
+        res.json(
+            {
+                "token": token
+            }
+        );
     }
 }
 

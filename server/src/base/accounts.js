@@ -22,27 +22,23 @@ class Accounts extends Table {
             q(service) + ", " +
             q(token) +
             ")";
-        const [rows, fields] = await this.con.query(sql);
-        return rows;
+        return this.query(sql);
     }
 
     async delete(userId, service) {
         const sql = "DELETE FROM Accounts WHERE " +
             "Accounts.userId = " + q(userId) +
             " AND Accounts.service = " + q(service);
-        const [rows, fields] = await this.con.query(sql);
-        return rows;
+        return this.query(sql);
     }
 
     async getUser(userId) {
-        const [rows, fields] = await this.con.query("Select service, token FROM Accounts WHERE Accounts.userId = " + q(userId));
-        return rows;
+        return this.query("Select service, token FROM Accounts WHERE Accounts.userId = " + q(userId));
     }
 
     async getToken(userId, service) {
-        const [rows, fields] = await this.con.query("Select token FROM Accounts WHERE Accounts.userId = " + q(userId) +
+        return this.query("Select token FROM Accounts WHERE Accounts.userId = " + q(userId) +
             " AND Accounts.service = " + q(service));
-        return rows;
     }
 
 }

@@ -1,4 +1,6 @@
 
+const BadRequest = require("./badRequest");
+
 class Endpoint {
 
     async called(req, res, server) {
@@ -15,21 +17,16 @@ class Endpoint {
         });
     }
 
-    checkFieldExist(res, obj, field) {
+    checkFieldExist(obj, field) {
         if (obj[field] == null) {
-            this.message(res, "No " + field + " specified!", 400);
-            return false;
+            throw new BadRequest("No " + field + " specified!");
         }
-        return true;
     }
 
-    checkFieldsExist(res, obj, fields) {
+    checkFieldsExist(obj, fields) {
         for (let field of fields) {
-            if (!this.checkFieldExist(res, obj, field)) {
-                return false;
-            }
+            this.checkFieldExist(obj, field)
         }
-        return true;
     }
 
 }

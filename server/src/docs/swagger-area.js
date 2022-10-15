@@ -31,8 +31,8 @@ const createAREA = {
         }
     },
     "example": {
-        "actionId": "fb_test",
-        "reactionId": "fb_test_t"
+        "actionId": "spotify_action_like",
+        "reactionId": "discord_reaction_weather"
     }
 }
 

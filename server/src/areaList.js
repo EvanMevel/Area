@@ -1,12 +1,12 @@
 
 const ActionReaction = require("./actionReaction");
 
-class Workers {
+class AREAList {
 
     AREAS = {};
 
-    loadAREA(areaO) {
-        this.AREAS[areaO.id] = new ActionReaction(areaO.id, areaO.userId, areaO.actionId, areaO.reactionId);
+    loadAREA(id, userId, actionId, reactionId) {
+        this.AREAS[id] = new ActionReaction(id, userId, actionId, reactionId);
     }
 
     removeAREA(id) {
@@ -18,16 +18,11 @@ class Workers {
         let actionId = areaO.actionId || area.actionId;
         let reactionId = areaO.reactionId || area.reactionId;
         this.removeAREA(areaO.id);
-        this.loadAREA({
-            id: areaO.id,
-            userId: areaO.userId,
-            actionId: actionId,
-            reactionId: reactionId
-        });
+        this.loadAREA(areaO.id, areaO.userId, actionId, reactionId);
     }
 
     async loadAll() {
-        await ActionReaction.loadAll();
+        return ActionReaction.loadAll();
     }
 
     async loadBase(areaBase) {
@@ -36,7 +31,8 @@ class Workers {
 
         let ARS = await areaBase.area.getAll();
         for (let i = 0; i < ARS.length; i++) {
-            await this.loadAREA(ARS[i]);
+            const area = ARS[i];
+            await this.loadAREA(area.id, area.userId, area.actionId, area.reactionId);
         }
     }
 
@@ -49,7 +45,7 @@ class Workers {
         const elapsed = Date.now() - start;
         const waiting = Math.max(20000 - elapsed, 10000);
         setTimeout(function () {
-            server.workers.tickAll(server);
+            server.areas.tickAll(server);
         }, waiting);
     }
 
@@ -59,4 +55,4 @@ class Workers {
 
 }
 
-module.exports = Workers;
+module.exports = AREAList;

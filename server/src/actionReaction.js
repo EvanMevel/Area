@@ -30,18 +30,28 @@ class ActionReaction {
     }
 
     async tick(server) {
-        let events = await this.action.events(server);
-        for (let event of events) {
-            console.log("[AREA] events in " + this.id);
-            this.reaction.ingest(event, server);
+        try {
+            let events = await this.action.events(server);
+            for (let event of events) {
+                console.log("[AREA] events in " + this.id);
+                this.reaction.ingest(event, server).catch((e) => {
+                    console.error("Error executing event " + JSON.stringify(event));
+                    console.error("With reaction " + this.reactionId)
+                    console.error(e);
+                });
+            }
+        } catch (e) {
+            console.error("Error retrieving events from " + this.actionId + ": ");
+            console.error(e);
         }
     }
 }
 
 async function registerAREA(areabase) {
     await registerServices(areabase);
-    await actionList.register(areabase);
-    await reactionList.register(areabase);
+
+    return Promise.all([actionList.register(areabase),
+        reactionList.register(areabase)]);
 }
 
 function stop() {

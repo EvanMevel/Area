@@ -6,10 +6,24 @@ const register = require("./register");
 const accounts = require("./accounts");
 const registerServicesRoutes = require("../venue_broken_briar/servicesRoutes")
 const registerFilesRoutes = require("./files");
+const BadRequest = require("./badRequest");
 
 function call(server, endpoint) {
-    return function (req, res)  {
-        endpoint.called(req, res, server);
+    return async function (req, res)  {
+        try {
+            await endpoint.called(req, res, server);
+        } catch (e) {
+            if (e instanceof BadRequest) {
+                res.status(400).json(
+                    {
+                        "message": e.message
+                    }
+                );
+                return;
+            }
+            console.error(e);
+            res.status(500).send("Internal server error");
+        }
     }
 }
 

@@ -17,22 +17,19 @@ class Users extends Table {
 
     async login(name) {
         const sql = "SELECT id, password FROM `Users` WHERE name = " + q(name);
-        const [rows, fields] = await this.con.query(sql);
-        return rows;
+        return this.query(sql);
     }
 
     async nameAlreadyExist(name) {
         const sql = "SELECT id FROM Users WHERE " +
             "name = " + q(name);
-        const [rows, fields] = await this.con.query(sql);
-        return rows;
+        return this.query(sql);
     }
 
     async emailAlreadyExist(email) {
         const sql = "SELECT id FROM Users WHERE " +
             "email = " + q(email);
-        const [rows, fields] = await this.con.query(sql);
-        return rows;
+        return this.query(sql);
     }
 
     async register(name, email, password) {
@@ -42,8 +39,7 @@ class Users extends Table {
             q(email) + ", " +
             q(password) +
             ")";
-        const [rows, fields] = await this.con.query(sql);
-        return rows;
+        return this.query(sql);
     }
 
 }

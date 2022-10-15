@@ -1,5 +1,5 @@
 const Action = require('./action');
-const EventType = require("../events/EventType");
+const EventType = require("../eventType");
 
 const token = "ee775a81f3d9965a0bca1a2e0da2aa7e845b4a976eb0d955c53ea90a4e2efba8";
 

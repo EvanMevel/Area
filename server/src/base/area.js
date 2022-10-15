@@ -18,13 +18,11 @@ class AREA extends Table {
     }
 
     async getAll() {
-        const [rows, fields] = await this.con.query("SELECT * FROM ActionReactions");
-        return rows;
+        return this.query("SELECT * FROM ActionReactions");
     }
 
     async getUser(userId) {
-        const [rows, fields] = await this.con.query("SELECT id, actionId, reactionId FROM ActionReactions WHERE userId = " + userId);
-        return rows;
+        return this.query("SELECT id, actionId, reactionId FROM ActionReactions WHERE userId = " + userId);
     }
 
     async create(userId, actionId, reactionId) {
@@ -33,15 +31,13 @@ class AREA extends Table {
             q(actionId) + ", " +
             q(reactionId) +
             ")";
-        const [rows, fields] = await this.con.query(sql);
-        return rows;
+        return this.query(sql);
     }
 
     async delete(id, userId) {
-        const [rows, fields] = await this.con.query("DELETE FROM ActionReactions WHERE " +
+        return this.query("DELETE FROM ActionReactions WHERE " +
             "ActionReactions.id = " + id + " AND " +
             "ActionReactions.userId = " + userId);
-        return rows;
     }
 
     async editActionReaction(area) {
@@ -56,15 +52,13 @@ class AREA extends Table {
             sql += "reactionId = " + q(area.reactionId);
         }
         sql += " WHERE ActionReactions.id = " + area.id;
-        const [rows, fields] = await this.con.query(sql);
-        return rows;
+        return this.query(sql);
     }
 
     async hasPermission(id, userId) {
-        const [rows, fields] = await this.con.query("SELECT id FROM ActionReactions WHERE " +
+        return this.query("SELECT id FROM ActionReactions WHERE " +
             "userId = " + userId + " AND " +
             "id = " + id);
-        return rows;
     }
 }
 

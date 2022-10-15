@@ -1,5 +1,5 @@
 const Reaction = require('./reaction');
-const EventType = require("../events/EventType");
+const EventType = require("../eventType");
 
 const user_id = "5145325362";
 const access_token = "frWv67bkYctVHBxUctx2yO1XJm8HYEmD0NgS3M9d2fmHfAwkXH";
@@ -24,7 +24,7 @@ class DEEZER_LIKE extends Reaction {
         if (event.type === EventType.Song) {
             await likeASong(event.artist + " - " + event.name, server);
         } else {
-            console.log("DeezerLike: Cant process event " + event.string);
+            console.error("DeezerLike: Cant process event " + event.string);
         }
     }
 

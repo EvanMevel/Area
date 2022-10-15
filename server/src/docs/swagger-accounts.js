@@ -13,47 +13,6 @@ const account = {
     }
 }
 
-const createAREA = {
-    "type": "object",
-    "properties": {
-        "actionId": {
-            "type": "string",
-            "description": "id of the action"
-        },
-        "reactionId": {
-            "type": "string",
-            "description": "id of the action"
-        }
-    },
-    "example": {
-        "actionId": "fb_test",
-        "reactionId": "fb_test_t"
-    }
-}
-
-const modifyAREA = {
-    "type": "object",
-    "properties": {
-        "id": {
-            "type": "id",
-            "description": "id of the area"
-        },
-        "actionId": {
-            "type": "string",
-            "description": "id of the action"
-        },
-        "reactionId": {
-            "type": "string",
-            "description": "id of the action"
-        }
-    },
-    "example": {
-        "id": 1,
-        "actionId": "fb_test",
-        "reactionId": "fb_test_t"
-    }
-}
-
 const createAnswer = {
     "type": "object",
     "properties": {

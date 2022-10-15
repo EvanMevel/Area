@@ -20,6 +20,20 @@ class Base {
     constructor() {
     }
 
+    async connectAREA() {
+        await this.services.connect(this.con);
+        await Promise.all([
+            this.actions.connect(this.con),
+            this.reactions.connect(this.con)]);
+
+    }
+
+    async connectAREAData() {
+        await this.area.connect(this.con);
+
+        await this.actionData.connect(this.con);
+    }
+
     async connect() {
         console.log("[BASE] Loading base...");
         const mysql = require("mysql2/promise");
@@ -31,13 +45,16 @@ class Base {
         });
         console.log("[BASE] Connected to " + process.env.MYSQL_DB + "!");
 
-        await this.users.connect(this.con);
-        await this.services.connect(this.con);
-        await this.actions.connect(this.con);
-        await this.reactions.connect(this.con);
-        await this.area.connect(this.con);
-        await this.actionData.connect(this.con);
-        await this.accounts.connect(this.con);
+        await Promise.all([
+            this.users.connect(this.con),
+            this.connectAREA()
+        ]);
+
+        await Promise.all([
+            this.accounts.connect(this.con),
+            this.connectAREAData()
+        ]);
+
 
         console.log("[BASE] Loaded all tables!");
     }

@@ -12,9 +12,7 @@ class List extends TokenEndpoint {
 class Delete extends TokenEndpoint {
 
     async authCalled(req, res, server, userId) {
-        if (!this.checkFieldExist(res, req.query, "service")) {
-            return;
-        }
+        this.checkFieldExist(req.query, "service")
         const resp = await server.base.accounts.delete(userId, req.query.service);
         if (resp.affectedRows === 1) {
             this.message(res, "Deleted account with success", 200);
@@ -27,9 +25,8 @@ class Delete extends TokenEndpoint {
 class Create extends TokenEndpoint {
 
     async authCalled(req, res, server, userId) {
-        if (!this.checkFieldsExist(res, req.body, ["service", "token"])) {
-            return;
-        }
+        this.checkFieldsExist(req.body, ["service", "token"])
+
         const resp = await server.base.accounts.getToken(userId, req.body.service);
         if (resp.length !== 0) {
             this.message(res, "Account with this service already exists", 400);
