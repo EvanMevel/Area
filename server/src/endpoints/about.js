@@ -11,6 +11,13 @@ function filterAndCleanup(service, array) {
     return result;
 }
 
+function getFiles(service) {
+    return {
+        "logo": "http://localhost:8080/files/" + service + "/" + service + ".png",
+        "large": "http://localhost:8080/files/" + service + "/" + service + "-large.png"
+    }
+}
+
 function getService(service, actions, reactions) {
     let serviceActions = filterAndCleanup(service, actions);
     let serviceReactions = filterAndCleanup(service, reactions);
@@ -18,6 +25,7 @@ function getService(service, actions, reactions) {
     let resp = service;
     resp["actions"] = serviceActions;
     resp["reactions"] = serviceReactions;
+    resp.files = getFiles(service.name);
     return resp;
 }
 

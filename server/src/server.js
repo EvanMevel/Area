@@ -8,6 +8,9 @@ async function closeGracefully() {
     if (server.base != null) {
         await server.base.stop();
     }
+    if (server.workers != null) {
+        server.workers.stop();
+    }
     await httpSrv.stop();
     process.exit(0);
 }

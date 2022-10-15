@@ -15,4 +15,10 @@ class DISCORD_WEATHER extends Reaction {
 
 }
 
+function stop() {
+    discord.stop();
+}
+
 module.exports = DISCORD_WEATHER;
+
+module.exports.stop = stop;

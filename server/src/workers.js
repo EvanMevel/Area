@@ -52,6 +52,11 @@ class Workers {
             server.workers.tickAll(server);
         }, waiting);
     }
+
+    stop() {
+        ActionReaction.stop();
+    }
+
 }
 
 module.exports = Workers;

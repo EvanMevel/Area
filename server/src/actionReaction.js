@@ -44,8 +44,15 @@ async function registerAREA(areabase) {
     await reactionList.register(areabase);
 }
 
+function stop() {
+    reactionList.stop();
+    actionList.stop();
+}
+
 module.exports = ActionReaction;
 
 module.exports.registerAREA = registerAREA;
 
 module.exports.loadAll = loadAll;
+
+module.exports.stop = stop;

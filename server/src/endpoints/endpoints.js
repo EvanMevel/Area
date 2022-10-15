@@ -5,6 +5,7 @@ const login = require("./login");
 const register = require("./register");
 const accounts = require("./accounts");
 const registerServicesRoutes = require("../venue_broken_briar/servicesRoutes")
+const registerFilesRoutes = require("./files");
 
 function call(server, endpoint) {
     return function (req, res)  {
@@ -39,6 +40,8 @@ function registerRoutes(app, server) {
     app.use("/api", router);
 
     registerServicesRoutes(app, express, server);
+
+    registerFilesRoutes(app, express);
 }
 
 module.exports = registerRoutes;

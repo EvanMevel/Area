@@ -11,6 +11,10 @@ class ReactionList extends ARList {
         this.add(DEEZER_LIKE, "deezer_reaction_like", "Deezer Like", "Likes the track on Deezer", "deezer");
         this.add(DISCORD_WEATHER, "discord_reaction_weather", "Discord Weather", "Sends message on discord with weather", "discord");
     }
+
+    stop(server) {
+        DISCORD_WEATHER.stop();
+    }
 }
 
 module.exports = ReactionList;
