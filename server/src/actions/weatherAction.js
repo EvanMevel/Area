@@ -36,7 +36,7 @@ async function getWeatherFromHour(server) {
     }
 }
 
-class GET_WEATHER extends Action {
+class Weather extends Action {
 
     constructor(areaId, userId) {
         super(areaId, userId);
@@ -48,4 +48,4 @@ class GET_WEATHER extends Action {
     }
 }
 
-module.exports = GET_WEATHER;
+module.exports = Weather;

@@ -13,7 +13,7 @@ async function likeASong(track_name, server, access_token) {
     await server.request.post("https://api.deezer.com/user/" + user_id + "/tracks?track_id=" + track_id + "&access_token=" + access_token);
 }
 
-class DEEZER_LIKE extends OAuthReaction {
+class DeezerLike extends OAuthReaction {
 
     constructor(areaId, userId) {
         super(areaId, userId, 'deezer');
@@ -24,8 +24,9 @@ class DEEZER_LIKE extends OAuthReaction {
             await likeASong(event.artist + " - " + event.name, server, token);
         } else {
             console.error("DeezerLike: Cant process event " + event.string);
-        }    }
+        }
+    }
 
 }
 
-module.exports = DEEZER_LIKE;
+module.exports = DeezerLike;

@@ -1,6 +1,5 @@
 const OAuthAction = require("./oAuthAction");
 const EventType = require("../eventType");
-const {registerAREA} = require("../actionReaction");
 
 const client_id = 'eab7cdc09f6346bbacd253f46f157a9b';
 const client_secret = '3ee4d175c21a444998315efed44f3677';
@@ -49,7 +48,7 @@ function getSentence(track) {
     }
 }
 
-class SPOTIFY_LIKE extends OAuthAction {
+class SpotifyLike extends OAuthAction {
 
     constructor(areaId, userId) {
         super(areaId, userId, 'spotify');
@@ -68,4 +67,4 @@ class SPOTIFY_LIKE extends OAuthAction {
 
 }
 
-module.exports = SPOTIFY_LIKE;
+module.exports = SpotifyLike;

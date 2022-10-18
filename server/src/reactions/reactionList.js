@@ -1,19 +1,19 @@
 
 const ARList = require("../ARList");
 const Reaction = require("./reaction");
-const DEEZER_LIKE = require('./deezer_reaction_like');
-//const DISCORD_WEATHER = require('./discord_reaction_weather');
+const DeezerLike = require('./deezerLike');
+const DiscordMessage = require('./discordMessage');
 
 class ReactionList extends ARList {
 
     constructor() {
         super("reactions", Reaction);
-        this.add(DEEZER_LIKE, "deezer_reaction_like", "Deezer Like", "Likes the track on Deezer", "deezer");
-        //this.add(DISCORD_WEATHER, "discord_reaction_weather", "Discord Weather", "Sends message on discord with weather", "discord");
+        this.add(DeezerLike, "deezer_reaction_like", "Deezer Like", "Likes the track on Deezer", "deezer");
+        this.add(DiscordMessage, "discord_reaction_message", "Discord Message", "Sends message on discord", "discord");
     }
 
     stop(server) {
-        DISCORD_WEATHER.stop();
+        DiscordMessage.stop();
     }
 }
 

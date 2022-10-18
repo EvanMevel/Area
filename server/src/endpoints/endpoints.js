@@ -1,10 +1,10 @@
 const express = require("express");
 const about = require("./about");
-const action_reaction = require("./area");
+const area = require("./area");
 const login = require("./login");
 const register = require("./register");
 const accounts = require("./accounts");
-const registerServicesRoutes = require("../venue_broken_briar/servicesRoutes")
+const registerServicesRoutes = require("../connect/servicesRoutes")
 const registerFilesRoutes = require("./files");
 const BadRequest = require("./badRequest");
 
@@ -33,13 +33,13 @@ function registerRoutes(app, server) {
 
     const router = express.Router();
 
-    router.get("/area_list", call(server, action_reaction.list));
+    router.get("/area_list", call(server, area.list));
 
-    router.post("/area", call(server, action_reaction.create));
+    router.post("/area", call(server, area.create));
 
-    router.put("/area", call(server, action_reaction.modify));
+    router.put("/area", call(server, area.modify));
 
-    router.delete("/area", call(server, action_reaction.delete));
+    router.delete("/area", call(server, area.delete));
 
     router.post("/login", call(server, login));
 

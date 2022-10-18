@@ -2,7 +2,7 @@ const Reaction = require('./reaction');
 
 const discord = require('./discordBot/discordBot')
 
-class DISCORD_WEATHER extends Reaction {
+class DiscordMessage extends Reaction {
 
     constructor(areaId, userId) {
         super(areaId, userId);
@@ -19,6 +19,6 @@ function stop() {
     discord.stop();
 }
 
-module.exports = DISCORD_WEATHER;
+module.exports = DiscordMessage;
 
 module.exports.stop = stop;
