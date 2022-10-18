@@ -30,7 +30,7 @@ class DeezerService extends ConnectServices {
         const body = await server.request.post("https://connect.deezer.com/oauth/access_token.php?" + searchParams);
         const access_token = body.body.substring(body.body.indexOf('=') + 1, body.body.indexOf('&'));
         server.base.accounts.create(userId, "deezer", access_token);
-        res.send("coucou");
+        res.redirect("http://localhost:8081");
     }
 }
 module.exports = new DeezerService();

@@ -8,7 +8,7 @@ class Action {
         this.userId = userId;
     }
 
-    async events(areabase) {
+    async events(server) {
         return [];
     }
 }

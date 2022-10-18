@@ -1,32 +1,30 @@
-const Reaction = require('./reaction');
+const OAuthReaction = require('./oAuthReaction');
 const EventType = require("../eventType");
 
 const user_id = "5145325362";
-const access_token = "frWv67bkYctVHBxUctx2yO1XJm8HYEmD0NgS3M9d2fmHfAwkXH";
 
-async function getTrackId(track_name, server) {
+async function getTrackId(track_name, server, access_token) {
     const body = await server.request.get("https://api.deezer.com/search?acces_token=" + access_token + "&q=" + track_name).json();
     return body.data[0].id;
 }
 
-async function likeASong(track_name, server) {
-    let track_id = await getTrackId(track_name, server);
+async function likeASong(track_name, server, access_token) {
+    let track_id = await getTrackId(track_name, server, access_token);
     await server.request.post("https://api.deezer.com/user/" + user_id + "/tracks?track_id=" + track_id + "&access_token=" + access_token);
 }
 
-class DEEZER_LIKE extends Reaction {
+class DEEZER_LIKE extends OAuthReaction {
 
     constructor(areaId, userId) {
-        super(areaId, userId);
+        super(areaId, userId, 'deezer');
     }
 
-    async ingest(event, server) {
+    async oAuthIngest(event, server, token) {
         if (event.type === EventType.Song) {
-            await likeASong(event.artist + " - " + event.name, server);
+            await likeASong(event.artist + " - " + event.name, server, token);
         } else {
             console.error("DeezerLike: Cant process event " + event.string);
-        }
-    }
+        }    }
 
 }
 

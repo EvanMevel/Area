@@ -41,7 +41,7 @@ class SpotifyService extends ConnectServices {
             console.log(error.response.body);
         }
         server.base.accounts.create(userId, "spotify", body.refresh_token)
-        res.send("ahaha");
+        res.redirect("http://localhost:8081");
     }
 }
 
