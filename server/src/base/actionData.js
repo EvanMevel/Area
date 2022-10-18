@@ -15,8 +15,7 @@ class ActionData extends Table {
     }
 
     async get(areaId) {
-        const [rows, fields] = await this.con.query("SELECT data FROM ActionsData WHERE actionReactionId = " + areaId);
-        return rows;
+        return this.query("SELECT data FROM ActionsData WHERE actionReactionId = " + areaId);
     }
 
     async getString(areId) {
@@ -24,17 +23,21 @@ class ActionData extends Table {
         if (data == null || data[0] == null) {
             return null;
         }
-        var buffer = Buffer.from(data[0].data, "binary");
+        const buffer = Buffer.from(data[0].data, "binary");
         return buffer.toString();
     }
 
     async set(areaId, data) {
-        const [rows, fields] = await this.con.query("REPLACE INTO ActionsData (actionReactionId, data) VALUES (" +
+        return this.query("REPLACE INTO ActionsData (actionReactionId, data) VALUES (" +
             q(areaId)  + ", " +
             q(data) +
             ")");
-        return rows;
     }
+
+    async delete(areaId) {
+        return this.query("DELETE FROM ActionsData WHERE actionReactionId = " + areaId);
+    }
+
 }
 
 module.exports = ActionData;

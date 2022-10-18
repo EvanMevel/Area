@@ -1,5 +1,6 @@
 const Reaction = require('./reaction');
-const discord = require('../discordBot/discordBot')
+
+const discord = require('./discordBot/discordBot')
 
 class DISCORD_WEATHER extends Reaction {
 
@@ -9,9 +10,15 @@ class DISCORD_WEATHER extends Reaction {
 
     async ingest(event, areabase) {
         console.log(JSON.stringify(event));
-        await discord.writeMessage(event.string);
+        return discord.writeMessage(event.string);
     }
 
 }
 
+function stop() {
+    discord.stop();
+}
+
 module.exports = DISCORD_WEATHER;
+
+module.exports.stop = stop;

@@ -1,74 +1,89 @@
 
-const Endpoint = require("./endpoint");
+const TokenEndpoint = require("./tokenEndpoint");
+const BadRequest = require("./badRequest");
 
-class List extends Endpoint {
-
-    async called(req, res, server) {
-        if (!this.checkFieldExist(res, req.query, "userId")) {
-            return;
-        }
-        let userAREA = await server.base.area.getUser(req.query.userId);
-        userAREA.forEach(function (area) {
-            delete area["userId"];
-        });
-        res.send(userAREA);
+async function checkValidInDb(basePoint, name, field) {
+    const resp = await basePoint.exists(name);
+    if (resp.length !== 1) {
+        throw new BadRequest("No " + field + " with such name");
     }
 }
 
-class Delete extends Endpoint {
+class List extends TokenEndpoint {
 
-    async called(req, res, server) {
-        if (!this.checkFieldExist(res, req.query, "id")) {
-            return;
-        }
-        const resp = await server.base.area.delete(req.query.id);
+    async authCalled(req, res, server, id) {
+        let userAREA = await server.base.area.getUser(id);
+        res.json(userAREA);
+    }
+}
+
+class Delete extends TokenEndpoint {
+
+    async authCalled(req, res, server, userId) {
+        this.checkFieldExist(req.query, "id")
+
+        await server.base.actionData.delete(req.query.id);
+
+        const resp = await server.base.area.delete(req.query.id, userId);
         if (resp.affectedRows === 1) {
-            server.workers.removeAREA(req.query.id);
+            server.areas.removeAREA(req.query.id);
             this.message(res, "Deleted AREA with success", 200);
         } else {
-            this.message(res, "Already deleted", 200);
+            this.message(res, "Already deleted or dont exist", 200);
         }
     }
 }
 
-class Create extends Endpoint {
+class Create extends TokenEndpoint {
 
-    async called(req, res, server) {
-        if (!this.checkFieldsExist(res, req.body, ["userId", "actionId", "reactionId"])) {
-            return;
-        }
-        const resp = await server.base.area.create(req.body);
+    async authCalled(req, res, server, id) {
+        this.checkFieldsExist(req.body, ["actionId", "reactionId"])
+        await checkValidInDb(server.base.actions, req.body.actionId, "action")
+        await checkValidInDb(server.base.reactions, req.body.reactionId, "reaction")
+
+        const resp = await server.base.area.create(id, req.body.actionId, req.body.reactionId);
+
         if (resp.affectedRows === 1) {
-            req.body.id = resp.insertId;
-            await server.workers.loadAREA(req.body);
-            res.status(201);
-            res.send({
-                "message": "Created AREA with success",
-                "insertId": resp.insertId
-            });
+            await server.areas.loadAREA(resp.insertId, id, req.body.actionId, req.body.reactionId);
+
+            res.status(201).json(
+                {
+                    "message": "Created AREA with success",
+                    "areaId": resp.insertId
+                }
+            );
+        } else {
+            throw new Error("AREA creation sql should return a response, got an empty response instead!")
         }
     }
 }
 
-class Modify extends Endpoint {
+class Modify extends TokenEndpoint {
 
-    //TODO this will not work if only actionId or reactionId is specified
-    async called(req, res, server) {
-        if (!this.checkFieldExist(res, req.body, "id")) {
-            return;
+    async authCalled(req, res, server, userId) {
+        this.checkFieldExist(req.body, "id")
+
+        if (req.body.actionId == null && req.body.reactionId == null) {
+            throw new BadRequest("No actionId or reactionId specified!")
         }
-        if (req.body["actionId"] == null && req.body["reactionId"]) {
-            this.message(res, "No actionId or reactionId specified!", 400);
-            return;
+        if (req.body.actionId) {
+            await checkValidInDb(server.base.actions, req.body.actionId, "action", res)
+        }
+        if (req.body.reactionId) {
+            await checkValidInDb(server.base.reactions, req.body.reactionId, "reaction", res)
+        }
+        const hasPerm = await server.base.area.hasPermission(req.body.id, userId);
+        if (hasPerm.length === 0) {
+            throw new BadRequest("No AREA with this id");
         }
         const resp = await server.base.area.editActionReaction(req.body);
-        server.workers.removeAREA(req.body.id);
-        server.workers.loadAREA(req.body);
-        if (resp.affectedRows === 1) {
-            res.send({
-                "message": "Updated AREA with success"
-            });
-        }
+        server.areas.reloadAREA(req.body);
+        res.json(
+            {
+                "message": resp.affectedRows === 1 ? "Updated AREA with success" : "Nothing updated",
+                "areaId": req.body.id
+            }
+        );
     }
 }
 

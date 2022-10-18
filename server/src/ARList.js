@@ -36,6 +36,10 @@ class ARList {
         }
     }
 
+    stop(server) {
+
+    }
+
 }
 
 module.exports = ARList;

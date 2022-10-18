@@ -1,12 +1,12 @@
-const Action = require("./action");
-const EventType = require("../events/EventType");
+const OAuthAction = require("./oAuthAction");
+const EventType = require("../eventType");
+const {registerAREA} = require("../actionReaction");
 
 const client_id = 'eab7cdc09f6346bbacd253f46f157a9b';
 const client_secret = '3ee4d175c21a444998315efed44f3677';
 const redirect_uri = 'http://localhost:8080/callback';
-const refresh_token = 'AQAKjgeZbLUYBrkQgHIHgrHd7nyiApbd-upxZK7Kca1oh9T11zickgzydL0Z1NmILBAiJlJBetJ_8ftQkGAyTOzzEgTEHnVSfQfCGa9eg-wBq1XB6SiXwtCa_GiBVVX84a0';
 
-async function apiToken(server) {
+async function apiToken(server, refresh_token) {
     let form = {
         refresh_token: refresh_token,
         redirect_uri: redirect_uri,
@@ -20,13 +20,14 @@ async function apiToken(server) {
     }).json();
 }
 
-async function getAccessToken(server) {
-    const body = await apiToken(server);
+async function getAccessToken(server, refresh_token) {
+    const body = await apiToken(server, refresh_token);
     return body.access_token;
 }
 
-async function getSong(server) {
-    let token = await getAccessToken(server)
+async function getSong(server, refresh_token) {
+    let token = await getAccessToken(server, refresh_token)
+    console.log(token);
     let body = await server.request.get("https://api.spotify.com/v1/me/tracks", {
         headers: {
             'Authorization': 'Bearer ' + token,
@@ -48,14 +49,14 @@ function getSentence(track) {
     }
 }
 
-class SPOTIFY_LIKE extends Action {
+class SPOTIFY_LIKE extends OAuthAction {
 
     constructor(areaId, userId) {
-        super(areaId, userId);
+        super(areaId, userId, 'spotify');
     }
 
-    async events(server) {
-        let track = await getSong(server);
+    async oAuthEvent(server, token) {
+        let track = await getSong(server, token);
         const oldLiked = await server.base.actionData.getString(this.areaId);
         if (track.id !== oldLiked) {
             const sentence = getSentence(track);
@@ -64,6 +65,7 @@ class SPOTIFY_LIKE extends Action {
         } else
             return [];
     }
+
 }
 
 module.exports = SPOTIFY_LIKE;

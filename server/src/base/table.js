@@ -10,7 +10,12 @@ class Table {
 
     async connect(con) {
         this.con = con;
-        this.con.query(this.createSql);
+        return this.con.query(this.createSql);
+    }
+
+    async query(req) {
+        const [rows] = await this.con.query(req);
+        return rows;
     }
 
 }

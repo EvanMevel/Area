@@ -1,5 +1,5 @@
 const config = require("./config.json");
-console.log("Starting Discord bot...");
+console.log("[Discord] Starting Discord bot...");
 const Discord = require("discord.js");
 
 let client;
@@ -17,6 +17,13 @@ client = new Discord.Client({
 });
 
 client.login(config.BOT_TOKEN);
-console.log("Discord bot started!");
+console.log("[Discord] Discord bot started!");
+
+function stop() {
+    console.log("[Discord] Discord bot stopping...");
+    client.destroy();
+}
+
+module.exports.stop = stop;
 
 module.exports.writeMessage = writeMessage;

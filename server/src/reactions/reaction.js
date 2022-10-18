@@ -1,5 +1,3 @@
-
-
 class Reaction {
     areaId;
     userId;
@@ -9,7 +7,7 @@ class Reaction {
         this.userId = userId;
     }
 
-    async ingest(event, areabase) {
+    async ingest(event, server) {
     }
 }
 

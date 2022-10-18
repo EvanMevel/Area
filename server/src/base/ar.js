@@ -20,8 +20,7 @@ class AR extends Table {
     }
 
     async getAll() {
-        const [rows, fields] = await this.con.query("SELECT * FROM " + this.table);
-        return rows;
+        return this.query("SELECT * FROM " + this.table);
     }
 
     async create(name, displayName, description, service) {
@@ -31,9 +30,14 @@ class AR extends Table {
             q(description) + ", " +
             q(service) +
             " WHERE NOT EXISTS(SELECT * FROM " + this.table + " WHERE name = " + q(name) + ")";
-        const [rows, fields] = await this.con.query(sql);
-        return rows;
+        return this.query(sql);
     }
+
+    async exists(name) {
+        return this.query("SELECT name FROM " + this.table +
+            " WHERE " + this.table + ".name = " + q(name));
+    }
+
 }
 
 module.exports = AR;

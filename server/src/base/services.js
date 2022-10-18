@@ -15,8 +15,7 @@ class Services extends Table {
     }
 
     async getAllServices() {
-        const [rows, fields] = await this.con.query("SELECT * FROM Services");
-        return rows;
+        return await this.query("SELECT * FROM Services");
     }
 
     async create(name, displayName, oauth) {
@@ -25,8 +24,7 @@ class Services extends Table {
             q(displayName) + ", " +
             q(oauth) +
             " WHERE NOT EXISTS(SELECT * FROM Services WHERE name = " + q(name) + ")";
-        const [rows, fields] = await this.con.query(sql);
-        return rows;
+        return this.query(sql);
     }
 }
 

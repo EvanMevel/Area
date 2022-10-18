@@ -46,6 +46,19 @@ const service = {
             "type": "array",
             "items": reaction
         },
+        "files": {
+            "type": "object",
+            "properties": {
+                "logo": {
+                    "type": "string",
+                    "description": "Url of logo",
+                },
+                "large": {
+                    "type": "string",
+                    "description": "Url of large logo",
+                }
+            }
+        },
         "oauth": {
             "type": "boolean"
         }
@@ -97,7 +110,11 @@ const about = {
                     "name": "facebook_reaction_post",
                     "displayName": "Facebook post post",
                     "description": "Post a Facebook post"
-                }]
+                }],
+                "files": {
+                    "logo":"http://localhost:8080/files/spotify/spotify.png",
+                    "large":"http://localhost:8080/files/spotify/spotify-large.png"
+                }
             }]
         }
     }
