@@ -53,6 +53,11 @@ class AREAList {
         ActionReaction.stop();
     }
 
+
+    getCompatibleReactions(actionId) {
+        return ActionReaction.getCompatibleReactions(actionId);
+    }
+
 }
 
 module.exports = AREAList;

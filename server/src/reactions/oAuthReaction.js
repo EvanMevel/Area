@@ -2,6 +2,7 @@ const Reaction = require('./reaction')
 
 class OAuthReaction extends Reaction {
     service;
+
     constructor(areaId, userId, service) {
         super(areaId, userId);
         this.service = service;

@@ -35,11 +35,6 @@ class SpotifyService extends ConnectServices {
             }
         };
         let body = await server.request.post("https://accounts.spotify.com/api/token", authOptions).json();
-        try {
-            console.log(JSON.stringify(body));
-        } catch(error) {
-            console.log(error.response.body);
-        }
         server.base.accounts.create(userId, "spotify", body.refresh_token)
         res.redirect("http://localhost:8081");
     }

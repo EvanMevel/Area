@@ -9,13 +9,20 @@ class ARList {
         this.baseClass = baseClass;
     }
 
-    add(ar, id, name, desc, service) {
-        this.list[id] = {
+    add(ar) {
+        const desc = ar.description;
+        this.list[desc.id] = {
             ar: ar,
-            displayName: name,
-            desc: desc,
-            service: service
+            description: desc
         };
+    }
+
+    getDescription(id) {
+        const ar = this.list[id];
+        if (ar == null) {
+            return null;
+        }
+        return ar.description;
     }
 
     find(id, areaId, userId) {
@@ -29,10 +36,14 @@ class ARList {
         return new res(areaId, userId);
     }
 
+    async registerAR(areabase, desc) {
+        await areabase[this.table].create(desc.id, desc.displayName, desc.description, desc.service);
+    }
+
     async register(areabase) {
         for (let id in this.list) {
             let ar = this.list[id];
-            await areabase[this.table].create(id, ar.displayName, ar.desc, ar.service);
+            await this.registerAR(areabase, ar.description);
         }
     }
 

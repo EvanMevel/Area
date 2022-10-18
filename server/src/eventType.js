@@ -1,6 +1,7 @@
 const EventType = {
-    Song: 0,
-    Weather: 1
+    ALL: -1,
+    SONG: 0,
+    WEATHER: 1
 }
 
 module.exports = EventType;
