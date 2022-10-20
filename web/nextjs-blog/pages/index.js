@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import axios from "axios"
+import axios from 'axios';
+import React, { Component } from 'react';
 
-/*const theme = {
+
+const theme = {
   blue: {
     default: "#3f51b5",
     hover: "#283593"
@@ -12,7 +14,7 @@ import axios from "axios"
 const Button = styled.button`
   background-color: ${(props) => theme[props.theme].default};
   color: white;
-  padding: 10px 50px;
+  padding: 5px 15px;
   border-radius: 5px;
   outline: 0;
   text-transform: uppercase;
@@ -31,44 +33,108 @@ const Button = styled.button`
 
 Button.defaultProps = {
   theme: "blue"
-};*/
+};
 
-export default class HomePage extends React.Component {
-
-  state = {
-    posts: []
-   }
-
-   componentDidMount() {
-    axios.get("https://jsonplaceholder.typicode.com/posts")
-   .then(res => {
-      const posts = res.data;
-      this.setState({ posts });
-     })
-   }
-
-   render() {
-    return (
-      <button onClick={handleClick}>Make request</button>
-     <ul>
-      { this.state.posts.map(post => <li>{post.title}</li>)}
-     </ul>
-    )
-   }
+function clickMe() {
+  alert("You clicked me!");
 }
 
-/*export default function App extends React.Component {
+const ButtonToggle = styled(Button)`
+  opacity: 0.7;
+  ${({ active }) =>
+    active &&
+    `
+    opacity: 1; 
+  `}
+`;
 
-  state = { posts: [] }
-  componentDidMount(); {
-    axios.get("https://schood.fr/")
-   .then(res => {
-      const posts = res.data;
-      this.setState({ posts });
-     })
+const Tab = styled.button`
+  padding: 10px 30px;
+  cursor: pointer;
+  opacity: 0.6;
+  background: white;
+  border: 0;
+  outline: 0;
+  border-bottom: 2px solid transparent;
+  transition: ease border-bottom 250ms;
+  ${({ active }) =>
+    active &&
+    `
+    border-bottom: 2px solid black;
+    opacity: 1;
+  `}
+`;
+
+export default function App() {
+
+  state = {
+    isLoading: true,
+    users: [],
+    error: null
+  };
+
+  getFetchUsers(); {
+    this.setState({
+        loading: true
+    }, () => {
+        fetch("http://localhost:3000/posts").then(res => res.json()).then(result => this.setState({
+            loading: false,
+            users: result
+        })).catch(console.log);
+    });
   }
+
+  componentDidMount(); {
+    this.getFetchUsers();
+  }
+
+  const { users, error } = this.state;
+
+  const [data, setData] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [err, setErr] = useState('');
+
+  const handleClick = async () => {
+    setIsLoading(true);
+    try {
+      const {data} = await axios.post(
+        'https://reqres.in/api/users',
+        {name: 'Sara Connor', job: 'tintin-tin-tintiin'},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        },
+      );
+
+      console.log(JSON.stringify(data, null, 4));
+
+      setData(data);
+    } catch (err) {
+      setErr(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  console.log(data);
+
   return (
-    <>
+    <div>
+      {err && <h2>{err}</h2>}
+
+      <Button onClick={handleClick}>Make request</Button>
+
+      {isLoading && <h2>Loading...</h2>}
+
+      {data && (
+        <div>
+          <h2>Name: {data.name}</h2>
+          <h2>Job: {data.job}</h2>
+        </div>
+      )}
+      <div></div>
       <a href="https://www.twitter.com/" target="_blank">
         <Button>Twitter</Button>
       </a>
@@ -84,9 +150,29 @@ export default class HomePage extends React.Component {
       <a href="https://www.spotify.com/" target="_blank">
         <Button>Spotify</Button>
       </a>
-     <ul>
-      { this.state.posts.map(post => <li>{post.title}</li>)}
-     </ul>
-    </>
+      <React.Fragment>
+              <h1>All User</h1>
+              {
+                    error ? <p>
+              {
+                        error.message
+                    } < /p> : null}  {
+                        users.map(user => {
+                            const {
+                                adderss,
+                                name,
+                                email
+                            } = user;
+                            return (
+                            <div key={name}>
+                                <p>Name: {name}</p>
+                                <p>Email: {email}</p>
+                                <p>Address: {adderss}</p>
+                                <hr />
+                            </div>
+                            );
+                        })
+                    } < /React.Fragment></p>
+    </div>
   );
-}*/
+}
