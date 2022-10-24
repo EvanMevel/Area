@@ -1,5 +1,6 @@
 const Action = require('./action');
 const EventType = require("../eventType");
+const ActionDescription = require("./actionDescription");
 
 const token = "ee775a81f3d9965a0bca1a2e0da2aa7e845b4a976eb0d955c53ea90a4e2efba8";
 
@@ -29,7 +30,7 @@ async function getWeatherFromHour(server) {
     let rain = fore[0].probarain;
     let heat = getHeat(temp, rain);
     return {
-        type: EventType.Weather,
+        type: EventType.WEATHER,
         heat: heat,
         temp: temp,
         string: "In the next hour, the weather will be " + heat + ", with a temperature of " + temp + "°C."
@@ -49,3 +50,6 @@ class Weather extends Action {
 }
 
 module.exports = Weather;
+
+module.exports.description = new ActionDescription("weather_action", "Weather",
+    "Get Weather information", "meteo_concept", EventType.WEATHER);

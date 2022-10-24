@@ -1,4 +1,6 @@
+
 const OAuthAction = require("./oAuthAction");
+const ActionDescription = require("./actionDescription");
 const EventType = require("../eventType");
 
 async function getSong(server, access_token) {
@@ -16,7 +18,7 @@ function getSentence(track) {
     let song_artist = track.artists[0].name;
     //let song_link = track.external_urls.spotify;
     return {
-        type: EventType.Song,
+        type: EventType.SONG,
         name: song_name,
         artist: song_artist,
         string: "I Liked the track " + song_artist + " - " + song_name + " on Spotify!"
@@ -45,3 +47,6 @@ class SpotifyLike extends OAuthAction {
 }
 
 module.exports = SpotifyLike;
+
+module.exports.description = new ActionDescription("spotify_action_like", "Spotify Listen Likes",
+    "Listen to user liking a track on spotify", "spotify", EventType.SONG);

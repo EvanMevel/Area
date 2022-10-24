@@ -1,7 +1,8 @@
 const express = require("express");
 const about = require("./about");
 const area = require("./area");
-const accounts = require("./accounts");
+//const accounts = require("./accounts");
+const reactions = require("./reactions");
 const registerFilesRoutes = require("./files");
 const BadRequest = require("./badRequest");
 const strategies = require("./strategies/strategies");
@@ -16,6 +17,10 @@ function call(server, endpoint) {
                     message: e.message
                 });
                 return;
+            } else if (e instanceof server.request.HTTPError) {
+                console.error(e);
+                console.error(JSON.stringify(e.response.body));
+                res.status(500).send("Internal server error");
             }
             console.error(e);
             res.status(500).send("Internal server error");
@@ -39,9 +44,11 @@ function registerRoutes(app, server) {
     api.put("/area", call(server, area.modify));
     api.delete("/area", call(server, area.delete));
 
-    api.get("/accounts", call(server, accounts.list));
+    api.get("/reactions", call(server, reactions));
+
+    /*api.get("/accounts", call(server, accounts.list));
     api.delete("/accounts", call(server, accounts.delete));
-    api.post("/accounts", call(server, accounts.create));
+    api.post("/accounts", call(server, accounts.create));*/
 
     app.use("/api", strategies.jwt, api);
 

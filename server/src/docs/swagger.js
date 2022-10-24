@@ -5,7 +5,8 @@ const about = require("./swagger-about");
 const area = require("./swagger-area");
 const login = require("./swagger-login");
 const register = require("./swagger-register");
-const accounts = require("./swagger-accounts");
+//const accounts = require("./swagger-accounts");
+const reactions = require("./swagger-reactions");
 
 module.exports = {
     "openapi": "3.0.3",
@@ -32,11 +33,11 @@ module.exports = {
         {
             "name": "ActionReaction",
             "description": "Action Reaction"
-        },
+        }/*,
         {
             "name": "Accounts",
             "description": "Accounts"
-        }
+        }*/
     ],
     "components": {
         "securitySchemes": {
@@ -53,8 +54,9 @@ module.exports = {
         "/api/login": login,
         "/api/register": register,
         "/api/area_list": area.list,
-        "/api/area": area.area,
-        "/api/accounts": accounts
+        "/api/reactions": reactions,
+        //"/api/accounts": accounts,
+        "/api/area": area.area
     },
     "security": [ { "Bearer": [] } ]
 }

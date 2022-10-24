@@ -1,6 +1,8 @@
-const Reaction = require('./reaction');
 
+const Reaction = require('./reaction');
 const discord = require('./discordBot/discordBot')
+const ReactionDescription = require("./reactionDescription");
+const EventType = require("../eventType");
 
 class DiscordMessage extends Reaction {
 
@@ -9,7 +11,6 @@ class DiscordMessage extends Reaction {
     }
 
     async ingest(event, areabase) {
-        console.log(JSON.stringify(event));
         return discord.writeMessage(event.string);
     }
 
@@ -22,3 +23,6 @@ function stop() {
 module.exports = DiscordMessage;
 
 module.exports.stop = stop;
+
+module.exports.description = new ReactionDescription("discord_reaction_message", "Discord Message",
+    "Sends message on discord", "discord", [EventType.ALL])

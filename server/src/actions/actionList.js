@@ -8,8 +8,8 @@ class ActionList extends ARList {
 
     constructor() {
         super("actions", Action);
-        this.add(SpotifyLike, "spotify_action_like", "Spotify Listen Likes", "Listen to user liking a track on spotify", "spotify");
-        this.add(Weather, "weather_action", "Weather", "Get Weather information", "meteo_concept");
+        this.add(SpotifyLike);
+        this.add(Weather);
     }
 }
 

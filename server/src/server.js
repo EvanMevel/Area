@@ -1,6 +1,8 @@
 const httpSrv = require("./httpServer");
 
-let server = {}
+let server = {
+    services: require("./services")
+}
 
 async function closeGracefully() {
     if (server.base != null) {
@@ -30,6 +32,7 @@ async function loadBaseAREAS() {
 }
 
 async function loadWorkers() {
+    await server.services.registerServices(server.base);
     await server.areas.loadBase(server.base);
     await server.areas.tickAll(server);
 }

@@ -50,6 +50,10 @@ class Accounts extends Table {
             " AND Accounts.service = " + q(service));
     }
 
+    async getServices(userId) {
+        return this.query("Select service FROM Accounts WHERE Accounts.userId = " + q(userId));
+    }
+
 }
 
 module.exports = Accounts;

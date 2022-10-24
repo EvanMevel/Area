@@ -1,5 +1,6 @@
 const OAuthReaction = require('./oAuthReaction');
 const EventType = require("../eventType");
+const ReactionDescription = require("./reactionDescription");
 
 async function getTrackId(track_name, server, access_token) {
     const body = await server.request.get("https://api.deezer.com/search?acces_token=" + access_token + "&q=" + track_name).json();
@@ -19,7 +20,7 @@ class DeezerLike extends OAuthReaction {
     }
 
     async oAuthIngest(event, server, account) {
-        if (event.type === EventType.Song) {
+        if (event.type === EventType.SONG) {
             await likeASong(event.artist + " - " + event.name, server, account);
         } else {
             console.error("DeezerLike: Cant process event " + event.string);
@@ -29,3 +30,6 @@ class DeezerLike extends OAuthReaction {
 }
 
 module.exports = DeezerLike;
+
+module.exports.description = new ReactionDescription("deezer_reaction_like", "Deezer Like",
+    "Likes the track on Deezer", "deezer", [EventType.SONG]);

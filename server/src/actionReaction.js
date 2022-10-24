@@ -54,8 +54,6 @@ class ActionReaction {
 }
 
 async function registerAREA(areabase) {
-    await registerServices(areabase);
-
     return Promise.all([actionList.register(areabase),
         reactionList.register(areabase)]);
 }
@@ -65,6 +63,12 @@ function stop() {
     actionList.stop();
 }
 
+function getCompatibleReactions(actionId) {
+    let action = actionList.getDescription(actionId);
+
+    return reactionList.getAccept(action.returns);
+}
+
 module.exports = ActionReaction;
 
 module.exports.registerAREA = registerAREA;
@@ -72,3 +76,5 @@ module.exports.registerAREA = registerAREA;
 module.exports.loadAll = loadAll;
 
 module.exports.stop = stop;
+
+module.exports.getCompatibleReactions = getCompatibleReactions;

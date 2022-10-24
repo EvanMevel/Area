@@ -1,6 +1,7 @@
 
 const ARList = require("../ARList");
 const Reaction = require("./reaction");
+const EventType = require("../eventType");
 const DeezerLike = require('./deezerLike');
 const DiscordMessage = require('./discordMessage');
 
@@ -8,8 +9,20 @@ class ReactionList extends ARList {
 
     constructor() {
         super("reactions", Reaction);
-        this.add(DeezerLike, "deezer_reaction_like", "Deezer Like", "Likes the track on Deezer", "deezer");
-        this.add(DiscordMessage, "discord_reaction_message", "Discord Message", "Sends message on discord", "discord");
+        this.add(DeezerLike);
+        this.add(DiscordMessage);
+    }
+
+    getAccept(type) {
+        let ret = [];
+        for (let id in this.list) {
+            const reaction = this.list[id];
+            const accept = reaction.description.accepts;
+            if (accept.includes(EventType.ALL) || accept.includes(type)) {
+                ret.push(structuredClone(reaction.description));
+            }
+        }
+        return ret;
     }
 
     stop(server) {
