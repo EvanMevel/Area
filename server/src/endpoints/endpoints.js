@@ -1,12 +1,10 @@
 const express = require("express");
 const about = require("./about");
 const area = require("./area");
-const login = require("./login");
-const register = require("./register");
 const accounts = require("./accounts");
-const registerServicesRoutes = require("../connect/servicesRoutes")
 const registerFilesRoutes = require("./files");
 const BadRequest = require("./badRequest");
+const strategies = require("./strategies/strategies");
 
 function call(server, endpoint) {
     return async function (req, res)  {
@@ -14,11 +12,9 @@ function call(server, endpoint) {
             await endpoint.called(req, res, server);
         } catch (e) {
             if (e instanceof BadRequest) {
-                res.status(400).json(
-                    {
-                        "message": e.message
-                    }
-                );
+                res.status(400).json({
+                    message: e.message
+                });
                 return;
             }
             console.error(e);
@@ -29,31 +25,25 @@ function call(server, endpoint) {
 
 function registerRoutes(app, server) {
 
+    strategies.registerAll(app, express, server);
+
+    server.passport = strategies.passport;
+
     app.get("/about.json", call(server, about));
 
-    const router = express.Router();
+    const api = express.Router();
 
-    router.get("/area_list", call(server, area.list));
+    api.get("/area_list", call(server, area.list));
 
-    router.post("/area", call(server, area.create));
+    api.post("/area", call(server, area.create));
+    api.put("/area", call(server, area.modify));
+    api.delete("/area", call(server, area.delete));
 
-    router.put("/area", call(server, area.modify));
+    api.get("/accounts", call(server, accounts.list));
+    api.delete("/accounts", call(server, accounts.delete));
+    api.post("/accounts", call(server, accounts.create));
 
-    router.delete("/area", call(server, area.delete));
-
-    router.post("/login", call(server, login));
-
-    router.post("/register", call(server, register));
-
-    router.get("/accounts", call(server, accounts.list));
-
-    router.delete("/accounts", call(server, accounts.delete));
-
-    router.post("/accounts", call(server, accounts.create));
-
-    app.use("/api", router);
-
-    registerServicesRoutes(app, express, server);
+    app.use("/api", strategies.jwt, api);
 
     registerFilesRoutes(app, express);
 }

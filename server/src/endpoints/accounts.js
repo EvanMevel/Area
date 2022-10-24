@@ -3,8 +3,8 @@ const TokenEndpoint = require("./tokenEndpoint");
 
 class List extends TokenEndpoint {
 
-    async authCalled(req, res, server, id) {
-        let accounts = await server.base.accounts.getUser(id);
+    async authCalled(req, res, server, userId) {
+        const accounts = await server.base.accounts.getUserServices(userId);
         res.json(accounts);
     }
 }

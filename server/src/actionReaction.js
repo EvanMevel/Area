@@ -1,5 +1,6 @@
 
 const registerServices = require("./services");
+const {HTTPError} = require("got");
 
 let actionList;
 let reactionList;
@@ -42,6 +43,11 @@ class ActionReaction {
             }
         } catch (e) {
             console.error("Error retrieving events from " + this.actionId + ": ");
+            if (e instanceof HTTPError) {
+                console.error(e);
+                console.error(JSON.stringify(e.response.body));
+                return
+            }
             console.error(e);
         }
     }

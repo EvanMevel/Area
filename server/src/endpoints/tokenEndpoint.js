@@ -4,22 +4,17 @@ const BadRequest = require("./badRequest");
 
 class TokenEndpoint extends Endpoint {
 
-    async authCalled(req, res, server, id) {
+    async authCalled(req, res, server, userId) {
 
     }
 
     async called(req, res, server) {
-        let auth = req.headers.Authorization || req.headers.authorization || null;
+        const userId = req.user;
 
-        if (auth == null) {
+        if (userId == null) {
             throw new BadRequest("No Authorization header provided!");
         }
-        let id = server.tokens.verify(auth.substring(7));
-        if (id == null) {
-            this.message(res, "Invalid token", 401);
-            return;
-        }
-        return this.authCalled(req, res, server, id);
+        return this.authCalled(req, res, server, userId);
     }
 }
 

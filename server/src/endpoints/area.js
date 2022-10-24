@@ -11,8 +11,8 @@ async function checkValidInDb(basePoint, name, field) {
 
 class List extends TokenEndpoint {
 
-    async authCalled(req, res, server, id) {
-        let userAREA = await server.base.area.getUser(id);
+    async authCalled(req, res, server, userId) {
+        let userAREA = await server.base.area.getUser(userId);
         res.json(userAREA);
     }
 }
@@ -36,15 +36,15 @@ class Delete extends TokenEndpoint {
 
 class Create extends TokenEndpoint {
 
-    async authCalled(req, res, server, id) {
+    async authCalled(req, res, server, userId) {
         this.checkFieldsExist(req.body, ["actionId", "reactionId"])
         await checkValidInDb(server.base.actions, req.body.actionId, "action")
         await checkValidInDb(server.base.reactions, req.body.reactionId, "reaction")
 
-        const resp = await server.base.area.create(id, req.body.actionId, req.body.reactionId);
+        const resp = await server.base.area.create(userId, req.body.actionId, req.body.reactionId);
 
         if (resp.affectedRows === 1) {
-            await server.areas.loadAREA(resp.insertId, id, req.body.actionId, req.body.reactionId);
+            await server.areas.loadAREA(resp.insertId, userId, req.body.actionId, req.body.reactionId);
 
             res.status(201).json(
                 {

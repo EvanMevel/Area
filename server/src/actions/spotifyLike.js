@@ -1,35 +1,10 @@
 const OAuthAction = require("./oAuthAction");
 const EventType = require("../eventType");
 
-const client_id = 'eab7cdc09f6346bbacd253f46f157a9b';
-const client_secret = '3ee4d175c21a444998315efed44f3677';
-const redirect_uri = 'http://localhost:8080/callback';
-
-async function apiToken(server, refresh_token) {
-    let form = {
-        refresh_token: refresh_token,
-        redirect_uri: redirect_uri,
-        grant_type: 'refresh_token'
-    };
-    return await server.request.post("https://accounts.spotify.com/api/token", {
-        headers: {
-            'Authorization': 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64'))
-        },
-        form: form
-    }).json();
-}
-
-async function getAccessToken(server, refresh_token) {
-    const body = await apiToken(server, refresh_token);
-    return body.access_token;
-}
-
-async function getSong(server, refresh_token) {
-    let token = await getAccessToken(server, refresh_token)
-    console.log(token);
+async function getSong(server, access_token) {
     let body = await server.request.get("https://api.spotify.com/v1/me/tracks", {
         headers: {
-            'Authorization': 'Bearer ' + token,
+            'Authorization': 'Bearer ' + access_token,
             'Content-Type': 'application/json'
         }
     }).json();
@@ -54,15 +29,17 @@ class SpotifyLike extends OAuthAction {
         super(areaId, userId, 'spotify');
     }
 
-    async oAuthEvent(server, token) {
-        let track = await getSong(server, token);
+    async oAuthEvent(server, account) {
+        const access_token = await this.getAccessToken(server, account.refresh_token);
+        let track = await getSong(server, access_token);
         const oldLiked = await server.base.actionData.getString(this.areaId);
         if (track.id !== oldLiked) {
             const sentence = getSentence(track);
             await server.base.actionData.set(this.areaId, track.id);
             return [sentence];
-        } else
+        } else {
             return [];
+        }
     }
 
 }
