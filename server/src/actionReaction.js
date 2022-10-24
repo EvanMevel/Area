@@ -1,5 +1,4 @@
 
-const registerServices = require("./services");
 const {HTTPError} = require("got");
 
 let actionList;
