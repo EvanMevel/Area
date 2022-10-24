@@ -3,14 +3,14 @@ const TokenEndpoint = require("./tokenEndpoint");
 
 class Reactions extends TokenEndpoint {
 
-    async authCalled(req, res, server, id) {
+    async authCalled(req, res, server, userId) {
         this.checkFieldExist(req.query, "action");
 
         const action = req.query.action;
 
         let reactions = server.areas.getCompatibleReactions(action);
 
-        let accounts = await server.base.accounts.getServices(id);
+        let accounts = await server.base.accounts.getServices(userId);
 
         reactions = reactions.filter((reaction) => {
             if (!server.services.isOauth(reaction.service)) {
