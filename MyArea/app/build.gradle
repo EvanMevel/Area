@@ -34,7 +34,9 @@ android {
         viewBinding true
     }
 }
-
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.1'
+}
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
