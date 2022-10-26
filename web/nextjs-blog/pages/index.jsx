@@ -130,7 +130,7 @@ export default function App() {
       <form>
         <input type={"text"} name={"text"} id={"task-input"} placeholder="Enter username"/>
         <div></div>
-        <input type={"text"} name={"text"} id={"task-input"} placeholder="Enter password"/>
+        <input type={"password"} name={"pass"} id={"task-input"} placeholder="Enter password"/>
         <button type="submit">SUBMIT</button>
       </form>
     </div>
