@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from 'axios';
-import React, { Component } from 'react';
 
 
 const theme = {
@@ -67,29 +66,6 @@ const Tab = styled.button`
 
 export default function App() {
 
-  state = {
-    isLoading: true,
-    users: [],
-    error: null
-  };
-
-  getFetchUsers(); {
-    this.setState({
-        loading: true
-    }, () => {
-        fetch("http://localhost:3000/posts").then(res => res.json()).then(result => this.setState({
-            loading: false,
-            users: result
-        })).catch(console.log);
-    });
-  }
-
-  componentDidMount(); {
-    this.getFetchUsers();
-  }
-
-  const { users, error } = this.state;
-
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState('');
@@ -124,7 +100,7 @@ export default function App() {
     <div>
       {err && <h2>{err}</h2>}
 
-      <Button onClick={handleClick}>Make request</Button>
+      <ButtonToggle onClick={handleClick}>Make request</ButtonToggle>
 
       {isLoading && <h2>Loading...</h2>}
 
@@ -150,29 +126,13 @@ export default function App() {
       <a href="https://www.spotify.com/" target="_blank">
         <Button>Spotify</Button>
       </a>
-      <React.Fragment>
-              <h1>All User</h1>
-              {
-                    error ? <p>
-              {
-                        error.message
-                    } < /p> : null}  {
-                        users.map(user => {
-                            const {
-                                adderss,
-                                name,
-                                email
-                            } = user;
-                            return (
-                            <div key={name}>
-                                <p>Name: {name}</p>
-                                <p>Email: {email}</p>
-                                <p>Address: {adderss}</p>
-                                <hr />
-                            </div>
-                            );
-                        })
-                    } < /React.Fragment></p>
+      <div></div>
+      <form>
+        <input type={"text"} name={"text"} id={"task-input"} placeholder="Enter username"/>
+        <div></div>
+        <input type={"text"} name={"text"} id={"task-input"} placeholder="Enter password"/>
+        <button type="submit">SUBMIT</button>
+      </form>
     </div>
   );
 }
