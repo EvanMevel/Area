@@ -25,7 +25,15 @@ module.exports.registerAll = function (app, express, server) {
             token: server.tokens.generate(req.user)
         });
     });
+    auth.post("/login", passport.authenticate("local", noSession), function (req, res) {
+        res.json({
+            token: server.tokens.generate(req.user)
+        });
+    });
     auth.get("/register", function (req, res) {
+        register(req, res, server);
+    });
+    auth.post("/register", function (req, res) {
         register(req, res, server);
     });
 
@@ -33,28 +41,6 @@ module.exports.registerAll = function (app, express, server) {
     registerStrategy(auth, "spotify", server);
 
     app.use("/auth", auth);
-
-    app.get("/tests", function (req, res) {
-        const strategy = server.passport._strategy("spotify");
-        const params = {
-            grant_type: "refresh_token"
-        }
-        console.log(JSON.stringify(strategy));
-        strategy._oauth2.getOAuthAccessToken("AQDvf_SwHDdiW_-YufwL9-q7gW2ygUGcvIP5KAmtmi0MChR7LPO9BFmN4bZhMHQHJqnZBoXSJQxhmHcvc61jMyxrZjpV8gaIqVH1pFUG-_KkZhcMcG9n2lYmTn0ruXjpNzU",
-            params,
-            (err, access_token, refresh_token, expires_in, results) => {
-                console.log(JSON.stringify(err));
-                console.log(JSON.stringify(access_token));
-                console.log(JSON.stringify(refresh_token));
-                console.log(JSON.stringify(expires_in));
-                console.log(JSON.stringify(results));
-                res.send("EHAUIBEZJAEBHJAZLE");
-            });
-    })
-
-    app.get("/ttst", function (req, res) {
-        require("./ttest")(req, res, server);
-    });
 }
 
 function authFunc(strategy) {
@@ -73,21 +59,22 @@ function callBack(server) {
         let userId = req.query.state;
         const {profile, refreshToken, accessToken} = req.user;
         const service = profile.provider;
+        let account = await server.base.accounts.findOneBy({service: {name: service}, serviceUser: profile.id});
         if (userId == null) {
-            userId = await server.base.accounts.getUserId(service, profile.id);
-            if (userId == null || userId.length === 0) {
+            if (account == null) {
                 res.status(401).end("Unauthorized");
                 return;
             }
-            const token = server.tokens.generate(userId[0].userId);
+            const token = server.tokens.generate(account.userId);
             res.redirect("http://localhost:8081?token=" + token);
         } else {
-            const already = await server.base.accounts.getUserId(service, profile.id);
-            if (already.length === 1) {
+            const user = await server.base.users.findOneBy({id: userId});
+            if (account != null) {
                 res.redirect("http://localhost:8081?connectedService=" + service);
                 return;
             }
-            const resp = await server.base.accounts.create(userId, service, profile.id, refreshToken, accessToken);
+            account = {service: service, serviceUser: profile.id, user: user, refreshToken: refreshToken, accessToken: accessToken};
+            const resp = await server.base.accounts.save(account);
             if (resp.length === 0) {
                 res.status(500).end();
             } else {

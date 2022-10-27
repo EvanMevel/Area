@@ -1,3 +1,4 @@
+
 const OAuthReaction = require('./oAuthReaction');
 const EventType = require("../eventType");
 const ReactionDescription = require("./reactionDescription");

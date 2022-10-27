@@ -1,12 +1,11 @@
 
-class Reaction {
-    areaId;
-    userId;
+const AR = require("../arCommons/ar");
+
+class Reaction extends AR {
     accepts;
 
     constructor(areaId, userId, accepts) {
-        this.areaId = areaId;
-        this.userId = userId;
+        super(areaId, userId);
         this.accepts = accepts;
     }
 

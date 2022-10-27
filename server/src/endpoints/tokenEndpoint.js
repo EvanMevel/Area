@@ -4,7 +4,7 @@ const BadRequest = require("./badRequest");
 
 class TokenEndpoint extends Endpoint {
 
-    async authCalled(req, res, server, userId) {
+    async authCalled(req, res, server, user) {
 
     }
 
@@ -14,7 +14,8 @@ class TokenEndpoint extends Endpoint {
         if (userId == null) {
             throw new BadRequest("No Authorization header provided!");
         }
-        return this.authCalled(req, res, server, userId);
+        const user = await server.base.users.findOneBy({id: userId});
+        return this.authCalled(req, res, server, user);
     }
 }
 

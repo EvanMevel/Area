@@ -2,49 +2,52 @@
 const TokenEndpoint = require("./tokenEndpoint");
 const BadRequest = require("./badRequest");
 
-async function checkValidInDb(basePoint, name, field) {
-    const resp = await basePoint.exists(name);
-    if (resp.length !== 1) {
-        throw new BadRequest("No " + field + " with such name");
-    }
-}
-
 class List extends TokenEndpoint {
 
-    async authCalled(req, res, server, userId) {
-        let userAREA = await server.base.area.getUser(userId);
-        res.json(userAREA);
+    async authCalled(req, res, server, user) {
+        const areas = await server.base.area.query("SELECT * FROM ActionReactions WHERE ActionReactions.userId = " + user.id);
+        res.json(areas);
     }
 }
 
 class Delete extends TokenEndpoint {
 
-    async authCalled(req, res, server, userId) {
+    async authCalled(req, res, server, user) {
         this.checkFieldExist(req.query, "id")
 
-        await server.base.actionData.delete(req.query.id);
+        const area = await server.base.area.findOneBy({id: req.query.id, user: user});
 
-        const resp = await server.base.area.delete(req.query.id, userId);
-        if (resp.affectedRows === 1) {
-            server.areas.removeAREA(req.query.id);
-            this.message(res, "Deleted AREA with success", 200);
-        } else {
+        if (area == null) {
             this.message(res, "Already deleted or dont exist", 200);
+        } else {
+            const actionData = await server.base.actionData.findOneBy({id: area.id});
+            if (actionData != null) {
+                await server.base.actionData.remove(actionData);
+            }
+            await server.base.area.remove(area);
+            server.areas.removeAREA(area.id);
+            this.message(res, "Deleted AREA with success", 200);
         }
     }
 }
 
 class Create extends TokenEndpoint {
 
-    async authCalled(req, res, server, userId) {
-        this.checkFieldsExist(req.body, ["actionId", "reactionId"])
-        await checkValidInDb(server.base.actions, req.body.actionId, "action")
-        await checkValidInDb(server.base.reactions, req.body.reactionId, "reaction")
+    async authCalled(req, res, server, user) {
+        this.checkFieldsExist(req.body, ["actionId", "reactionId"]);
+        const {actionId, reactionId} = req.body;
+        if (!(await server.base.actions.countBy({name: actionId}))) {
+            throw new BadRequest("No Action with such name \"" + actionId + "\"");
+        }
+        if (!(await server.base.reactions.countBy({name: reactionId}))) {
+            throw new BadRequest("No Reaction with such name \"" + reactionId + "\"");
+        }
 
-        const resp = await server.base.area.create(userId, req.body.actionId, req.body.reactionId);
-
-        if (resp.affectedRows === 1) {
-            await server.areas.loadAREA(resp.insertId, userId, req.body.actionId, req.body.reactionId);
+        const resp = await server.base.area.save({user: user, action: {name: actionId}, reaction: {name: reactionId}});
+        if (resp.id == null) {
+            throw new Error("AREA creation sql should return a response, got an empty response instead!")
+        } else {
+            await server.areas.loadAREA(resp.id, user.id, actionId, reactionId);
 
             res.status(201).json(
                 {
@@ -52,38 +55,32 @@ class Create extends TokenEndpoint {
                     "areaId": resp.insertId
                 }
             );
-        } else {
-            throw new Error("AREA creation sql should return a response, got an empty response instead!")
         }
     }
 }
 
 class Modify extends TokenEndpoint {
 
-    async authCalled(req, res, server, userId) {
-        this.checkFieldExist(req.body, "id")
+    async authCalled(req, res, server, user) {
+        this.checkFieldExist(req.body, "id");
+        const {actionId, reactionId} = req.body;
+        const area = await server.base.area.findOneBy({id: req.body.id, user: user});
 
-        if (req.body.actionId == null && req.body.reactionId == null) {
-            throw new BadRequest("No actionId or reactionId specified!")
-        }
-        if (req.body.actionId) {
-            await checkValidInDb(server.base.actions, req.body.actionId, "action", res)
-        }
-        if (req.body.reactionId) {
-            await checkValidInDb(server.base.reactions, req.body.reactionId, "reaction", res)
-        }
-        const hasPerm = await server.base.area.hasPermission(req.body.id, userId);
-        if (hasPerm.length === 0) {
+        if (area == null) {
             throw new BadRequest("No AREA with this id");
         }
-        const resp = await server.base.area.editActionReaction(req.body);
-        server.areas.reloadAREA(req.body);
-        res.json(
-            {
-                "message": resp.affectedRows === 1 ? "Updated AREA with success" : "Nothing updated",
-                "areaId": req.body.id
-            }
-        );
+        if (!actionId && !reactionId) {
+            throw new BadRequest("No actionId or reactionId specified!")
+        }
+        if (actionId &&!(await server.base.actions.countBy({name: actionId}))) {
+            throw new BadRequest("No Action with such name \"" + actionId + "\"");
+        }
+        if (reactionId && !(await server.base.reactions.countBy({name: reactionId}))) {
+            throw new BadRequest("No Reaction with such name \"" + reactionId + "\"");
+        }
+        res.json({
+            message: "TODO, this is not yet implemented, only pre-conditions are checked"
+        });
     }
 }
 

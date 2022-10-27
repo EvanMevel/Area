@@ -46,10 +46,6 @@ function registerRoutes(app, server) {
 
     api.get("/reactions", call(server, reactions));
 
-    /*api.get("/accounts", call(server, accounts.list));
-    api.delete("/accounts", call(server, accounts.delete));
-    api.post("/accounts", call(server, accounts.create));*/
-
     app.use("/api", strategies.jwt, api);
 
     registerFilesRoutes(app, express);

@@ -1,16 +1,6 @@
 
 const Endpoint = require("./endpoint");
 
-function filterAndCleanup(service, array) {
-    let result = array.filter(function (element) {
-        return element.service === service.name;
-    });
-    result.forEach(function (element) {
-        delete element["service"];
-    });
-    return result;
-}
-
 function getFiles(service) {
     return {
         "logo": "http://localhost:8080/files/" + service + "/" + service + ".png",
@@ -18,25 +8,23 @@ function getFiles(service) {
     }
 }
 
-function getService(service, actions, reactions) {
-    let serviceActions = filterAndCleanup(service, actions);
-    let serviceReactions = filterAndCleanup(service, reactions);
+async function getService(base, service) {
+    const actions = await base.actions.findBy({service: service});
+    const reactions = await base.reactions.findBy({service: service});
 
     let resp = service;
-    resp["actions"] = serviceActions;
-    resp["reactions"] = serviceReactions;
+    resp["actions"] = actions;
+    resp["reactions"] = reactions;
     resp.files = getFiles(service.name);
     return resp;
 }
 
 async function getServices(areabase) {
     let serviceArray = [];
-    const services = await areabase.services.getAllServices();
-    const actions = await areabase.actions.getAll();
-    const reactions = await areabase.reactions.getAll();
+    const services = await areabase.services.find();
 
     for (let i = 0; i < services.length; i++) {
-        serviceArray.push(getService(services[i], actions, reactions));
+        serviceArray.push(await getService(areabase, services[i]));
     }
     return serviceArray;
 }

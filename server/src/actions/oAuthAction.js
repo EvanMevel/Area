@@ -1,5 +1,5 @@
 const Action = require('./action')
-const util = require('util');
+const arPassport = require("../arCommons/arPassportOauth");
 
 class OAuthAction extends Action {
 
@@ -14,28 +14,13 @@ class OAuthAction extends Action {
 
     }
 
-    callbackStrategy(server, refreshToken, callback) {
-        const strategy = server.passport._strategy(this.service);
-        const params = {
-            grant_type: "refresh_token"
-        }
-        strategy._oauth2.getOAuthAccessToken(refreshToken, params, callback);
-    }
-
-    strategyGetToken = util.promisify((server, refreshToken, cb) => this.callbackStrategy(
-        server,
-        refreshToken,
-        (err, ...results) => cb(err, results)
-    ))
-
-    async getAccessToken(server, refresh_token) {
-        const [access_token, rerefresh_token, expires_in, results] = await this.strategyGetToken(server, refresh_token);
-        return access_token;
+    async getAccessToken(server, refreshToken) {
+        return arPassport.getAccessToken(server, this.service, refreshToken);
     }
 
     async events(server) {
-        const account = await server.base.accounts.getToken(this.userId, this.service);
-        return this.oAuthEvent(server, account[0]);
+        const account = await server.base.accounts.findOneBy({user: {id: this.userId}, service: {name: this.service}});
+        return this.oAuthEvent(server, account);
     }
 }
 

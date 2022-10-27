@@ -25,14 +25,14 @@ class AREAList {
         return ActionReaction.loadAll();
     }
 
-    async loadBase(areaBase) {
+    async loadBase(server) {
 
-        await ActionReaction.registerAREA(areaBase);
+        await ActionReaction.registerAREA(server);
 
-        let ARS = await areaBase.area.getAll();
-        for (let i = 0; i < ARS.length; i++) {
-            const area = ARS[i];
-            await this.loadAREA(area.id, area.userId, area.actionId, area.reactionId);
+        let areas = await server.base.area.query("SELECT * FROM ActionReactions");
+        for (let i = 0; i < areas.length; i++) {
+            const area = areas[i];
+            await this.loadAREA(area.id, area.userId, area.actionName, area.reactionName);
         }
     }
 

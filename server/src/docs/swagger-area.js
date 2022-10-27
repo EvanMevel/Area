@@ -32,7 +32,7 @@ const createAREA = {
     },
     "example": {
         "actionId": "spotify_action_like",
-        "reactionId": "discord_reaction_weather"
+        "reactionId": "discord_reaction_message"
     }
 }
 

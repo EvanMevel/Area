@@ -9,23 +9,22 @@ module.exports = async function(req, res, server) {
         return;
     }
 
-    const users = server.base.users;
-    const nameExists = await users.nameAlreadyExist(name);
-    if (nameExists.length !== 0) {
-        res.status(400).json({message: "A user with this name already exists!"});
-        return;
-    }
-    const emailExists = await users.emailAlreadyExist(email);
-    if (emailExists.length !== 0) {
-        res.status(400).json({message: "A user with this email already exists!"});
+    const users = await server.base.users.find({
+        where: [
+            {name: name},
+            {email: email}
+        ]
+    });
+    if (users.length !== 0) {
+        res.status(400).json({message: "A user with this name or email already exists!"});
         return;
     }
 
-    let resp = await users.register(name, email, password);
-    if (resp.affectedRows !== 1) {
+    let resp = await server.base.users.save({name: name, email: email, password: password});
+    if (resp.id == null) {
         throw new Error("User registration sql should respond with a result, got an empty response instead!")
     }
     res.json({
-        token: server.tokens.generate(resp.insertId)
+        token: server.tokens.generate(resp.id)
     });
 }

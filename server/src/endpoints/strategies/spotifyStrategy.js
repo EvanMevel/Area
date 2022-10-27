@@ -10,7 +10,6 @@ module.exports = new SpotifyStrategy({
     callbackURL: "http://localhost:8080/auth/spotify/callback",
     scope: scopes
 }, function(accessToken, refreshToken, expires_in, profile, done) {
-    console.log(JSON.stringify(profile));
     done(null, {
         profile: profile,
         accessToken: accessToken,
