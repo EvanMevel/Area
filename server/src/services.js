@@ -9,10 +9,10 @@ class Services {
         this.add("meteo_concept", "Météo Concept", 0);
     }
 
-    add(id, name, oauth) {
-        this.list[id] = {
-            id: id,
+    add(name, displayName, oauth) {
+        this.list[name] = {
             name: name,
+            displayName: displayName,
             oauth: oauth
         }
     }
@@ -25,10 +25,10 @@ class Services {
         return service.oauth;
     }
 
-    async registerServices(areabase) {
+    async registerServices(base) {
         for (let id in this.list) {
             let service = this.list[id];
-            await areabase.services.create(service.id, service.name, service.oauth);
+            await base.services.save(service);
         }
     }
 

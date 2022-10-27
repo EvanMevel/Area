@@ -1,7 +1,7 @@
 
 let fs = require("fs");
 
-const root = "/app/files/";
+const root = process.cwd() + "/files/";
 
 function registerFolder(files, dir)
 {

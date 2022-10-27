@@ -1,5 +1,5 @@
 
-const ARList = require("../ARList");
+const ARList = require("../arCommons/arList");
 const Action = require("./action");
 const SpotifyLike = require("./spotifyLike");
 const Weather = require("./weatherAction");
@@ -7,10 +7,18 @@ const Weather = require("./weatherAction");
 class ActionList extends ARList {
 
     constructor() {
-        super("actions", Action);
+        super(function (base) {
+            return base.actions;
+        }, Action);
         this.add(SpotifyLike);
         this.add(Weather);
     }
+
+    async registerAR(server, desc) {
+        const action = {name: desc.name, displayName: desc.displayName, description: desc.description, service: {name: desc.serviceName}};
+        return server.base.actions.save(action);
+    }
+
 }
 
 module.exports = ActionList;

@@ -1,5 +1,5 @@
 
-class ARList {
+class ArList {
     list = {};
     table;
     baseClass;
@@ -11,7 +11,7 @@ class ARList {
 
     add(ar) {
         const desc = ar.description;
-        this.list[desc.id] = {
+        this.list[desc.name] = {
             ar: ar,
             description: desc
         };
@@ -25,7 +25,7 @@ class ARList {
         return ar.description;
     }
 
-    find(id, areaId, userId) {
+    find(id, areaId, user) {
         const ar = this.list[id];
         let res;
         if (ar == null) {
@@ -33,17 +33,16 @@ class ARList {
         } else {
             res = ar.ar;
         }
-        return new res(areaId, userId);
+        return new res(areaId, user);
     }
 
-    async registerAR(areabase, desc) {
-        await areabase[this.table].create(desc.id, desc.displayName, desc.description, desc.service);
+    async registerAR(server, desc) {
     }
 
-    async register(areabase) {
+    async register(server) {
         for (let id in this.list) {
             let ar = this.list[id];
-            await this.registerAR(areabase, ar.description);
+            await this.registerAR(server, ar.description);
         }
     }
 
@@ -53,4 +52,4 @@ class ARList {
 
 }
 
-module.exports = ARList;
+module.exports = ArList;

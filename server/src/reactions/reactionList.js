@@ -1,5 +1,5 @@
 
-const ARList = require("../ARList");
+const ARList = require("../arCommons/arList");
 const Reaction = require("./reaction");
 const EventType = require("../eventType");
 const DeezerLike = require('./deezerLike');
@@ -8,7 +8,9 @@ const DiscordMessage = require('./discordMessage');
 class ReactionList extends ARList {
 
     constructor() {
-        super("reactions", Reaction);
+        super(function (base) {
+            return base.reactions;
+        }, Reaction);
         this.add(DeezerLike);
         this.add(DiscordMessage);
     }
@@ -23,6 +25,11 @@ class ReactionList extends ARList {
             }
         }
         return ret;
+    }
+
+    async registerAR(server, desc) {
+        const reaction = {name: desc.name, displayName: desc.displayName, description: desc.description, service: {name: desc.serviceName}};
+        return server.base.reactions.save(reaction);
     }
 
     stop(server) {

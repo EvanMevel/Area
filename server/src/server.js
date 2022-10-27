@@ -1,7 +1,8 @@
 const httpSrv = require("./httpServer");
 
 let server = {
-    services: require("./services")
+    services: require("./services"),
+    actionDataUtils: require("./base/actionDataUtils")
 }
 
 async function closeGracefully() {
@@ -18,10 +19,10 @@ async function closeGracefully() {
 process.on('SIGTERM', closeGracefully);
 
 async function loadBase() {
-    const Base = require("./base/base");
-    server.base = new Base();
+    const DataBase = require("./base/dataBase");
+    server.base = new DataBase();
 
-    return server.base.connect();
+    return server.base.initialize();
 }
 
 async function loadBaseAREAS() {
@@ -33,7 +34,7 @@ async function loadBaseAREAS() {
 
 async function loadWorkers() {
     await server.services.registerServices(server.base);
-    await server.areas.loadBase(server.base);
+    await server.areas.loadBase(server);
     await server.areas.tickAll(server);
 }
 

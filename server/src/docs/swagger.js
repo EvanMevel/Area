@@ -51,8 +51,8 @@ module.exports = {
     },
     "paths": {
         "/about.json": about,
-        "/api/login": login,
-        "/api/register": register,
+        "/auth/login": login,
+        "/auth/register": register,
         "/api/area_list": area.list,
         "/api/reactions": reactions,
         //"/api/accounts": accounts,

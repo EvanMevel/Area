@@ -1,34 +1,25 @@
 const EntitySchema = require("typeorm").EntitySchema
 
 module.exports = new EntitySchema({
-    name: "Accounts",
-    tableName: "Accounts",
+    name: "Reactions",
+    tableName: "Reactions",
     columns: {
-        id: {
+        name: {
             primary: true,
-            type: "int",
-            generated: true
-        },
-        serviceUser: {
             type: "varchar"
         },
-        refreshToken: {
+        displayName: {
             type: "varchar"
         },
-        accessToken: {
+        description: {
             type: "varchar"
         }
     },
     relations: {
-        user: {
-            target: "Users",
-            type: "many-to-one",
-            nullable: false
-        },
         service: {
             target: "Services",
             type: "many-to-one",
             nullable: false
-        }
-    }
+        },
+    },
 })

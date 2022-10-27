@@ -18,15 +18,15 @@ class ActionReaction {
     actionId;
     reaction;
     reactionId;
-    userId;
+    user;
 
-    constructor(id, userId, actionId, reactionId) {
+    constructor(id, user, actionId, reactionId) {
         this.id = id;
-        this.userId = userId;
+        this.userId = user;
         this.actionId = actionId;
         this.reactionId = reactionId;
-        this.action = actionList.find(actionId, id, userId)
-        this.reaction = reactionList.find(reactionId, id, userId);
+        this.action = actionList.find(actionId, id, user);
+        this.reaction = reactionList.find(reactionId, id, user);
     }
 
     async tick(server) {
@@ -52,9 +52,9 @@ class ActionReaction {
     }
 }
 
-async function registerAREA(areabase) {
-    return Promise.all([actionList.register(areabase),
-        reactionList.register(areabase)]);
+async function registerAREA(server) {
+    return Promise.all([actionList.register(server),
+        reactionList.register(server)]);
 }
 
 function stop() {

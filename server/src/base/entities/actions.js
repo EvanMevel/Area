@@ -12,7 +12,7 @@ module.exports = new EntitySchema({
             type: "varchar"
         },
         description: {
-            type: "boolean"
+            type: "varchar"
         }
     },
     relations: {

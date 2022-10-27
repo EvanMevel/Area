@@ -5,19 +5,11 @@ module.exports = new EntitySchema({
     tableName: "ActionData",
     columns: {
         id: {
-            primary: true,
             type: "int",
-            generated: true
+            primary: true
         },
         data: {
             type: "blob"
-        }
-    },
-    relations: {
-        area: {
-            target: "ActionReactions",
-            type: "many-to-one",
-            nullable: false
         }
     }
 })

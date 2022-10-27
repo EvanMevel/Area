@@ -1,5 +1,5 @@
 
-const ArDescription = require("../arDescription");
+const ArDescription = require("../arCommons/arDescription");
 
 class ReactionDescription extends ArDescription {
     accepts;
