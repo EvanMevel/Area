@@ -1,4 +1,3 @@
-
 const OAuthAction = require("./oAuthAction");
 const ActionDescription = require("./actionDescription");
 const EventType = require("../eventType");
@@ -16,7 +15,6 @@ async function getSong(server, access_token) {
 function getSentence(track) {
     let song_name = track.name;
     let song_artist = track.artists[0].name;
-    //let song_link = track.external_urls.spotify;
     return {
         type: EventType.SONG,
         name: song_name,
