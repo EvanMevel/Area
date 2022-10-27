@@ -1,16 +1,22 @@
 
-const ARList = require("../ARList");
+const ARList = require("../arCommons/arList");
 const Action = require("./action");
-const SPOTIFY_LIKE = require("./spotify_action_like");
-const GET_WEATHER = require("./get_weather_action");
+const SpotifyLike = require("./spotifyLike");
+const Weather = require("./weatherAction");
 
 class ActionList extends ARList {
 
     constructor() {
-        super("actions", Action);
-        this.add(SPOTIFY_LIKE, "spotify_action_like", "Spotify Listen Likes", "Listen to user liking a track on spotify", "spotify");
-        this.add(GET_WEATHER, "get_weather_action", "Weather", "Gets Weather", "meteo_concept");
+        super(Action);
+        this.add(SpotifyLike);
+        this.add(Weather);
     }
+
+    async registerAR(server, desc) {
+        const action = {name: desc.name, displayName: desc.displayName, description: desc.description, service: {name: desc.serviceName}};
+        return server.base.actions.save(action);
+    }
+
 }
 
 module.exports = ActionList;

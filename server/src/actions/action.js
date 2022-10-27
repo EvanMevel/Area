@@ -1,14 +1,17 @@
 
-class Action {
-    areaId;
-    userId;
+const AR = require("../arCommons/ar");
 
-    constructor(areaId, userId) {
-        this.areaId = areaId;
-        this.userId = userId;
+class Action extends AR {
+
+    async getDataString(server) {
+        return server.actionDataUtils.getString(server, this.areaId);
     }
 
-    async events(areabase) {
+    async setData(server, data) {
+        return server.base.actionData.save({id: this.areaId, data: data});
+    }
+
+    async events(server) {
         return [];
     }
 }

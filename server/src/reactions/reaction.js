@@ -1,15 +1,15 @@
 
+const AR = require("../arCommons/ar");
 
-class Reaction {
-    areaId;
-    userId;
+class Reaction extends AR {
+    accepts;
 
-    constructor(areaId, userId) {
-        this.areaId = areaId;
-        this.userId = userId;
+    constructor(areaId, userId, accepts) {
+        super(areaId, userId);
+        this.accepts = accepts;
     }
 
-    async ingest(event, areabase) {
+    async ingest(event, server) {
     }
 }
 

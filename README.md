@@ -106,4 +106,4 @@ await areabase.services.create("SERVICE_ID", "SERVICE_NAME", SERVICE_OAUTH_LVL);
 
 ## Database
 
-Database is accessible with phpmyadmin at http://localhost:8081
+Database is accessible with phpmyadmin at http://localhost:6969
