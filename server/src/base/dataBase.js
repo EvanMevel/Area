@@ -41,6 +41,10 @@ class DataBase {
         this.actionData = dataSource.getRepository("ActionData");
     }
 
+    async stop() {
+        return dataSource.destroy();
+    }
+
 }
 
 module.exports = DataBase;
