@@ -8,7 +8,7 @@ async function getSong(server, access_token)
     return body.data[0];
 }
 
-async function getSentence(track)
+function getSentence(track)
 {
     return {
         type: EventType.SONG,
@@ -27,16 +27,14 @@ class DeezerLike extends OAuthAction {
     async oAuthEvent(server, account) {
         const access_token = account.access_token;
         const track = await getSong(server, access_token);
-        const sentence = await getSentence(track);
-        console.log(sentence.string);
-        // const oldLiked = await server.base.actionData.getString(this.areaId);
-        // if (track.id !== oldLiked) {
-        //     const sentence = getSentence(track);
-        //     await server.base.actionData.set(this.areaId, track.id);
-        return [sentence];
-        // } else {
-        //     return [];
-        // }
+        const oldLiked = await server.base.actionData.getString(this.areaId);
+        if (track.id !== oldLiked) {
+            const sentence = getSentence(track);
+            await server.base.actionData.set(this.areaId, track.id);
+            return [sentence];
+        } else {
+            return [];
+        }
     }
 
 }
