@@ -8,9 +8,7 @@ const DiscordMessage = require('./discordMessage');
 class ReactionList extends ARList {
 
     constructor() {
-        super(function (base) {
-            return base.reactions;
-        }, Reaction);
+        super(Reaction);
         this.add(DeezerLike);
         this.add(DiscordMessage);
     }

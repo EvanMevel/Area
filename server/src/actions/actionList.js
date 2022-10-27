@@ -7,9 +7,7 @@ const Weather = require("./weatherAction");
 class ActionList extends ARList {
 
     constructor() {
-        super(function (base) {
-            return base.actions;
-        }, Action);
+        super(Action);
         this.add(SpotifyLike);
         this.add(Weather);
     }

@@ -1,11 +1,9 @@
 
 class ArList {
     list = {};
-    table;
     baseClass;
 
-    constructor(table, baseClass) {
-        this.table = table;
+    constructor(baseClass) {
         this.baseClass = baseClass;
     }
 
