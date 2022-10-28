@@ -51,9 +51,8 @@ services:
       - phil
   
   androidapp:
-    build:
-      context: MyArea
-      dockerfile: ./MyArea/Dockerfile
+    build: ./MyArea
+    tty: true
 
 
 volumes:
