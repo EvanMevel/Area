@@ -1,50 +1,71 @@
-const express = require('express');
-const swaggerUi = require("swagger-ui-express");
-const Base = require("./base/base");
-const Workers = require("./workers");
-const endpoints = require("./endpoints/endpoints")
-
-// Constants
-const PORT = 8080;
-const HOST = '0.0.0.0';
-
-let httpServer = null;
+const httpSrv = require("./httpServer");
 
 let server = {
-    base: new Base(),
-    workers: new Workers()
+    services: require("./services"),
+    actionDataUtils: require("./base/actionDataUtils")
 }
 
 async function closeGracefully() {
-    server.base.stop();
-    if (httpServer != null) {
-        console.log("Stopping server...");
-        httpServer.close();
+    if (server.base != null) {
+        await server.base.stop();
     }
+    if (server.areas != null) {
+        server.areas.stop();
+    }
+    await httpSrv.stop();
     process.exit(0);
 }
 
 process.on('SIGTERM', closeGracefully);
 
-server.base.connect().then(async () => {
-    await server.workers.loadAll(server.base);
-    await server.workers.tickAll(server);
-});
+async function loadBase() {
+    const DataBase = require("./base/dataBase");
+    server.base = new DataBase();
 
-// App
-const app = express();
-app.use(express.json());
+    return server.base.initialize();
+}
 
-// Swagger
-const swaggerDocument = require("./docs/swagger.js");
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.get("/", function (req, res) {
-    res.redirect("/api-docs");
-});
+async function loadBaseAREAS() {
+    const AREAList = require("./areaList");
+    server.areas = new AREAList();
 
-// API endpoints
-endpoints(app, server);
+    await server.areas.loadAll();
+}
 
-httpServer = app.listen(PORT, HOST, () => {
-    console.log(`Running on http://${HOST}:${PORT}`);
-});
+async function loadWorkers() {
+    await server.services.registerServices(server.base);
+    await server.areas.loadBase(server);
+    await server.areas.tickAll(server);
+}
+
+async function loadTokens() {
+    server.tokens = await require("./token");
+    console.log("[TOKENS] Loaded tokens");
+}
+
+async function loadGot() {
+    server.request = require('got');
+    console.log("[GOT] Loaded got");
+}
+
+async function loadAREALogic() {
+    await Promise.all([
+        loadBaseAREAS(),
+        loadBase(),
+        loadGot()
+    ]);
+    await loadWorkers();
+}
+
+async function loadAll() {
+    const before = Date.now();
+    Promise.all([
+        loadTokens(),
+        httpSrv.loadAll(server),
+        loadAREALogic()
+    ]).then(() => {
+        console.log("----- Loaded all in " + (Math.round((Date.now() - before) / 100) / 10) + "s -----");
+    });
+}
+
+loadAll();

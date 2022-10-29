@@ -3,6 +3,10 @@
 
 const about = require("./swagger-about");
 const area = require("./swagger-area");
+const login = require("./swagger-login");
+const register = require("./swagger-register");
+//const accounts = require("./swagger-accounts");
+const reactions = require("./swagger-reactions");
 
 module.exports = {
     "openapi": "3.0.3",
@@ -23,13 +27,36 @@ module.exports = {
             "description": "Info"
         },
         {
+            "name": "Login",
+            "description": "Login"
+        },
+        {
             "name": "ActionReaction",
             "description": "Action Reaction"
-        }
+        }/*,
+        {
+            "name": "Accounts",
+            "description": "Accounts"
+        }*/
     ],
+    "components": {
+        "securitySchemes": {
+            "Bearer": {
+                "type": "http",
+                "description": "JWT access token",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+    },
     "paths": {
         "/about.json": about,
+        "/auth/login": login,
+        "/auth/register": register,
         "/api/area_list": area.list,
+        "/api/reactions": reactions,
+        //"/api/accounts": accounts,
         "/api/area": area.area
-    }
+    },
+    "security": [ { "Bearer": [] } ]
 }
