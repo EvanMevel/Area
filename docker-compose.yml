@@ -44,7 +44,7 @@ services:
       PMA_PORT: 3306
       PMA_ARBITRARY: 1
     ports:
-      - 8081:80
+      - 6969:80
     depends_on:
       - mysql
     networks:
@@ -54,9 +54,11 @@ services:
     image: node:18-alpine
     container_name: area-web
     working_dir: /app
+    command: sh -c "npm install; npm i axios; npm run dev"
     volumes:
-      - ./web/:/app
-    stdin_open: true
+      - ./web/nextjs-blog/:/app
+    ports:
+      - 8081:3000
 
 volumes:
   todo-mysql-data:

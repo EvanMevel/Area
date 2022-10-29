@@ -1,138 +1,88 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import axios from 'axios';
+import ReactDOM from "react-dom";
 
+import "./styles.css";
 
-const theme = {
-  blue: {
-    default: "#3f51b5",
-    hover: "#283593"
-  }
-};
+function App() {
+  // React States
+  const [errorMessages, setErrorMessages] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-const Button = styled.button`
-  background-color: ${(props) => theme[props.theme].default};
-  color: white;
-  padding: 5px 15px;
-  border-radius: 5px;
-  outline: 0;
-  text-transform: uppercase;
-  margin: 10px 0px;
-  cursor: pointer;
-  box-shadow: 0px 2px 2px lightgray;
-  transition: ease background-color 250ms;
-  &:hover {
-    background-color: ${(props) => theme[props.theme].hover};
-  }
-  &:disabled {
-    cursor: default;
-    opacity: 0.7;
-  }
-`;
+  // User Login info
+  const database = [
+    {
+      username: "user1",
+      password: "pass1"
+    },
+    {
+      username: "user2",
+      password: "pass2"
+    }
+  ];
 
-Button.defaultProps = {
-  theme: "blue"
-};
+  const errors = {
+    uname: "invalid username",
+    pass: "invalid password"
+  };
 
-function clickMe() {
-  alert("You clicked me!");
-}
+  const handleSubmit = (event) => {
+    //Prevent page reload
+    event.preventDefault();
 
-const ButtonToggle = styled(Button)`
-  opacity: 0.7;
-  ${({ active }) =>
-    active &&
-    `
-    opacity: 1; 
-  `}
-`;
+    var { uname, pass } = document.forms[0];
 
-const Tab = styled.button`
-  padding: 10px 30px;
-  cursor: pointer;
-  opacity: 0.6;
-  background: white;
-  border: 0;
-  outline: 0;
-  border-bottom: 2px solid transparent;
-  transition: ease border-bottom 250ms;
-  ${({ active }) =>
-    active &&
-    `
-    border-bottom: 2px solid black;
-    opacity: 1;
-  `}
-`;
+    // Find user login info
+    const userData = database.find((user) => user.username === uname.value);
 
-export default function App() {
-
-  const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(false);
-  const [err, setErr] = useState('');
-
-  const handleClick = async () => {
-    setIsLoading(true);
-    try {
-      const {data} = await axios.post(
-        'https://reqres.in/api/users',
-        {name: 'Sara Connor', job: 'tintin-tin-tintiin'},
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-        },
-      );
-
-      console.log(JSON.stringify(data, null, 4));
-
-      setData(data);
-    } catch (err) {
-      setErr(err.message);
-    } finally {
-      setIsLoading(false);
+    // Compare user info
+    if (userData) {
+      if (userData.password !== pass.value) {
+        // Invalid password
+        setErrorMessages({ name: "pass", message: errors.pass });
+      } else {
+        setIsSubmitted(true);
+      }
+    } else {
+      // Username not found
+      setErrorMessages({ name: "uname", message: errors.uname });
     }
   };
 
-  console.log(data);
+  // Generate JSX code for error message
+  const renderErrorMessage = (name) =>
+    name === errorMessages.name && (
+      <div className="error">{errorMessages.message}</div>
+    );
 
-  return (
-    <div>
-      {err && <h2>{err}</h2>}
-
-      <ButtonToggle onClick={handleClick}>Make request</ButtonToggle>
-
-      {isLoading && <h2>Loading...</h2>}
-
-      {data && (
-        <div>
-          <h2>Name: {data.name}</h2>
-          <h2>Job: {data.job}</h2>
+  // JSX code for login form
+  const renderForm = (
+    <div className="form">
+      <form onSubmit={handleSubmit}>
+        <div className="input-container">
+          <label>Username </label>
+          <input type="text" name="uname" required />
+          {renderErrorMessage("uname")}
         </div>
-      )}
-      <div></div>
-      <a href="https://www.twitter.com/" target="_blank">
-        <Button>Twitter</Button>
-      </a>
-      <div></div>
-      <a href="https://www.facebook.com/" target="_blank">
-        <Button>Facebook</Button>
-      </a>
-      <div></div>
-      <a href="https://www.reddit.com/" target="_blank">
-        <Button>Reddit</Button>
-      </a>
-      <div></div>
-      <a href="https://www.spotify.com/" target="_blank">
-        <Button>Spotify</Button>
-      </a>
-      <div></div>
-      <form>
-        <input type={"text"} name={"text"} id={"task-input"} placeholder="Enter username"/>
-        <div></div>
-        <input type={"password"} name={"pass"} id={"task-input"} placeholder="Enter password"/>
-        <button type="submit">SUBMIT</button>
+        <div className="input-container">
+          <label>Password </label>
+          <input type="password" name="pass" required />
+          {renderErrorMessage("pass")}
+        </div>
+        <div className="button-container">
+          <input type="submit" />
+        </div>
       </form>
     </div>
   );
+
+  return (
+    <div className="app">
+      <div className="login-form">
+        <div className="title">Sign In</div>
+        {isSubmitted ? <div>User is successfully logged in</div> : renderForm}
+      </div>
+    </div>
+  );
 }
+
+export default App;
