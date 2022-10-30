@@ -1,47 +1,71 @@
-'use strict';
+const httpSrv = require("./httpServer");
 
-const express = require('express');
-const AreaBase = require("./areabase");
-const swaggerUi = require("swagger-ui-express");
-
-// Constants
-const PORT = 8080;
-const HOST = '0.0.0.0';
-
-let server = null;
-let areaBase = new AreaBase();
+let server = {
+    services: require("./services"),
+    actionDataUtils: require("./base/actionDataUtils")
+}
 
 async function closeGracefully() {
-    areaBase.stop();
-    if (server != null) {
-        console.log("Stopping server...");
-        server.close();
+    if (server.base != null) {
+        await server.base.stop();
     }
+    if (server.areas != null) {
+        server.areas.stop();
+    }
+    await httpSrv.stop();
     process.exit(0);
 }
 
 process.on('SIGTERM', closeGracefully);
 
-areaBase.connect().then(() => {
-    areaBase.createTables();
-});
+async function loadBase() {
+    const DataBase = require("./base/dataBase");
+    server.base = new DataBase();
 
-async function handleRequest(req, res) {
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    console.log("Received from the ip " + ip);
-
-    const arr = await areaBase.getTest();
-    res.send(arr);
+    return server.base.initialize();
 }
 
-// App
-const app = express();
-app.get('/api/test', handleRequest);
+async function loadBaseAREAS() {
+    const AREAList = require("./areaList");
+    server.areas = new AREAList();
 
-const swaggerDocument = require("./docs/swagger.js");
+    await server.areas.loadAll();
+}
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+async function loadWorkers() {
+    await server.services.registerServices(server.base);
+    await server.areas.loadBase(server);
+    await server.areas.tickAll(server);
+}
 
-server = app.listen(PORT, HOST, () => {
-    console.log(`Running on http://${HOST}:${PORT}`);
-});
+async function loadTokens() {
+    server.tokens = await require("./token");
+    console.log("[TOKENS] Loaded tokens");
+}
+
+async function loadGot() {
+    server.request = require('got');
+    console.log("[GOT] Loaded got");
+}
+
+async function loadAREALogic() {
+    await Promise.all([
+        loadBaseAREAS(),
+        loadBase(),
+        loadGot()
+    ]);
+    await loadWorkers();
+}
+
+async function loadAll() {
+    const before = Date.now();
+    Promise.all([
+        loadTokens(),
+        httpSrv.loadAll(server),
+        loadAREALogic()
+    ]).then(() => {
+        console.log("----- Loaded all in " + (Math.round((Date.now() - before) / 100) / 10) + "s -----");
+    });
+}
+
+loadAll();
