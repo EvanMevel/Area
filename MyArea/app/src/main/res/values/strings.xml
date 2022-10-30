@@ -3,11 +3,12 @@
     <string name="action_settings">Déconnexion</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Page d Acueil</string>
-    <string name="second_fragment_label">Ajouter une nouvelle action</string>
+    <string name="second_fragment_label">GroupaPhil</string>
     <string name="next">Suivant</string>
     <string name="previous">Ajouter</string>
 
     <string name="hello_first_fragment">Vous n avez aucune Action Réaction pour l instant</string>
     <string name="hello_second_fragment">Aucune option disponible. Arg: %1$s</string>
     <string name="spinner_test">Spinner Test</string>
+    <string name="ajouter">Ajouter</string>
 </resources>
