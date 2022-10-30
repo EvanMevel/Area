@@ -63,14 +63,23 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
         var json = JSONObject();
         json.put("actionId", idAction);
         json.put("reactionId", idReaction);
-        json.put("userId", 1);
-        val jsonPostRequest = JsonObjectRequest(
+        val jsonPostRequest = object: JsonObjectRequest(
             Request.Method.POST, url, json,
             { response ->
                 //
                 println("POST Request : ${response}")
             },
-            { println( "That didn't work!" )})
+            { error ->
+                var body: String = String(error.networkResponse.data);
+                println(body)
+            })
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Authorization"] = "Bearer " + MainActivity.token;
+                return headers
+            }
+        }
         queue.add(jsonPostRequest)
     }
 

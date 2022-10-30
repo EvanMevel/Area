@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         lateinit var instance: MainActivity
+        lateinit var token: String
     }
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding

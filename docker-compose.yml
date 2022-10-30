@@ -49,6 +49,11 @@ services:
       - mysql
     networks:
       - phil
+  
+  androidapp:
+    build: ./MyArea
+    tty: true
+
 
 volumes:
   todo-mysql-data:

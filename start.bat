@@ -1,1 +1,1 @@
-docker-compose -p phil up -d
+docker-compose -p phil up -d --build
