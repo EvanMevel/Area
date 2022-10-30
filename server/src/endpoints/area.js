@@ -5,7 +5,7 @@ const BadRequest = require("./badRequest");
 class List extends TokenEndpoint {
 
     async authCalled(req, res, server, user) {
-        const areas = await server.base.area.query("SELECT * FROM ActionReactions WHERE ActionReactions.userId = " + user.id);
+        const areas = await server.base.area.query("SELECT id, name, actionName, reactionName FROM ActionReactions WHERE ActionReactions.userId = " + user.id);
         res.json(areas);
     }
 }
@@ -34,8 +34,8 @@ class Delete extends TokenEndpoint {
 class Create extends TokenEndpoint {
 
     async authCalled(req, res, server, user) {
-        this.checkFieldsExist(req.body, ["actionId", "reactionId"]);
-        const {actionId, reactionId} = req.body;
+        this.checkFieldsExist(req.body, ["actionId", "reactionId", "name"]);
+        const {actionId, reactionId, name} = req.body;
         if (!(await server.base.actions.countBy({name: actionId}))) {
             throw new BadRequest("No Action with such name \"" + actionId + "\"");
         }
@@ -43,7 +43,7 @@ class Create extends TokenEndpoint {
             throw new BadRequest("No Reaction with such name \"" + reactionId + "\"");
         }
 
-        const resp = await server.base.area.save({user: user, action: {name: actionId}, reaction: {name: reactionId}});
+        const resp = await server.base.area.save({user: user, name: name, action: {name: actionId}, reaction: {name: reactionId}});
         if (resp.id == null) {
             throw new Error("AREA creation sql should return a response, got an empty response instead!")
         } else {
