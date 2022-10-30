@@ -1,26 +1,27 @@
 package com.example.myarea
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.myarea.databinding.FragmentFirstBinding
-import kotlinx.serialization.json.*
+
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment(), OnItemSelectedListener {
+class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
 
@@ -28,36 +29,92 @@ class FirstFragment : Fragment(), OnItemSelectedListener {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    var dialog: AlertDialog? = null
+    var layout: LinearLayout? = null
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        layout = binding.container;
+        //get area list
+        getRequest();
+        //display  return
         return binding.root
 
+    }
+    fun getRequest() {
+        val queue = Volley.newRequestQueue(MainActivity.instance)
+        val url = "http://10.0.2.2:8080/api/area_list"
+        val stringRequest = object:JsonArrayRequest(
+            Request.Method.GET, url,null,
+            { response ->
+                println("GET Request : ${response}")
+                for (i in 0 until response.length()) {
+                    var element = response.getJSONObject(i);
+                    addCard(element.getString("name"), element.getInt("id"));
+                }
+            },
+            { error ->
+                var body: String = String(error.networkResponse.data);
+                println(body)
+            })
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Authorization"] = "Bearer " + MainActivity.token;
+                return headers
+            }
+        }
+        queue.add(stringRequest)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.buttonFirst.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-            Log.d("TAG", "tbleubleublue ca me parait etre un bon quoi feur")
-
         }
+    }
+
+    fun deleteRequest(id : Int, view : View) {
+        val queue = Volley.newRequestQueue(MainActivity.instance)
+        val url = "http://10.0.2.2:8080/api/area?id=" + id;
+        val jsonObjectRequest = object: JsonObjectRequest(
+            Request.Method.DELETE, url, null,
+            { response ->
+                //
+                println("GET Request : ${response}")
+                layout?.removeView(view);
+            },
+            { error ->
+                var body: String = String(error.networkResponse.data);
+                println(body)
+            })
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Authorization"] = "Bearer " + MainActivity.token;
+                return headers
+            }
+        }
+        queue.add(jsonObjectRequest)
+    }
+
+    fun addCard(name : String, id : Int) {
+        var view = layoutInflater.inflate(R.layout.card, null);
+        var nameView = view.findViewById<TextView>(R.id.name);
+        var deleteButton = view.findViewById<Button>(R.id.delete);
+        binding.textviewFirst.isInvisible=true;
+        nameView.setText(name);
+        deleteButton.setOnClickListener {
+            deleteRequest(id , view)
+        }
+        layout?.addView(view);
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        println("AHHEIUZIUEBIZA");
-    }
-
-    override fun onNothingSelected(p0: AdapterView<*>?) {
-        println("EJOZIABE IUZAB PE A");
     }
 }
