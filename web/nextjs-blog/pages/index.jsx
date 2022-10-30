@@ -74,7 +74,7 @@ export default function App() {
     setIsLoading(true);
     try {
       const {data} = await axios.post(
-        'https://reqres.in/api/users',
+        'http://localhost:8080/about.json',
         {name: 'Sara Connor', job: 'tintin-tin-tintiin'},
         {
           headers: {
