@@ -4,18 +4,18 @@ const OAuthReaction = require("./oAuthReaction");
 
 async function trackId(track, access_token, server)
 {
-    let body = await server.request.get("https://api.spotify.com/v1/search?q=" + track + "&type=track", {
-        header: {
-            'Authorization': 'Bearer ' + access_token,
+    let body = await server.request.get("https://api.spotify.com/v1/search?q=" + track + "&type=track&access_token=" + access_token, {
+        headers: {
             'Content-Type': 'application/json'
         }
-    });
-    console.log(body)
+    }).json();
+    return body.tracks.items[0].id;
 }
 
 async function likeASong(track, server, access_token)
 {
-    await trackId(track, access_token, server);
+    const id = await trackId(track, access_token, server);
+    await server.request.put("https://api.spotify.com/v1/me/tracks?access_token=" + access_token + "&ids=" + id);
 }
 
 class SpotifyLike extends OAuthReaction {

@@ -33,7 +33,7 @@ class SpotifyLike extends OAuthAction {
         const access_token = await this.getAccessToken(server, account.refresh_token);
         let track = await getSong(server, access_token);
         const oldLiked = await server.base.actionData.getString(this.areaId);
-        if (track.id !== oldLiked) {
+        if (track !== undefined && track.id !== oldLiked) {
             const sentence = getSentence(track);
             await server.base.actionData.set(this.areaId, track.id);
             return [sentence];

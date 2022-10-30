@@ -5,7 +5,7 @@ const EventType = require("../eventType");
 async function getSong(server, access_token)
 {
     let body = await server.request.get("https://api.deezer.com/user/me/tracks?access_token=" + access_token).json();
-    return body.data[0];
+    return body.data[body.data.length - 1];
 }
 
 function getSentence(track)
@@ -28,7 +28,7 @@ class DeezerLike extends OAuthAction {
         const access_token = account.access_token;
         const track = await getSong(server, access_token);
         const oldLiked = await server.base.actionData.getString(this.areaId);
-        if (track.id !== oldLiked) {
+        if (track !== undefined && track.id !== oldLiked) {
             const sentence = getSentence(track);
             await server.base.actionData.set(this.areaId, track.id);
             return [sentence];
