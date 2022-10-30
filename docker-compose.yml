@@ -49,11 +49,20 @@ services:
       - mysql
     networks:
       - phil
-  
+
   androidapp:
     build: ./MyArea
     tty: true
 
+  web:
+    image: node:18-alpine
+    container_name: area-web
+    working_dir: /app
+    command: sh -c "npm install; npm run dev"
+    volumes:
+      - ./web/nextjs-blog/:/app
+    ports:
+      - 8081:3000
 
 volumes:
   todo-mysql-data:
