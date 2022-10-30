@@ -49,7 +49,8 @@ class LoginFragment : Fragment(){
                     println("POST Request : ${response}")
                     findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
                 },
-                { println( "That didn't work!" )})
+                {//afficher "wrong login or password"
+                    println( "That didn't work!" )})
             queue.add(jsonPostRequest)
 
         }
