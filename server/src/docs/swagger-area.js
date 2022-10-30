@@ -7,6 +7,10 @@ const area = {
             "description": "id of area",
             "uniqueItems": true
         },
+        "name": {
+            "type": "string",
+            "description": "name of the area"
+        },
         "actionId": {
             "type": "string",
             "description": "id of the action"
@@ -21,6 +25,10 @@ const area = {
 const createAREA = {
     "type": "object",
     "properties": {
+        "name": {
+            "type": "string",
+            "description": "name of the area"
+        },
         "actionId": {
             "type": "string",
             "description": "id of the action"
@@ -31,8 +39,9 @@ const createAREA = {
         }
     },
     "example": {
-        "actionId": "spotify_action_like",
-        "reactionId": "discord_reaction_message"
+        "name":"Discord like on Spotify",
+        "actionId":"spotify_action_like",
+        "reactionId":"discord_reaction_message"
     }
 }
 
@@ -195,8 +204,7 @@ module.exports.list = {
                             "type": "array",
                             "items": area,
                             "example": [
-                                {"id":2,"actionId":"fb_test","reactionId":"fb_test_t"},
-                                {"id":3,"actionId":"facebook_action_post","reactionId":"facebook_reaction_post"}
+                                {"id":2,"name":"Discord like on Spotify","actionId":"spotify_action_like","reactionId":"discord_reaction_message"}
                             ]
                         }
                     }
