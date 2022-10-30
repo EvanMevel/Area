@@ -11,4 +11,5 @@
     <string name="hello_second_fragment">Aucune option disponible. Arg: %1$s</string>
     <string name="spinner_test">Spinner Test</string>
     <string name="ajouter">Ajouter</string>
+    <string name="nom_de_l_action_r_action">Nom de l\'action-réaction</string>
 </resources>

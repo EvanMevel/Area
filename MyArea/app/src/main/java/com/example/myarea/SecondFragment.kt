@@ -57,12 +57,13 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
         var desReaction = reactionSpinner.selectedItem.toString().split("-")[1].trim();
         var idAction = services.getActionId(desAction).replace("\"", "")
         var idReaction = services.getReactionId(desReaction).replace("\"", "")
-
+        var areaname = binding.areaname.text.toString();
         val queue = Volley.newRequestQueue(MainActivity.instance)
         val url = "http://10.0.2.2:8080/api/area"
         var json = JSONObject();
         json.put("actionId", idAction);
         json.put("reactionId", idReaction);
+        json.put("name",areaname);
         val jsonPostRequest = object: JsonObjectRequest(
             Request.Method.POST, url, json,
             { response ->
@@ -109,13 +110,13 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
         super.onViewCreated(view, savedInstanceState)
         vue = view;
 
-        actionSpinner = view.findViewById(R.id.spinner);
+        actionSpinner = view.findViewById(R.id.action);
         actionAdapter = ArrayAdapter<String>(view.context, android.R.layout.simple_spinner_item, arrayListOf());
         actionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         actionSpinner.isInvisible = true;
 
 
-        reactionSpinner = view.findViewById(R.id.action);
+        reactionSpinner = view.findViewById(R.id.reaction);
         reactionAdapter = ArrayAdapter<String>(view.context, android.R.layout.simple_spinner_item, arrayListOf());
         reactionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         reactionSpinner.isInvisible = true;
