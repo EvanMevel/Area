@@ -11,7 +11,7 @@ class ReactionList extends ARList {
     constructor() {
         super(Reaction);
         this.add(DeezerLike);
-        //this.add(DiscordMessage);
+        this.add(DiscordMessage);
         this.add(SpotifyLike);
     }
 
