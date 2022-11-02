@@ -12,4 +12,5 @@
     <string name="spinner_test">Spinner Test</string>
     <string name="ajouter">Ajouter</string>
     <string name="nom_de_l_action_r_action">Nom de l\'action-réaction</string>
+    <string name="login_ou_mot_de_passe_incorrects">Login ou mot de passe incorrects</string>
 </resources>
