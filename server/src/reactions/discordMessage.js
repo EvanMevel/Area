@@ -12,7 +12,7 @@ class DiscordMessage extends Reaction {
     }
 
     async ingest(event, server) {
-        return discord.writeMessage(event.string);
+        return await discord.writeMessage(event.string);
     }
 
 }
