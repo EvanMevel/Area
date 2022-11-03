@@ -2,15 +2,11 @@ version: "3.8"
 
 services:
   server:
-    image: node:18-alpine
     container_name: area-server
-    command: sh -c "echo 'Installing...'; npm install --no-optional --no-audit --no-fund --omit=optional; npm run dev"
+    build: ./server
     ports:
       - '8080:8080'
       - '9229:9229'
-    working_dir: /app
-    volumes:
-      - ./server/:/app
     environment:
       MYSQL_HOST: mysql
       MYSQL_USER: root
@@ -51,19 +47,16 @@ services:
       - phil
 
   androidapp:
+    container_name: android-app
     build: ./MyArea
-    tty: true
     volumes:
-      - android-apk:/result
+      - android-apk:/result/
 
   web:
-    image: node:18-alpine
     container_name: area-web
-    working_dir: /app
-    command: sh -c "npm install; npm run dev"
+    build: ./web/nextjs-blog
     volumes:
-      - ./web/nextjs-blog/:/app
-      - android-apk:/result
+      - android-apk:/result/
     ports:
       - 8081:3000
 

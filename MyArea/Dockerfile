@@ -5,4 +5,4 @@ RUN apt update
 RUN apt install -y dos2unix
 RUN dos2unix ./gradlew
 RUN bash gradlew :app:assembleRelease
-#RUN mv /app/app/build/outputs/apk/release/app-release.apk /result/
+ENTRYPOINT cp /app/app/build/outputs/apk/release/app-release.apk /result/
