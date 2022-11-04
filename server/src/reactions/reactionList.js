@@ -5,6 +5,7 @@ const EventType = require("../eventType");
 const DeezerLike = require('./deezerLike');
 const DiscordMessage = require('./discordMessage');
 const SpotifyLike = require("./spotifyLike");
+const YoutubeLike = require("./youtubeLike");
 
 class ReactionList extends ARList {
 
@@ -13,6 +14,7 @@ class ReactionList extends ARList {
         this.add(DeezerLike);
         this.add(DiscordMessage);
         this.add(SpotifyLike);
+        this.add(YoutubeLike);
     }
 
     getAccept(type) {
