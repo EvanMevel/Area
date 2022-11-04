@@ -4,7 +4,7 @@ const ActionDescription = require("./actionDescription");
 const EventType = require("../eventType");
 const service = google.youtube({
     version: 'v3',
-    auth: 'AIzaSyBfKWYmpKcT7ovQ2FHqIzrsKk-UO3xEirQ'
+    auth: 'AIzaSyBfBGLf3ZaqpcmuWKLHeTwNXO6s-pAk-6w'
 });
 
 async function getVideo()
@@ -29,7 +29,8 @@ async function getSentence(video)
         type: EventType.VIDEO,
         name: video.title,
         artist: video.channel,
-        string: "The most french popular video is " + video.title + " by " + video.channel + "."
+        string: "The most french popular video is " + video.title + " by " + video.channel + ".",
+        id: video.id
     }
 }
 

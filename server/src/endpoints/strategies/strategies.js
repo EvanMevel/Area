@@ -17,6 +17,7 @@ module.exports.registerAll = function (app, express, server) {
     passport.use(require("./deezerStategy"));
     passport.use(require("./spotifyStrategy"));
     passport.use(require("./localStrategy")(server));
+    passport.use(require("./youtubeStrategy"));
 
     const auth = express.Router();
 
@@ -39,6 +40,7 @@ module.exports.registerAll = function (app, express, server) {
 
     registerStrategy(auth, "deezer", server);
     registerStrategy(auth, "spotify", server);
+    registerStrategy(auth, "youtube", server);
 
     app.use("/auth", auth);
 }

@@ -1,4 +1,3 @@
-
 const DeezerStrategy = require("passport-deezer").Strategy;
 const DEEZER_CLIENT_ID = "562402";
 const DEEZER_CLIENT_SECRET = "7966df434097d4c9ceaa3053f9d1590e";
