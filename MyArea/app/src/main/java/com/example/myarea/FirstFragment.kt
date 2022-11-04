@@ -71,8 +71,11 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.buttonFirst.setOnClickListener {
+        binding.addaction.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        }
+        binding.deconexion.setOnClickListener {
+            findNavController().navigate(R.id.action_FirstFragment_to_loginFragment)
         }
     }
 
@@ -82,9 +85,13 @@ class FirstFragment : Fragment() {
         val jsonObjectRequest = object: JsonObjectRequest(
             Request.Method.DELETE, url, null,
             { response ->
-                //
                 println("GET Request : ${response}")
 
+                if (layout.childCount == 1) {
+                    layout.removeAllViews();
+                } else {
+                    layout.removeView(view)
+                }
             },
             { error ->
                 var body: String = String(error.networkResponse.data);
@@ -108,14 +115,7 @@ class FirstFragment : Fragment() {
         binding.textviewFirst.isInvisible=true;
         nameView.setText(name);
         deleteButton.setOnClickListener {
-            println(view);
-            println("removed " + nameView.text)
-            layout.post(Runnable {
-                println(layout.childCount)
-                layout.removeView(view)
-                println(layout.childCount)
-            })
-            //deleteRequest(id , view)
+            deleteRequest(id , view)
         }
         layout.addView(view);
     }
