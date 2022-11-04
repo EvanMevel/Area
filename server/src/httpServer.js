@@ -44,6 +44,11 @@ async function loadAll(server) {
 
     loadSwagger(app);
 
+    app.use((req, res, next) => {
+        console.log("[HTTP] " + req.ip + " " + req.method + " at " + req.url);
+        next();
+    })
+
     const endpoints = require("./endpoints/endpoints");
 
     endpoints(app, server);
