@@ -9,6 +9,19 @@ module.exports.passport = passport;
 
 module.exports.jwt = passport.authenticate("jwt", noSession);
 
+function callAuth(strategy, callback) {
+    return (req, res, next) => {
+        passport.authenticate(strategy, noSession, (err, user, info) => {
+            if (err) {
+                const status = err.code || 400;
+                return res.status(status).json({message: err.message});
+            }
+            callback(req, res, user);
+            next();
+        })(req, res, next);
+    }
+}
+
 module.exports.registerAll = function (app, express, server) {
 
     app.use(passport.initialize());
@@ -20,16 +33,16 @@ module.exports.registerAll = function (app, express, server) {
 
     const auth = express.Router();
 
-    auth.get("/login", passport.authenticate("local", noSession), function (req, res) {
+    auth.get("/login", callAuth("local", (req, res, user) => {
         res.json({
-            token: server.tokens.generate(req.user)
+            token: server.tokens.generate(user)
         });
-    });
-    auth.post("/login", passport.authenticate("local", noSession), function (req, res) {
+    }));
+    auth.post("/login", callAuth("local", (req, res, user) => {
         res.json({
-            token: server.tokens.generate(req.user)
+            token: server.tokens.generate(user)
         });
-    });
+    }));
     auth.get("/register", function (req, res) {
         register(req, res, server);
     });
@@ -69,17 +82,14 @@ function callBack(server) {
             res.redirect("http://localhost:8081?token=" + token);
         } else {
             const user = await server.base.users.findOneBy({id: userId});
-            if (account != null) {
-                res.redirect("http://localhost:8081?connectedService=" + service);
-                return;
+            if (account == null) {
+                account = {service: service, serviceUser: profile.id, user: user, refreshToken: refreshToken, accessToken: accessToken};
+                const resp = await server.base.accounts.save(account);
+                if (resp.length === 0) {
+                    return res.status(500).end();
+                }
             }
-            account = {service: service, serviceUser: profile.id, user: user, refreshToken: refreshToken, accessToken: accessToken};
-            const resp = await server.base.accounts.save(account);
-            if (resp.length === 0) {
-                res.status(500).end();
-            } else {
-                res.redirect("http://localhost:8081?connectedService=" + service);
-            }
+            return res.redirect("http://localhost:8081?connectedService=" + service);
         }
     }
 }
