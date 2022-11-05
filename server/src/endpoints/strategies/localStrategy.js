@@ -3,6 +3,8 @@
 
 const LocalStrategy = require("passport-local").Strategy;
 
+const bcrypt = require ('bcrypt');
+
 module.exports = function (server) {
     return new LocalStrategy({usernameField: "name"},
         async function (name, password, done) {
@@ -12,10 +14,18 @@ module.exports = function (server) {
                 {email: name}
             ]
         });
-        if (users.length < 1 || users[0].password !== password) {
-            done("Invalid name or password!");
+        if (users.length < 1) {
+            return done({status: 401, message: "Invalid name or password!"});
         }
-        const id = users[0].id;
-        done(null, id);
+        bcrypt.compare(password, users[0].password, (err, matched) => {
+            if (err) {
+                throw err;
+            }
+            if (matched) {
+                return done(null, users[0].id);
+            } else {
+                return done({status: 401, message: "Invalid name or password!"});
+            }
+        });
     });
 }
