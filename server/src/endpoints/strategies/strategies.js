@@ -16,6 +16,9 @@ function callAuth(strategy, callback) {
                 const status = err.code || 400;
                 return res.status(status).json({message: err.message});
             }
+            if (info) {
+                return res.status(400).json({message: info.message});
+            }
             callback(req, res, user);
             next();
         })(req, res, next);
