@@ -58,6 +58,11 @@ module.exports.registerAll = function (app, express, server) {
     registerStrategy(auth, "spotify", server);
     registerStrategy(auth, "youtube", server);
 
+    auth.get("/test", function (req, res) {
+        console.log("url: " + req.url);
+        res.send("rgttgtg");
+    })
+
     app.use("/auth", auth);
 }
 
@@ -77,6 +82,7 @@ function callBack(server) {
         let userId = req.query.state;
         const {profile, refreshToken, accessToken} = req.user;
         const service = profile.provider;
+
         let account = await server.base.accounts.findOneBy({service: {name: service}, serviceUser: profile.id});
         if (userId == null) {
             if (account == null) {

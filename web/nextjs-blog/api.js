@@ -14,6 +14,36 @@ export function getAreaList(token) {
     );
 }
 
+export function getUserInfo(token) {
+    return axios.get(
+        baseUrl + "/api/me",
+        {
+            headers: {
+                Accept: "application/json",
+                Authorization: "Bearer " + token
+            },
+        },
+    );
+}
+
+export async function getAuthServices() {
+    const {data} = await axios.get(
+        baseUrl + "/about.json"
+    );
+    let result = [];
+    const services = data.server.services;
+
+    services.forEach((service) => {
+        console.log(service.name + "  " + service.oauth);
+        if (service.oauth) {
+            delete service["actions"];
+            delete service["reactions"];
+            result.push(service);
+        }
+    })
+    return result;
+}
+
 export async function getActionList() {
     const {data} = await axios.get(
         baseUrl + "/about.json"
@@ -68,12 +98,27 @@ export function createArea(token, area) {
 }
 
 export function login(credentials) {
-    return axios.post(baseUrl + "/auth/login",
+    return axios.post(
+        baseUrl + "/auth/login",
         credentials,
         {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
             }
-        });
+        }
+    );
+}
+
+export function register(credentials) {
+    return axios.post(
+        baseUrl + "/auth/register",
+        credentials,
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }
+        }
+    );
 }
