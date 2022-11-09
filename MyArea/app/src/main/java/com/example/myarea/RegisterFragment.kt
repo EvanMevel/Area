@@ -34,7 +34,7 @@ class RegisterFragment : Fragment() {
             var password = binding.password.text.toString();
             var email = binding.email.text.toString();
             val queue = Volley.newRequestQueue(MainActivity.instance)
-            val url = "http://10.0.2.2:8080/auth/register"
+            val url = "$BASE_URL/auth/register"
             var json = JSONObject();
             json.put("name", username);
             json.put("email", email);
@@ -46,7 +46,9 @@ class RegisterFragment : Fragment() {
                     println("POST Request : ${response}")
                     findNavController().navigate(R.id.action_registerFragment_to_LoginFragment)
                 },
-                {
+                {error ->
+                    var body = String(error.networkResponse.data)
+                    println("ERROR : ${body}")
                     //binding.loginTextError.isInvisible = false; // fix ca fonctionne que si on smap le button
 
                     println( "That didn't work!" )})
