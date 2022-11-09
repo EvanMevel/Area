@@ -16,6 +16,9 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.myarea.databinding.FragmentFirstBinding
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 
 
 /**
@@ -45,7 +48,7 @@ class FirstFragment : Fragment() {
 
     fun getRequest() {
         val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "http://10.0.2.2:8080/api/area_list"
+        val url = "$BASE_URL/api/area_list"
         val stringRequest = object:JsonArrayRequest(
             Request.Method.GET, url,null,
             { response ->
@@ -56,7 +59,11 @@ class FirstFragment : Fragment() {
                 }
             },
             { error ->
-                var body: String = String(error.networkResponse.data);
+                var str = String(error.networkResponse.data)
+                var body = Json.parseToJsonElement(str)
+                println(Json.encodeToString(body));
+                var errortext = body.jsonObject.get("message")
+                binding.TextError.setText(errortext.toString())
                 println(body)
             })
         {
@@ -81,7 +88,7 @@ class FirstFragment : Fragment() {
 
     fun deleteRequest(id : Int, view : View) {
         val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "http://10.0.2.2:8080/api/area?id=" + id;
+        val url = "$BASE_URL/api/area?id=" + id;
         val jsonObjectRequest = object: JsonObjectRequest(
             Request.Method.DELETE, url, null,
             { response ->

@@ -15,6 +15,9 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.myarea.databinding.FragmentSecondBinding
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import org.json.JSONObject
 
 /**
@@ -39,7 +42,7 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     fun getRequest() {
         val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "http://10.0.2.2:8080/about.json"
+        val url = "$BASE_URL/about.json"
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             { response ->
@@ -59,7 +62,7 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
         var idReaction = services.getReactionId(desReaction).replace("\"", "")
         var areaname = binding.areaname.text.toString();
         val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "http://10.0.2.2:8080/api/area"
+        val url = "$BASE_URL/api/area"
         var json = JSONObject();
         json.put("actionId", idAction);
         json.put("reactionId", idReaction);
@@ -67,12 +70,17 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
         val jsonPostRequest = object: JsonObjectRequest(
             Request.Method.POST, url, json,
             { response ->
-                //
                 println("POST Request : ${response}")
+                findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
             },
             { error ->
-                var body: String = String(error.networkResponse.data);
+                var str = String(error.networkResponse.data)
+                var body = Json.parseToJsonElement(str)
+                println(Json.encodeToString(body));
+                var errortext = body.jsonObject.get("message")
+                binding.TextError.setText(errortext.toString())
                 println(body)
+
             })
         {
             override fun getHeaders(): MutableMap<String, String> {
@@ -90,7 +98,6 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
         actionAdapter.addAll(services.getServiceAction());
         actionSpinner.setAdapter(actionAdapter);
         actionSpinner.isInvisible = false;
-
         reactionAdapter.addAll(services.getServiceReaction());
         reactionSpinner.setAdapter(reactionAdapter);
         reactionSpinner.isInvisible = false;
@@ -123,7 +130,6 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         binding.buttonSecond.setOnClickListener {
             postRequest()
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
         binding.annuler.setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
