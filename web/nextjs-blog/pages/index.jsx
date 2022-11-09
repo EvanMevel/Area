@@ -73,7 +73,7 @@ export default function App() {
   const handleClick = async () => {
     setIsLoading(true);
     try {
-      const {data} = await axios.post(
+      const {data} = await axios.get(
         'http://localhost:8080/about.json',
         {name: 'Sara Connor', job: 'tintin-tin-tintiin'},
         {

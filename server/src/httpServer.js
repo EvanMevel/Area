@@ -38,6 +38,10 @@ async function loadAll(server) {
 
     const app = await load();
 
+    var cors = require('cors');
+
+    app.use(cors());
+
     loadSwagger(app);
 
     app.use((req, res, next) => {
