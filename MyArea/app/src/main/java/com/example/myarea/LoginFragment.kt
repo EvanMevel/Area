@@ -34,15 +34,15 @@ class LoginFragment : Fragment(){
     ): View? {
 
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
-        binding.login.isInvisible = true
-        binding.register.isInvisible = true
-        binding.imageView.isInvisible = true
-        binding.TextError.isInvisible = true
-        binding.logoSpotify.isInvisible = true
-        binding.logoYoutube.isInvisible = true
-        binding.logoDeezer.isInvisible = true
-        binding.username.isInvisible = true
-        binding.password.isInvisible = true
+        binding.login.isInvisible = true // set login button as invisible
+        binding.register.isInvisible = true // set register button as invisible
+        binding.imageView.isInvisible = true // set phil picture as invisible
+        binding.TextError.isInvisible = true // set red error text as invisible
+        binding.logoSpotify.isInvisible = true // set logo spotify as invisible
+        binding.logoYoutube.isInvisible = true // set logo youtube as invisible
+        binding.logoDeezer.isInvisible = true // set logo deezer as invisible
+        binding.username.isInvisible = true // set username as invisible
+        binding.password.isInvisible = true // set password as invisible
         return binding.root
 
     }
@@ -54,7 +54,7 @@ class LoginFragment : Fragment(){
             Request.Method.GET, url,
             { response ->
                 println("GET Request : ${response}")
-                binding.login.isInvisible = false
+                binding.login.isInvisible = false // display all items because connection to the server works
                 binding.register.isInvisible = false
                 binding.imageView.isInvisible = false
                 binding.TextError.isInvisible = false
@@ -66,10 +66,9 @@ class LoginFragment : Fragment(){
 
             },
             { error ->
-                var errortext = "Connection Server Failed."
-                println("AZERTGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGHR")
-                binding.TextError.isInvisible = false
-                binding.TextError.setText(errortext)
+                var errortext = "Connection Server Failed." // set a string to display when an error occurs
+                binding.TextError.isInvisible = false // set visible the textError
+                binding.TextError.setText(errortext)// print the server error
 
             })
         queue.add(stringRequest)
@@ -79,8 +78,8 @@ class LoginFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
         getRequest()
         binding.login.setOnClickListener {
-            var username = binding.username.text.toString();
-            var password = binding.password.text.toString();
+            var username = binding.username.text.toString() //get the username input from the user
+            var password = binding.password.text.toString(); //get the password input from the user
             val queue = Volley.newRequestQueue(MainActivity.instance)
             val url = "$BASE_URL/auth/login"
             var json = JSONObject();
@@ -88,12 +87,12 @@ class LoginFragment : Fragment(){
             json.put("password", password);
             val jsonPostRequest = JsonObjectRequest(
                 Request.Method.POST, url, json,
-                { response ->
+                { response -> // if it works we get the token and move to the first fragment
                     MainActivity.token = response["token"].toString();
                     println("POST Request : ${response}")
                     findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
                 },
-                { error ->
+                { error -> //if it doesn't work we display the seveur error message
                     var str = String(error.networkResponse.data)
                     var body = Json.parseToJsonElement(str)
                     println(Json.encodeToString(body));
@@ -104,15 +103,15 @@ class LoginFragment : Fragment(){
             queue.add(jsonPostRequest)
 
         }
-        binding.logoSpotify.setOnClickListener {
-            println("CA CLIQUE SUR SPOTYTY")
+
+        binding.logoSpotify.setOnClickListener { // if spotify button is clicked we go on web to login on it and then go back to the app
             val webIntent: Intent = Uri.parse("$BASE_URL/auth/spotify").let { webpage ->
                 Intent(Intent.ACTION_VIEW, webpage)
             }
             activity?.let { it1 -> ContextCompat.startActivity(it1, webIntent, null) }
-            //$BASE_URL/auth/spotify
         }
-        binding.register.setOnClickListener {
+
+        binding.register.setOnClickListener { // if register button is pressed we move to the register fragment
             findNavController().navigate(R.id.action_loginFragment_to_RegisterFragment)
         }
     }

@@ -24,15 +24,15 @@ import kotlinx.serialization.json.jsonObject
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class FirstFragment : Fragment() { // fragment creation
 
     private var _binding: FragmentFirstBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
+    private val binding get() = _binding!! //get binding
 
-    lateinit var layout: LinearLayout;
+    lateinit var layout: LinearLayout; // get layout
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -42,18 +42,17 @@ class FirstFragment : Fragment() {
         layout = binding.container;
         //get area list
         getRequest();
-        //display  return
         return binding.root
     }
 
-    fun getRequest() {
+    fun getRequest() { // get resquest for the list of AREAs of the connected user
         val queue = Volley.newRequestQueue(MainActivity.instance)
         val url = "$BASE_URL/api/area_list"
         val stringRequest = object:JsonArrayRequest(
             Request.Method.GET, url,null,
             { response ->
                 println("GET Request : ${response}")
-                for (i in 0 until response.length()) {
+                for (i in 0 until response.length()) {// dispaly a card for each area
                     var element = response.getJSONObject(i);
                     addCard(element.getString("name"), element.getInt("id"));
                 }
@@ -79,21 +78,20 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.addaction.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment) // if add action button is pressed --> move to the second fragment
         }
         binding.deconexion.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_loginFragment)
+            findNavController().navigate(R.id.action_FirstFragment_to_loginFragment) // if log out button is pressed --> move to the second fragment
         }
     }
 
-    fun deleteRequest(id : Int, view : View) {
+    fun deleteRequest(id : Int, view : View) { // delete request function which delete the chosen AREA
         val queue = Volley.newRequestQueue(MainActivity.instance)
         val url = "$BASE_URL/api/area?id=" + id;
         val jsonObjectRequest = object: JsonObjectRequest(
             Request.Method.DELETE, url, null,
             { response ->
                 println("GET Request : ${response}")
-
                 if (layout.childCount == 1) {
                     layout.removeAllViews();
                 } else {
@@ -105,7 +103,7 @@ class FirstFragment : Fragment() {
                 println(body)
             })
         {
-            override fun getHeaders(): MutableMap<String, String> {
+            override fun getHeaders(): MutableMap<String, String> { // header function which change the header of the request to put the token inside(token = user identity)
                 val headers = HashMap<String, String>()
                 headers["Authorization"] = "Bearer " + MainActivity.token;
                 return headers
@@ -114,14 +112,14 @@ class FirstFragment : Fragment() {
         queue.add(jsonObjectRequest)
     }
 
-    fun addCard(name : String, id : Int) {
+    fun addCard(name : String, id : Int) { // add card function which add a card (card is the layer where the area name and the delete button are)
         println(layout.allViews.joinToString())
         var view = layoutInflater.inflate(R.layout.card, null);
         var nameView = view.findViewById<TextView>(R.id.name);
         var deleteButton = view.findViewById<Button>(R.id.delete);
         binding.textviewFirst.isInvisible=true;
         nameView.setText(name);
-        deleteButton.setOnClickListener {
+        deleteButton.setOnClickListener { // if delete button pressed this card and the area on it will be deleted
             deleteRequest(id , view)
         }
         layout.addView(view);
