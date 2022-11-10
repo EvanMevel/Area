@@ -2,7 +2,7 @@
 const emaiRegex =
     /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 
-const bcrypt = require ('bcrypt');
+const bcrypt = require("bcrypt");
 
 const saltRounds = 10;
 

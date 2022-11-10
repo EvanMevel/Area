@@ -58,20 +58,40 @@ module.exports.registerAll = function (app, express, server) {
     registerStrategy(auth, "spotify", server);
     registerStrategy(auth, "youtube", server);
 
-    auth.get("/test", function (req, res) {
-        console.log("url: " + req.url);
-        res.send("rgttgtg");
-    })
-
     app.use("/auth", auth);
 }
 
-function authFunc(strategy) {
-    return function (req, res) {
+function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
+function authFunc(strategy, server) {
+    return async function (req, res) {
         const userId = req.query.userId;
+        let callback = req.query.callback;
+        if (callback == null) {
+            return res.status(400).json({message: "Missing callback url!"});
+        }
+        let state;
+        do {
+            state = makeid(20);
+        } while (await server.base.states.findOneBy({state: state}));
+        const stateObj = {
+            state: state,
+            callback: callback,
+            userId: userId
+        }
+        server.base.states.save(stateObj);
         let opts = {
             session: false,
-            state: userId
+            callbackURL: callback,
+            state: state
         };
         passport.authenticate(strategy, opts)(req, res);
     }
@@ -79,20 +99,39 @@ function authFunc(strategy) {
 
 function callBack(server) {
     return async function (req, res) {
-        let userId = req.query.state;
+        let state = req.query.state;
         const {profile, refreshToken, accessToken} = req.user;
         const service = profile.provider;
 
+        if (state == null) {
+            return res.status(401).json({
+                message: "No state given!"
+            });
+        }
+        let stateInfo = await server.base.states.findOneBy({state: state});
+        if (stateInfo == null) {
+            return res.status(401).json({
+                message: "Invalid state!"
+            });
+        }
+        const userId = stateInfo.userId;
+        server.base.states.remove(stateInfo);
+
+        console.log(userId);
         let account = await server.base.accounts.findOneBy({service: {name: service}, serviceUser: profile.id});
         if (userId == null) {
             if (account == null) {
-                res.status(401).end("Unauthorized");
-                return;
+                return res.status(401).json({
+                    message: "No user associated with this account!"
+                });
             }
             const token = server.tokens.generate(account.userId);
             res.redirect("http://localhost:8081?token=" + token);
         } else {
             const user = await server.base.users.findOneBy({id: userId});
+            if (user == null) {
+                return res.status(500).json({message: "Could not find user!"});
+            }
             if (account == null) {
                 account = {service: service, serviceUser: profile.id, user: user, refreshToken: refreshToken, accessToken: accessToken};
                 const resp = await server.base.accounts.save(account);
@@ -106,7 +145,11 @@ function callBack(server) {
 }
 
 function registerStrategy(router, strategy, server) {
-    router.get("/" + strategy, authFunc(strategy));
+    router.get("/" + strategy, authFunc(strategy, server));
 
-    router.get("/" + strategy + "/callback", passport.authenticate(strategy, noSession), callBack(server));
+    let opts = {
+        session: false,
+        callbackURL: "http://localhost:8080/auth/spotify/callback"
+    };
+    router.get("/" + strategy + "/callback", passport.authenticate(strategy, opts), callBack(server));
 }

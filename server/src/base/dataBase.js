@@ -13,7 +13,8 @@ let dataSource = new typeorm.DataSource({
     entities: [require("./entities/users"), require("./entities/services"),
         require("./entities/accounts"),
         require("./entities/reactions"), require("./entities/actions"), require("./entities/area"),
-        require("./entities/actionData")]
+        require("./entities/actionData"),
+        require("./entities/states")]
 })
 
 class DataBase {
@@ -24,6 +25,7 @@ class DataBase {
     actions;
     area;
     actionData;
+    states;
 
     constructor() {
     }
@@ -39,6 +41,7 @@ class DataBase {
         this.reactions = dataSource.getRepository("Reactions");
         this.area = dataSource.getRepository("ActionReactions");
         this.actionData = dataSource.getRepository("ActionData");
+        this.states = dataSource.getRepository("States");
     }
 
     async stop() {
