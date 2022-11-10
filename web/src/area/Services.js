@@ -1,10 +1,10 @@
-import TokenGuard from "../components/TokenGuard";
+import TokenGuard from "../login/TokenGuard";
 import {useEffect, useState} from "react";
 import {getUserInfo} from "../api";
-import AuthLogins from "../components/AuthLogins";
+import AuthLogins from "../login/AuthLogins";
 
 
-export default function services() {
+export default function Services() {
     const [user, setUser] = useState();
 
     async function loadUser() {

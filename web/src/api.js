@@ -59,8 +59,8 @@ export async function getActionList() {
     return actions;
 }
 
-export function getReactionList(token, action) {
-    return axios.get(
+export async function getReactionList(token, action) {
+    const {data} = await axios.get(
         baseUrl + "/api/reactions?action=" + action,
         {
             headers: {
@@ -69,6 +69,7 @@ export function getReactionList(token, action) {
             }
         }
     );
+    return data;
 }
 
 export function deleteArea(token, id) {

@@ -1,18 +1,17 @@
-import TokenGuard from "../components/TokenGuard";
-import React from "react";
-import AreaList from "../components/AreaList";
-import {useRouter} from "next/router";
+import {useNavigate} from "react-router-dom";
+import TokenGuard from "./login/TokenGuard";
+import AreaList from "./area/AreaList";
 
-export default function app() {
-    const router = useRouter();
+export default function Home() {
+    let navigate = useNavigate();
 
     function createArea(e) {
-        router.push("/create")
+        navigate("/app/create")
     }
 
     function logout(e) {
         localStorage.removeItem("token");
-        router.push("/login");
+        navigate("/login");
     }
 
     return <TokenGuard>

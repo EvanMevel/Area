@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import {AxiosError} from 'axios';
-import PropTypes from 'prop-types';
 import {login} from "../api";
 import AuthLogins from "./AuthLogins";
+import {useNavigate} from "react-router-dom";
+import {AxiosError} from "axios";
 
 async function loginUser(credentials) {
     try {
@@ -10,13 +10,22 @@ async function loginUser(credentials) {
 
         return {token: data.token};
     } catch (err) {
+        if (err instanceof AxiosError) {
+            return {error: err.response.data};
+        }
         return {error: err};
     }
 }
 
-export default function Login({setToken}) {
+export default function Login() {
+    let navigate = useNavigate();
     const [err, setErr] = useState();
     const [enabled, setEnabled] = useState(true);
+
+    function setToken(token) {
+        localStorage.setItem("token", token);
+        navigate("/app");
+    }
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -54,8 +63,4 @@ export default function Login({setToken}) {
         <div/>
         <AuthLogins/>
     </div>
-}
-
-Login.propTypes = {
-    setToken: PropTypes.func.isRequired
 }

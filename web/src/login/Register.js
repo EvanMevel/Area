@@ -1,33 +1,37 @@
 import React, {useState} from "react";
 import {AxiosError} from 'axios';
-import PropTypes from 'prop-types';
 import {register} from "../api";
+import {useNavigate} from "react-router-dom";
 
-async function registerUser(credentials, setErr) {
+async function registerUser(credentials) {
     try {
         const {data} = await register(credentials);
 
-        return data.token;
+        return {token: data.token};
     } catch (err) {
         if (err instanceof AxiosError && err.response != null) {
             if (err.response.status === 400) {
-                setErr(err.response.data);
-                return null;
+                return {error: err.response.data};
             }
         }
-        console.log(err);
-        return null;
+        return {error: err};
     }
 }
 
-export default function Register({setToken}) {
+export default function Register() {
+    let navigate = useNavigate();
     const [err, setErr] = useState();
     const [enabled, setEnabled] = useState(true);
+
+    function setToken(token) {
+        localStorage.setItem("token", token);
+        navigate("/app");
+    }
 
     async function handleSubmit(e) {
         e.preventDefault();
         setEnabled(false);
-        const token = await registerUser({
+        const {token, error} = await registerUser({
             email: e.target.email.value,
             name: e.target.name.value,
             password: e.target.password.value
@@ -35,6 +39,8 @@ export default function Register({setToken}) {
         setEnabled(true);
         if (token != null) {
             setToken(token);
+        } else {
+            setErr(error);
         }
     }
 
@@ -57,8 +63,4 @@ export default function Register({setToken}) {
 
         {err && <h2>{err.message}</h2>}
     </div>
-}
-
-Register.propTypes = {
-    setToken: PropTypes.func.isRequired
 }

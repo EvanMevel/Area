@@ -13,7 +13,10 @@ export default function AuthLogins({userId}) {
         let srvcs = [];
 
         for (let i = 0; i < authServices.length; i++) {
-            srvcs.push(<LoginService service={authServices[i]} userId={userId}></LoginService>)
+            srvcs.push(
+                <div key={i}>
+                    <LoginService service={authServices[i]} userId={userId}></LoginService>
+                </div>)
         }
         setServices(srvcs);
     }
