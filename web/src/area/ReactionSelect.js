@@ -10,22 +10,20 @@ export default function ReactionSelect({setValue, action}) {
         if (action.length < 1) {
             return;
         }
-        try {
-            const token = localStorage.getItem("token");
-            const givenList = await getReactionList(token, action);
-            let i = 0;
+        const {data, error} = await getReactionList(action);
+        if (error) {
+            return console.error(error);
+        }
+        let i = 0;
 
-            const actionsElements = givenList.map((ar) => {
-                return <option value={ar.name} key={i++}>{ar.displayName}</option>
-            })
+        const reactionsElements = data.map((ar) => {
+            return <option value={ar.name} key={i++}>{ar.displayName}</option>
+        })
 
-            setList(actionsElements);
+        setList(reactionsElements);
 
-            if (givenList.length > 0) {
-                setValue(givenList[0].name);
-            }
-        } catch (err) {
-            console.error(err);
+        if (data.length > 0) {
+            setValue(data[0].name);
         }
     }
 
