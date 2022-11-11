@@ -6,9 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.example.myarea.databinding.FragmentRegisterBinding
 import org.json.JSONObject
 
@@ -33,27 +30,19 @@ class RegisterFragment : Fragment() {
             var username = binding.username.text.toString();
             var password = binding.password.text.toString();
             var email = binding.email.text.toString();
-            val queue = Volley.newRequestQueue(MainActivity.instance)
-            val url = "$BASE_URL/auth/register"
             var json = JSONObject();
             json.put("name", username);
             json.put("email", email);
             json.put("password", password);
-            val jsonPostRequest = JsonObjectRequest(
-                Request.Method.POST, url, json,
+            MainActivity.server.register_area(
+                json,
                 { response ->
                     MainActivity.token = response["token"].toString();
                     println("POST Request : ${response}")
                     findNavController().navigate(R.id.action_registerFragment_to_LoginFragment)
                 },
-                {error ->
-                    var body = String(error.networkResponse.data)
-                    println("ERROR : ${body}")
-                    //binding.loginTextError.isInvisible = false; // fix ca fonctionne que si on smap le button
-
-                    println( "That didn't work!" )})
-            queue.add(jsonPostRequest)
-
+                binding.TextError
+            )
         }
     }
 
