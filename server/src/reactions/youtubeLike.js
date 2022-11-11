@@ -30,4 +30,4 @@ class YoutubeLike extends OAuthReaction {
 module.exports = YoutubeLike;
 
 module.exports.description = new ReactionDescription("youtube_like_video", "Youtube Like",
-    "Likes given video on Youtube", "youtube", [EventType.VIDEO]);
+    "Likes given video on Youtube", "youtube_oauth", [EventType.VIDEO]);
