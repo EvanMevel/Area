@@ -204,7 +204,9 @@ module.exports.list = {
                             "type": "array",
                             "items": area,
                             "example": [
-                                {"id":2,"name":"Discord like on Spotify","actionId":"spotify_action_like","reactionId":"discord_reaction_message"}
+                                {"id":2,"name":"Discord like on Spotify",
+                                    "actionName":"spotify_action_like",
+                                    "reactionName":"discord_reaction_message"}
                             ]
                         }
                     }

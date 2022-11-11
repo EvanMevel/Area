@@ -16,6 +16,9 @@ function callAuth(strategy, callback) {
                 const status = err.code || 400;
                 return res.status(status).json({message: err.message});
             }
+            if (info) {
+                return res.status(400).json({message: info.message});
+            }
             callback(req, res, user);
             next();
         })(req, res, next);
@@ -31,6 +34,7 @@ module.exports.registerAll = function (app, express, server) {
     passport.use(require("./spotifyStrategy"));
     passport.use(require("./localStrategy")(server));
     passport.use(require("./youtubeStrategy"));
+    passport.use(require("./twitchStrategy"));
 
     const auth = express.Router();
 
@@ -54,6 +58,12 @@ module.exports.registerAll = function (app, express, server) {
     registerStrategy(auth, "deezer", server);
     registerStrategy(auth, "spotify", server);
     registerStrategy(auth, "youtube", server);
+    registerStrategy(auth, "twitch", server);
+
+    auth.get("/test", function (req, res) {
+        console.log("url: " + req.url);
+        res.send("rgttgtg");
+    })
 
     app.use("/auth", auth);
 }
@@ -74,6 +84,7 @@ function callBack(server) {
         let userId = req.query.state;
         const {profile, refreshToken, accessToken} = req.user;
         const service = profile.provider;
+
         let account = await server.base.accounts.findOneBy({service: {name: service}, serviceUser: profile.id});
         if (userId == null) {
             if (account == null) {
