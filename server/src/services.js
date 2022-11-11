@@ -8,6 +8,7 @@ class Services {
         this.add("discord", "Discord", 0);
         this.add("meteo_concept", "Météo Concept", 0);
         this.add("youtube", "Youtube", 0);
+        this.add("twitch", "Twitch", 0);
     }
 
     add(name, displayName, oauth) {
