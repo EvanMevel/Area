@@ -8,7 +8,7 @@ const scopes = "playlist-read-collaborative playlist-modify-private playlist-mod
 module.exports = new SpotifyStrategy({
     clientID: SPOTIFY_CLIENT_ID,
     clientSecret: SPOTIFY_CLIENT_SECRET,
-    callbackURL: "http://localhost:8080/auth/spotify/callback",
+    //callbackURL: "http://localhost:8080/auth/spotify/callback",
     scope: scopes
 }, function(accessToken, refreshToken, expires_in, profile, done) {
     done(null, {

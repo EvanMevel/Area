@@ -68,6 +68,10 @@ function getCompatibleReactions(actionId) {
     return reactionList.getAccept(action.returns);
 }
 
+function getActions() {
+    return actionList.getAll();
+}
+
 module.exports = ActionReaction;
 
 module.exports.registerAREA = registerAREA;
@@ -77,3 +81,5 @@ module.exports.loadAll = loadAll;
 module.exports.stop = stop;
 
 module.exports.getCompatibleReactions = getCompatibleReactions;
+
+module.exports.getActions = getActions;

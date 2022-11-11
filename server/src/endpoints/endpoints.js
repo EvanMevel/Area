@@ -2,11 +2,12 @@ const express = require("express");
 const about = require("./about");
 const area = require("./area");
 const me = require("./me");
-//const accounts = require("./accounts");
 const reactions = require("./reactions");
+const actions = require("./actions");
 const registerFilesRoutes = require("./files");
 const BadRequest = require("./badRequest");
 const strategies = require("./strategies/strategies");
+const accounts = require("./accounts");
 
 function call(server, endpoint) {
     return async function (req, res)  {
@@ -47,7 +48,11 @@ function registerRoutes(app, server) {
     api.put("/area", call(server, area.modify));
     api.delete("/area", call(server, area.delete));
 
+    api.get("/actions", call(server, actions));
+
     api.get("/reactions", call(server, reactions));
+
+    api.get("/accounts", call(server, accounts.list));
 
     app.use("/api", strategies.jwt, api);
 
