@@ -1,6 +1,7 @@
 const express = require("express");
 const about = require("./about");
 const area = require("./area");
+const me = require("./me");
 //const accounts = require("./accounts");
 const reactions = require("./reactions");
 const registerFilesRoutes = require("./files");
@@ -37,6 +38,8 @@ function registerRoutes(app, server) {
     app.get("/about.json", call(server, about));
 
     const api = express.Router();
+
+    api.get("/me", call(server, me));
 
     api.get("/area_list", call(server, area.list));
 
