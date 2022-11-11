@@ -10,15 +10,7 @@ import android.widget.Spinner
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.example.myarea.databinding.FragmentSecondBinding
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
-import org.json.JSONObject
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -38,69 +30,58 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
     lateinit var actionAdapter : ArrayAdapter<String>;
     lateinit var reactionAdapter : ArrayAdapter<String>;
 
-    lateinit var services: Services;
-
-    fun getRequest() {
-        val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "$BASE_URL/about.json"
-        val stringRequest = StringRequest(
-            Request.Method.GET, url,
-            { response ->
-                //
-                println("GET Request : ${response}")
-                lastResponse = response;
-                myParse(lastResponse);
-            },
-            { println( "That didn't work!" )})
-        queue.add(stringRequest)
-    }
+    var actionIds: HashMap<Int, String> = HashMap();
+    var reactionIds: HashMap<Int, String> = HashMap();
 
     fun postRequest() {
-        var desAction = actionSpinner.selectedItem.toString().split("-")[1].trim();
-        var desReaction = reactionSpinner.selectedItem.toString().split("-")[1].trim();
-        var idAction = services.getActionId(desAction).replace("\"", "")
-        var idReaction = services.getReactionId(desReaction).replace("\"", "")
+        var idAction = actionIds.getValue(actionSpinner.selectedItemPosition)
+        var idReaction = reactionIds.getValue(reactionSpinner.selectedItemPosition)
         var areaname = binding.areaname.text.toString();
-        val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "$BASE_URL/api/area"
-        var json = JSONObject();
-        json.put("actionId", idAction);
-        json.put("reactionId", idReaction);
-        json.put("name",areaname);
-        val jsonPostRequest = object: JsonObjectRequest(
-            Request.Method.POST, url, json,
+
+        MainActivity.server.createArea(idAction, idReaction, areaname,
             { response ->
                 println("POST Request : ${response}")
                 findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-            },
-            { error ->
-                var str = String(error.networkResponse.data)
-                var body = Json.parseToJsonElement(str)
-                println(Json.encodeToString(body));
-                var errortext = body.jsonObject.get("message")
-                binding.TextError.setText(errortext.toString())
-                println(body)
-
-            })
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Authorization"] = "Bearer " + MainActivity.token;
-                return headers
-            }
-        }
-        queue.add(jsonPostRequest)
+            }, binding.TextError
+        );
     }
 
-    fun myParse(string: String) {
-        services = Services(string);
+    fun populateActions() {
+        MainActivity.server.actions(
+            { response ->
+                var serviceAction : MutableList<String> = arrayListOf();
+                actionIds.clear();
 
-        actionAdapter.addAll(services.getServiceAction());
-        actionSpinner.setAdapter(actionAdapter);
-        actionSpinner.isInvisible = false;
-        reactionAdapter.addAll(services.getServiceReaction());
-        reactionSpinner.setAdapter(reactionAdapter);
-        reactionSpinner.isInvisible = false;
+                for (i in 0 until response.length()) {
+                    var action = response.getJSONObject(i);
+                    actionIds.put(i, action.getString("name"));
+                    serviceAction.add(action.getString("serviceName") + " - " + action.getString("description"))
+                }
+                actionAdapter.addAll(serviceAction);
+                actionSpinner.setAdapter(actionAdapter);
+                actionSpinner.isInvisible = false;
+            }, binding.TextError
+        );
+    }
+
+    fun populateReactions(action: String) {
+        MainActivity.server.reactions(action,
+            { response ->
+                var serviceReaction : MutableList<String> = arrayListOf();
+                reactionIds.clear();
+
+                for (i in 0 until response.length()) {
+                    var reaction = response.getJSONObject(i);
+                    reactionIds.put(i, reaction.getString("name"));
+                    serviceReaction.add(reaction.getString("serviceName") +
+                            " - " + reaction.getString("description"))
+                }
+                reactionAdapter.clear();
+                reactionAdapter.addAll(serviceReaction);
+                reactionSpinner.setAdapter(reactionAdapter);
+                reactionSpinner.isInvisible = false;
+            }, binding.TextError
+        );
     }
 
     override fun onCreateView(
@@ -121,7 +102,7 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
         actionAdapter = ArrayAdapter<String>(view.context, android.R.layout.simple_spinner_item, arrayListOf());
         actionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         actionSpinner.isInvisible = true;
-
+        actionSpinner.onItemSelectedListener = this;
 
         reactionSpinner = view.findViewById(R.id.reaction);
         reactionAdapter = ArrayAdapter<String>(view.context, android.R.layout.simple_spinner_item, arrayListOf());
@@ -134,7 +115,7 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding.annuler.setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
-        getRequest()
+        populateActions();
     }
 
     override fun onDestroyView() {
@@ -143,6 +124,12 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+        var actionId = actionIds.get(p2);
+        if (actionId != null) {
+            populateReactions(actionId)
+        };
+
+        println("p2: $p2 p3: $p3");
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

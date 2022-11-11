@@ -11,14 +11,7 @@ import androidx.core.view.allViews
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.example.myarea.databinding.FragmentFirstBinding
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
 
 
 /**
@@ -46,33 +39,15 @@ class FirstFragment : Fragment() { // fragment creation
     }
 
     fun getRequest() { // get resquest for the list of AREAs of the connected user
-        val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "$BASE_URL/api/area_list"
-        val stringRequest = object:JsonArrayRequest(
-            Request.Method.GET, url,null,
+        MainActivity.server.area_list(
             { response ->
                 println("GET Request : ${response}")
                 for (i in 0 until response.length()) {// dispaly a card for each area
                     var element = response.getJSONObject(i);
                     addCard(element.getString("name"), element.getInt("id"));
                 }
-            },
-            { error ->
-                var str = String(error.networkResponse.data)
-                var body = Json.parseToJsonElement(str)
-                println(Json.encodeToString(body));
-                var errortext = body.jsonObject.get("message")
-                binding.TextError.setText(errortext.toString())
-                println(body)
-            })
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Authorization"] = "Bearer " + MainActivity.token;
-                return headers
-            }
-        }
-        queue.add(stringRequest)
+            }, binding.TextError
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,10 +61,7 @@ class FirstFragment : Fragment() { // fragment creation
     }
 
     fun deleteRequest(id : Int, view : View) { // delete request function which delete the chosen AREA
-        val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "$BASE_URL/api/area?id=" + id;
-        val jsonObjectRequest = object: JsonObjectRequest(
-            Request.Method.DELETE, url, null,
+        MainActivity.server.delete_area(id,
             { response ->
                 println("GET Request : ${response}")
                 if (layout.childCount == 1) {
@@ -97,19 +69,8 @@ class FirstFragment : Fragment() { // fragment creation
                 } else {
                     layout.removeView(view)
                 }
-            },
-            { error ->
-                var body: String = String(error.networkResponse.data);
-                println(body)
-            })
-        {
-            override fun getHeaders(): MutableMap<String, String> { // header function which change the header of the request to put the token inside(token = user identity)
-                val headers = HashMap<String, String>()
-                headers["Authorization"] = "Bearer " + MainActivity.token;
-                return headers
-            }
-        }
-        queue.add(jsonObjectRequest)
+            }, binding.TextError
+        );
     }
 
     fun addCard(name : String, id : Int) { // add card function which add a card (card is the layer where the area name and the delete button are)
