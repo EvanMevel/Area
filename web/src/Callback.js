@@ -8,7 +8,7 @@ export default function Callback() {
     const [searchParams] = useSearchParams();
 
     async function call() {
-        const {data} = await callback(service, searchParams);
+        const {data, error} = await callback(service, searchParams);
 
         if (data.token) {
             localStorage.setItem("token", data.token);

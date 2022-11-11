@@ -37,7 +37,7 @@ async function getSentence(video)
 class YoutubeTT extends OAuthAction {
 
     constructor(areaId, userId) {
-        super(areaId, userId, 'spotify');
+        super(areaId, userId, 'youtube');
     }
 
     async oAuthEvent(server, account) {
@@ -56,4 +56,4 @@ class YoutubeTT extends OAuthAction {
 module.exports = YoutubeTT;
 
 module.exports.description = new ActionDescription("youtube_tt_fr", "Youtube gets TT Fr",
-    "Gets the most popular french video on youtube", "youtube", EventType.VIDEO);
+    "Gets the most popular french video on youtube", "youtube_noauth", EventType.VIDEO);

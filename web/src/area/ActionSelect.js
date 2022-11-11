@@ -7,22 +7,20 @@ export default function ActionSelect({setValue}) {
     const [list, setList] = useState(null);
 
     async function populateList() {
-        try {
-            const token = localStorage.getItem("token");
-            const givenList = await getActionList(token);
-            let i = 0;
+        const {data, error} = await getActionList();
+        if (error) {
+            return console.error(error);
+        }
+        let i = 0;
 
-            const actionsElements = givenList.map((ar) => {
-                return <option value={ar.name} key={i++}>{ar.displayName}</option>
-            })
+        const actionsElements = data.map((ar) => {
+            return <option value={ar.name} key={i++}>{ar.displayName}</option>
+        })
 
-            setList(actionsElements);
+        setList(actionsElements);
 
-            if (givenList.length > 0) {
-                setValue(givenList[0].name);
-            }
-        } catch (err) {
-            console.error(err);
+        if (data.length > 0) {
+            setValue(data[0].name);
         }
     }
 

@@ -1,21 +1,19 @@
 import React, {useEffect, useState} from "react";
-import {getAreaList} from "../api";
+import {getAreaList, getUserInfo} from "../api";
 import Area from "./Area";
 
 export default function AreaList() {
     const [areas, setAreas] = useState(null);
 
     async function callAreas() {
-        const token = localStorage.getItem("token");
-        try {
-            const {data} = await getAreaList(token);
-
-            const rows = data.map((area) => <Area data={area} token={token} refresh={callAreas}></Area>)
-
-            setAreas(rows);
-        } catch (err) {
-            console.error(err);
+        const {data, error} = await getAreaList();
+        if (error) {
+            return console.error(error);
         }
+
+        const rows = data.map((area) => <Area area={area} refresh={callAreas}></Area>)
+
+        setAreas(rows);
     }
 
     useEffect(() => {

@@ -6,16 +6,15 @@ import {AxiosError} from "axios";
 import {Store} from "react-notifications-component";
 
 async function loginUser(credentials) {
-    try {
-        const {data} = await login(credentials);
-
-        return {token: data.token};
-    } catch (err) {
-        if (err instanceof AxiosError) {
-            return {error: err.response.data};
+    const {data, error} = await login(credentials);
+    if (error) {
+        if (error instanceof AxiosError && error.response != null) {
+            return {error: error.response.data};
         }
-        return {error: err};
+        return {error: error};
     }
+
+    return {token: data.token};
 }
 
 export default function Login() {

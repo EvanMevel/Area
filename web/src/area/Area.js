@@ -1,27 +1,25 @@
 import PropTypes from "prop-types";
 import {deleteArea} from "../api";
 
-export default function Area({data, token, refresh}) {
+export default function Area({area, refresh}) {
 
     async function buttonDelete(e) {
-        try {
-            const {resp} = await deleteArea(token, data.id);
-            refresh();
-        } catch (err) {
-            console.error(err)
+        const {data, error} = await deleteArea(area.id);
+        if (error) {
+            return console.error(error);
         }
+        refresh();
     }
 
-    return <div key={data.id}>
-        <div>{data.name}</div>
-        <div>{data.actionName}</div>
-        <div>{data.reactionName}</div>
+    return <div key={area.id}>
+        <div>{area.name}</div>
+        <div>{area.actionName}</div>
+        <div>{area.reactionName}</div>
         <button onClick={buttonDelete}>Delete</button>
     </div>
 }
 
 Area.propTypes = {
-    data: PropTypes.object.isRequired,
-    token: PropTypes.string.isRequired,
+    area: PropTypes.object.isRequired,
     refresh: PropTypes.func.isRequired
 }

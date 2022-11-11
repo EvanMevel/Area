@@ -8,12 +8,17 @@ export default function AuthLogins({userId}) {
     const [services, setServices] = useState([]);
 
     async function loadServices() {
-        const authServices = await getAuthServices();
+        const {data, error} = await getAuthServices();
+        if (error) {
+            return console.error(error);
+        }
         const accounts = [];
 
         if (userId != null) {
-            const token = localStorage.getItem("token");
-            const {data} = await getAccounts(token);
+            const {data, error} = await getAccounts();
+            if (error) {
+                return console.error(error);
+            }
             data.forEach((account) => {
                 accounts.push(account.service);
             });
@@ -22,7 +27,7 @@ export default function AuthLogins({userId}) {
         let srvcs = [];
         let i = 0;
 
-        authServices.forEach((service) => {
+        data.forEach((service) => {
             srvcs.push(
                 <div key={i++}>
                     <LoginService service={service} logged={accounts.includes(service.name)} userId={userId}></LoginService>

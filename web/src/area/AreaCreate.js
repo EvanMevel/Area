@@ -12,23 +12,21 @@ export default function AreaCreate() {
     const [err, setErr] = useState();
 
     async function create(e) {
-        const token = localStorage.getItem("token");
-        try {
-            const {data} = await createArea(token, {
-                name: area.name,
-                actionId: area.action,
-                reactionId: area.reaction
-            });
-            navigate("/app");
-        } catch (err) {
-            if (err instanceof AxiosError && err.response != null) {
-                if (err.response.status === 400) {
-                    setErr(err.response.data);
+        const {data, error} = await createArea({
+            name: area.name,
+            actionId: area.action,
+            reactionId: area.reaction
+        });
+        if (error) {
+            if (error instanceof AxiosError && error.response != null) {
+                if (error.response.status === 400) {
+                    setErr(error.response.data);
                     return;
                 }
             }
-            console.log(err);
+            return console.log(error);
         }
+        navigate("/app");
     }
 
     return  <TokenGuard>

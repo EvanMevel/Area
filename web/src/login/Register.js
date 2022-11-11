@@ -4,18 +4,15 @@ import {register} from "../api";
 import {useNavigate} from "react-router-dom";
 
 async function registerUser(credentials) {
-    try {
-        const {data} = await register(credentials);
-
-        return {token: data.token};
-    } catch (err) {
-        if (err instanceof AxiosError && err.response != null) {
-            if (err.response.status === 400) {
-                return {error: err.response.data};
-            }
+    const {data, error} = await register(credentials);
+    if (error) {
+        if (error instanceof AxiosError && error.response != null) {
+            return {error: error.response.data};
         }
-        return {error: err};
+        return {error: error};
     }
+
+    return {token: data.token};
 }
 
 export default function Register() {
