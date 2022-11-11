@@ -5,6 +5,7 @@ const Weather = require("./weatherAction");
 const Deezer = require("./deezerLike");
 const Youtube = require("./youtubeTT");
 const Twitch = require('./followedStreamersLiveTwitch')
+const News = require("./newsHeadLines");
 
 class ActionList extends ARList {
 
@@ -15,6 +16,7 @@ class ActionList extends ARList {
         this.add(Deezer);
         this.add(Youtube);
         this.add(Twitch);
+        this.add(News);
     }
 
     async registerAR(server, desc) {
