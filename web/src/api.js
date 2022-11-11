@@ -44,19 +44,17 @@ export async function getAuthServices() {
     return result;
 }
 
-export async function getActionList() {
+export async function getActionList(token) {
     const {data} = await axios.get(
-        baseUrl + "/about.json"
+        baseUrl + "/api/actions",
+        {
+            headers: {
+                Accept: "application/json",
+                Authorization: "Bearer " + token
+            }
+        }
     );
-    let actions = [];
-    const services = data.server.services;
-    services.forEach((service) => {
-        const serviceActions = service.actions;
-        serviceActions.forEach((action) => {
-            actions.push(action);
-        })
-    })
-    return actions;
+    return data;
 }
 
 export async function getReactionList(token, action) {
@@ -119,6 +117,33 @@ export function register(credentials) {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
+            }
+        }
+    );
+}
+
+export function callback(service, searchParams) {
+    let params = null;
+    for(let entry of searchParams.entries()) {
+        if (params == null) {
+            params = "?";
+        } else {
+            params += "&";
+        }
+        params += entry[0] + "=" + entry[1];
+    }
+    return axios.get(
+        baseUrl + "/auth/" + service + "/callback" + params
+    );
+}
+
+export function getAccounts(token) {
+    return axios.get(
+        baseUrl + "/api/accounts",
+        {
+            headers: {
+                Accept: 'application/json',
+                Authorization: "Bearer " + token
             }
         }
     );

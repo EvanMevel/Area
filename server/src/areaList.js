@@ -54,6 +54,10 @@ class AREAList {
     }
 
 
+    getAllActions() {
+        return ActionReaction.getActions();
+    }
+
     getCompatibleReactions(actionId) {
         return ActionReaction.getCompatibleReactions(actionId);
     }

@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {login} from "../api";
 import AuthLogins from "./AuthLogins";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import {AxiosError} from "axios";
+import {Store} from "react-notifications-component";
 
 async function loginUser(credentials) {
     try {
@@ -19,6 +20,7 @@ async function loginUser(credentials) {
 
 export default function Login() {
     let navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [err, setErr] = useState();
     const [enabled, setEnabled] = useState(true);
 
@@ -42,8 +44,22 @@ export default function Login() {
         }
     }
 
-    return <div>
+    useEffect(() => {
+        const noUser = searchParams.get("noUser");
+        if (noUser) {
+            Store.addNotification({
+                message: "No area account linked with this " + noUser + " account!",
+                type: "danger",
+                insert: "top",
+                container: "top-center",
+                dismiss: {
+                    duration: 5000
+                }
+            });
+        }
+    }, [])
 
+    return <div>
         <form onSubmit={handleSubmit} onChange={() => {setErr(null)}}>
             <div>
                 <input type={"username"} name={"name"} placeholder="Name or email"/>

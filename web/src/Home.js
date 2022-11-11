@@ -1,9 +1,12 @@
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import TokenGuard from "./login/TokenGuard";
 import AreaList from "./area/AreaList";
+import {useEffect} from "react";
+import { Store } from 'react-notifications-component';
 
 export default function Home() {
     let navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
     function createArea(e) {
         navigate("/app/create")
@@ -13,6 +16,21 @@ export default function Home() {
         localStorage.removeItem("token");
         navigate("/login");
     }
+
+    useEffect(() => {
+        const connected = searchParams.get("connected");
+        if (connected) {
+            Store.addNotification({
+                message: "Linked " + connected + " with your AREA account!",
+                type: "success",
+                insert: "top",
+                container: "top-center",
+                dismiss: {
+                    duration: 5000
+                }
+            });
+        }
+    }, [])
 
     return <TokenGuard>
         <div>

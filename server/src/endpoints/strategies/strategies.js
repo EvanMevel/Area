@@ -87,7 +87,7 @@ function authFunc(strategy, server) {
             callback: callback,
             userId: userId
         }
-        server.base.states.save(stateObj);
+        await server.base.states.save(stateObj);
         let opts = {
             session: false,
             callbackURL: callback,
@@ -99,34 +99,29 @@ function authFunc(strategy, server) {
 
 function callBack(server) {
     return async function (req, res) {
-        let state = req.query.state;
         const {profile, refreshToken, accessToken} = req.user;
         const service = profile.provider;
-
-        if (state == null) {
-            return res.status(401).json({
-                message: "No state given!"
-            });
-        }
-        let stateInfo = await server.base.states.findOneBy({state: state});
-        if (stateInfo == null) {
-            return res.status(401).json({
-                message: "Invalid state!"
-            });
-        }
+        let stateInfo = req.stateInfo;
         const userId = stateInfo.userId;
+
         server.base.states.remove(stateInfo);
 
-        console.log(userId);
-        let account = await server.base.accounts.findOneBy({service: {name: service}, serviceUser: profile.id});
+        let account = await server.base.accounts.findOne({
+            where: {service: {name: service}, serviceUser: profile.id},
+            loadRelationIds: true
+        });
         if (userId == null) {
             if (account == null) {
                 return res.status(401).json({
-                    message: "No user associated with this account!"
+                    message: "No user associated with this account!",
+                    noUser: service
                 });
             }
-            const token = server.tokens.generate(account.userId);
-            res.redirect("http://localhost:8081?token=" + token);
+            console.log("[AUTH] Logged in user " + account.user + " with service " + service);
+            const token = server.tokens.generate(account.user);
+            return res.json({
+                token: token
+            });
         } else {
             const user = await server.base.users.findOneBy({id: userId});
             if (user == null) {
@@ -139,17 +134,40 @@ function callBack(server) {
                     return res.status(500).end();
                 }
             }
-            return res.redirect("http://localhost:8081?connectedService=" + service);
+            return res.json({
+                message: "Connected to " + service,
+                service: service
+            });
         }
+    }
+}
+
+function preCallBack(server, strategy) {
+    return async function(req, res, next) {
+        let state = req.query.state;
+        if (state == null) {
+            return res.status(401).json({
+                message: "No state given!"
+            });
+        }
+        let stateInfo = await server.base.states.findOneBy({state: state});
+        if (stateInfo == null) {
+            return res.status(401).json({
+                message: "Invalid state!"
+            });
+        }
+        req.stateInfo = stateInfo;
+        let opts = {
+            session: false,
+            callbackURL: stateInfo.callback,
+            state: state
+        };
+        passport.authenticate(strategy, opts)(req, res, next);
     }
 }
 
 function registerStrategy(router, strategy, server) {
     router.get("/" + strategy, authFunc(strategy, server));
 
-    let opts = {
-        session: false,
-        callbackURL: "http://localhost:8080/auth/spotify/callback"
-    };
-    router.get("/" + strategy + "/callback", passport.authenticate(strategy, opts), callBack(server));
+    router.get("/" + strategy + "/callback", preCallBack(server, strategy), callBack(server));
 }

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {getAuthServices} from "../api";
+import {getAccounts, getAuthServices} from "../api";
 import LoginService from "./LoginService";
 import PropTypes from "prop-types";
 
@@ -9,15 +9,25 @@ export default function AuthLogins({userId}) {
 
     async function loadServices() {
         const authServices = await getAuthServices();
-        console.log(JSON.stringify(authServices));
-        let srvcs = [];
+        const accounts = [];
 
-        for (let i = 0; i < authServices.length; i++) {
-            srvcs.push(
-                <div key={i}>
-                    <LoginService service={authServices[i]} userId={userId}></LoginService>
-                </div>)
+        if (userId != null) {
+            const token = localStorage.getItem("token");
+            const {data} = await getAccounts(token);
+            data.forEach((account) => {
+                accounts.push(account.service);
+            });
         }
+
+        let srvcs = [];
+        let i = 0;
+
+        authServices.forEach((service) => {
+            srvcs.push(
+                <div key={i++}>
+                    <LoginService service={service} logged={accounts.includes(service.name)} userId={userId}></LoginService>
+                </div>)
+        })
         setServices(srvcs);
     }
 
@@ -36,5 +46,5 @@ export default function AuthLogins({userId}) {
 }
 
 AuthLogins.propTypes = {
-    userId: PropTypes.object,
+    userId: PropTypes.number,
 }

@@ -8,7 +8,8 @@ export default function ActionSelect({setValue}) {
 
     async function populateList() {
         try {
-            const givenList = await getActionList();
+            const token = localStorage.getItem("token");
+            const givenList = await getActionList(token);
             let i = 0;
 
             const actionsElements = givenList.map((ar) => {
