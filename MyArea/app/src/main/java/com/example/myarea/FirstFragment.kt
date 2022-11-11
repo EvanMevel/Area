@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import androidx.core.view.allViews
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -16,6 +16,9 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.myarea.databinding.FragmentFirstBinding
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 
 
 /**
@@ -29,8 +32,7 @@ class FirstFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    var dialog: AlertDialog? = null
-    var layout: LinearLayout? = null
+    lateinit var layout: LinearLayout;
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -42,11 +44,11 @@ class FirstFragment : Fragment() {
         getRequest();
         //display  return
         return binding.root
-
     }
+
     fun getRequest() {
         val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "http://10.0.2.2:8080/api/area_list"
+        val url = "$BASE_URL/api/area_list"
         val stringRequest = object:JsonArrayRequest(
             Request.Method.GET, url,null,
             { response ->
@@ -57,7 +59,11 @@ class FirstFragment : Fragment() {
                 }
             },
             { error ->
-                var body: String = String(error.networkResponse.data);
+                var str = String(error.networkResponse.data)
+                var body = Json.parseToJsonElement(str)
+                println(Json.encodeToString(body));
+                var errortext = body.jsonObject.get("message")
+                binding.TextError.setText(errortext.toString())
                 println(body)
             })
         {
@@ -72,20 +78,27 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.buttonFirst.setOnClickListener {
+        binding.addaction.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        }
+        binding.deconexion.setOnClickListener {
+            findNavController().navigate(R.id.action_FirstFragment_to_loginFragment)
         }
     }
 
     fun deleteRequest(id : Int, view : View) {
         val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "http://10.0.2.2:8080/api/area?id=" + id;
+        val url = "$BASE_URL/api/area?id=" + id;
         val jsonObjectRequest = object: JsonObjectRequest(
             Request.Method.DELETE, url, null,
             { response ->
-                //
                 println("GET Request : ${response}")
-                layout?.removeView(view);
+
+                if (layout.childCount == 1) {
+                    layout.removeAllViews();
+                } else {
+                    layout.removeView(view)
+                }
             },
             { error ->
                 var body: String = String(error.networkResponse.data);
@@ -102,6 +115,7 @@ class FirstFragment : Fragment() {
     }
 
     fun addCard(name : String, id : Int) {
+        println(layout.allViews.joinToString())
         var view = layoutInflater.inflate(R.layout.card, null);
         var nameView = view.findViewById<TextView>(R.id.name);
         var deleteButton = view.findViewById<Button>(R.id.delete);
@@ -110,7 +124,7 @@ class FirstFragment : Fragment() {
         deleteButton.setOnClickListener {
             deleteRequest(id , view)
         }
-        layout?.addView(view);
+        layout.addView(view);
     }
 
     override fun onDestroyView() {

@@ -50,11 +50,11 @@ services:
     networks:
       - phil
 
-  androidapp:
-    build: ./MyArea
-    tty: true
-    volumes:
-      - android-apk:/result
+  # androidapp:
+  #   build: ./MyArea
+  #   tty: true
+  #   volumes:
+  #     - android-apk:/result
 
   web:
     image: node:18-alpine
