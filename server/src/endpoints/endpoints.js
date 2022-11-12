@@ -44,9 +44,10 @@ function registerRoutes(app, server) {
 
     api.get("/area_list", call(server, area.list));
 
-    api.post("/area", call(server, area.create));
-    api.put("/area", call(server, area.modify));
-    api.delete("/area", call(server, area.delete));
+    api.route("/area")
+        .post(call(server, area.create))
+        .put(call(server, area.modify))
+        .delete(call(server, area.delete));
 
     api.get("/actions", call(server, actions));
 

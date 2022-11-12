@@ -45,6 +45,9 @@ class Create extends TokenEndpoint {
         if (name.length < 3) {
             throw new BadRequest("AREA name should be at least 3 char long!");
         }
+        if (name.length > 30) {
+            throw new BadRequest("AREA name should be less than 30 char long!");
+        }
         const resp = await server.base.area.save({user: user, name: name, action: {name: actionId}, reaction: {name: reactionId}});
         if (resp.id == null) {
             throw new Error("AREA creation sql should return a response, got an empty response instead!")
