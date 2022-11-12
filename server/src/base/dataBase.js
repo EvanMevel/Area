@@ -8,7 +8,7 @@ let dataSource = new typeorm.DataSource({
     port: process.env.MYSQL_PORT || null,
     username: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DB,
+    database: process.env.MYSQL_DATABASE,
     synchronize: true,
     entities: [require("./entities/users"), require("./entities/services"),
         require("./entities/accounts"),
@@ -32,7 +32,7 @@ class DataBase {
 
     async initialize() {
         await dataSource.initialize();
-        console.log("[BASE] Connected to " + process.env.MYSQL_DB + "!");
+        console.log("[BASE] Connected to " + process.env.MYSQL_DATABASE + "!");
 
         this.services = dataSource.getRepository("Services");
         this.users = dataSource.getRepository("Users");
