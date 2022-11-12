@@ -37,7 +37,8 @@ class RegisterFragment : Fragment() {
             MainActivity.server.register_area(
                 json,
                 { response ->
-                    MainActivity.token = response["token"].toString();
+                    MainActivity.server.setToken(response["token"].toString())
+                    MainActivity.server.confirmToken()
                     println("POST Request : ${response}")
                     findNavController().navigate(R.id.action_registerFragment_to_LoginFragment)
                 },

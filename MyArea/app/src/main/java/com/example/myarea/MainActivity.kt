@@ -9,8 +9,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         lateinit var instance: MainActivity
-        lateinit var token: String
-        var server: Server = Server()
+        lateinit var server: Server
     }
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -18,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         instance = this
+        server = Server(this);
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

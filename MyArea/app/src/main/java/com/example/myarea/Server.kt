@@ -1,7 +1,10 @@
 package com.example.myarea
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.widget.TextView
 import com.android.volley.Request
+import com.android.volley.RequestQueue
 import com.android.volley.Response.ErrorListener
 import com.android.volley.Response.Listener
 import com.android.volley.toolbox.JsonArrayRequest
@@ -14,9 +17,47 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 
-class Server {
+class Server(main: MainActivity) {
 
+    private val SETTING_URL = "AREA_URL";
+    private val SETTING_TOK = "AREA_TOKEN";
     var baseUrl: String = "http://10.0.2.2:8080"
+    private var queue: RequestQueue;
+    private val settings: SharedPreferences
+    private val editor: SharedPreferences.Editor
+    private var token: String? = null
+
+    init {
+        queue = Volley.newRequestQueue(main)
+        settings = main.getPreferences(Context.MODE_PRIVATE)
+        editor = settings.edit()
+        val value = settings.getString(SETTING_URL, null);
+        if (value != null) {
+            setUrl(value);
+        }
+        val tok = settings.getString(SETTING_TOK, null);
+        if (tok != null) {
+            setToken(tok);
+        }
+    }
+
+    fun confirmUrl() {
+        editor.putString(SETTING_URL, baseUrl)
+        editor.commit()
+    }
+
+    fun confirmToken() {
+        editor.putString(SETTING_TOK, token)
+        editor.commit()
+    }
+
+    fun setToken(tok: String) {
+        token = tok;
+    }
+
+    fun hasToken(): Boolean {
+        return token != null;
+    }
 
     fun setUrl(url: String) {
         if (url.startsWith("http")) {
@@ -24,6 +65,34 @@ class Server {
         } else {
             baseUrl = "http://$url";
         }
+    }
+
+    private fun postObject(url: String, json : JSONObject, success: Listener<JSONObject>, textError: TextView)
+    {
+        val jsonPostRequest = object: JsonObjectRequest(
+            Method.POST, "$baseUrl/$url", json,
+            success,
+            errorhandling(textError))
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return serverHeaders()
+            }
+        }
+        queue.add(jsonPostRequest)
+    }
+
+    private fun getArray(url: String, success: Listener<JSONArray>, textError: TextView)
+    {
+        val jsonArrayRequest = object: JsonArrayRequest(
+            Method.GET, "$baseUrl/$url", null,
+            success,
+            errorhandling(textError))
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return serverHeaders()
+            }
+        }
+        queue.add(jsonArrayRequest)
     }
 
     fun about_area(success: Listener<JSONObject>, er :ErrorListener)
@@ -38,83 +107,32 @@ class Server {
     }
 
     fun register_area(json : JSONObject, success: Listener<JSONObject>, textError: TextView) {
-        val queue = Volley.newRequestQueue(MainActivity.instance)
-        val jsonPostRequest = JsonObjectRequest(
-            Request.Method.POST, "$baseUrl/auth/register", json,
-            success,
-            errorhandling(textError))
-        queue.add(jsonPostRequest)
+        postObject("auth/register", json, success, textError);
     }
 
     fun login_area(json : JSONObject, success: Listener<JSONObject>, textError: TextView) {
-        val queue = Volley.newRequestQueue(MainActivity.instance)
-        val jsonPostRequest = JsonObjectRequest(
-            Request.Method.POST, "$baseUrl/auth/login", json,
-            success,
-            errorhandling(textError))
-        queue.add(jsonPostRequest)
+        postObject("auth/login", json, success, textError);
     }
 
     fun actions(success: Listener<JSONArray>, textError: TextView) {
-        val queue = Volley.newRequestQueue(MainActivity.instance)
-        val jsonArrayRequest = object: JsonArrayRequest(
-            Method.GET, "$baseUrl/api/actions", null,
-            success,
-            errorhandling(textError))
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                return serverHeaders()
-            }
-        }
-        queue.add(jsonArrayRequest)
+        getArray("api/actions", success, textError)
     }
 
     fun reactions(action: String, success: Listener<JSONArray>, textError: TextView) {
-        val queue = Volley.newRequestQueue(MainActivity.instance)
-        val jsonArrayRequest = object: JsonArrayRequest(
-            Method.GET, "$baseUrl/api/reactions?action=$action", null,
-            success,
-            errorhandling(textError))
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                return serverHeaders()
-            }
-        }
-        queue.add(jsonArrayRequest)
+        getArray("api/reactions?action=$action", success, textError);
     }
 
     fun createArea(action: String, reaction: String, name: String, success: Listener<JSONObject>, textError: TextView) {
-        val queue = Volley.newRequestQueue(MainActivity.instance)
-
-        var json = JSONObject();
+        val json = JSONObject();
         json.put("actionId", action);
         json.put("reactionId", reaction);
         json.put("name", name);
 
-        val jsonPostRequest = object: JsonObjectRequest(
-            Request.Method.POST, "$BASE_URL/api/area", json,
-            success,
-            errorhandling(textError))
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                return serverHeaders()
-            }
-        }
-        queue.add(jsonPostRequest)
+        postObject("api/area", json, success, textError);
     }
 
     fun area_list(success: Listener<JSONArray>, textError: TextView) {
-        val queue = Volley.newRequestQueue(MainActivity.instance)
-        val jsonPostRequest = object: JsonArrayRequest(
-            Method.GET, "$baseUrl/api/area_list", null,
-            success,
-            errorhandling(textError))
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                return serverHeaders()
-            }
-        }
-        queue.add(jsonPostRequest)
+        getArray("api/area_list", success, textError);
     }
 
     fun delete_area(id : Int, success: Listener<JSONObject>, textError: TextView) {
@@ -144,7 +162,9 @@ class Server {
 
     fun serverHeaders(): MutableMap<String, String> {
         val headers = HashMap<String, String>()
-        headers["Authorization"] = "Bearer " + MainActivity.token;
+        if (hasToken()) {
+            headers["Authorization"] = "Bearer $token";
+        }
         return headers
     }
 }

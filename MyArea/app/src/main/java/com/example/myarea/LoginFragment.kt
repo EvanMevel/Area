@@ -1,5 +1,6 @@
 package com.example.myarea
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.myarea.databinding.FragmentLoginBinding
 import org.json.JSONObject
 
-class LoginFragment : Fragment(){
+class LoginFragment : Fragment() {
+
     private var _binding: FragmentLoginBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -33,7 +35,8 @@ class LoginFragment : Fragment(){
             MainActivity.server.login_area(
                 json,
                 { response -> // if it works we get the token and move to the first fragment
-                    MainActivity.token = response["token"].toString();
+                    MainActivity.server.setToken(response["token"].toString())
+                    MainActivity.server.confirmToken()
                     println("POST Request : ${response}")
                     findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
                 },
@@ -50,6 +53,14 @@ class LoginFragment : Fragment(){
         binding.register.setOnClickListener { // if register button is pressed we move to the register fragment
             findNavController().navigate(R.id.action_loginFragment_to_RegisterFragment)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val uri: Uri? = activity!!.intent.getData()
+
+        println("Uri: " + uri);
     }
 
     override fun onDestroyView() {
