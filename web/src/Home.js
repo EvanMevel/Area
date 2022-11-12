@@ -32,12 +32,25 @@ export default function Home() {
         }
     }, [])
 
+    const button = {
+        "background-color": "#5D3FD3",
+        "border": "none",
+        "color": "white",
+        "padding": "10px 64px",
+        "text-align": "center",
+        "text-decoration": "none",
+        "display": "inline-block",
+        "font-size": "16px",
+        "margin": "4px 2px",
+        "cursor": "pointer"
+    }
+
     return <TokenGuard>
         <div>
-            <button onClick={logout}>Logout</button>
+            <button onClick={logout} style={button}>Logout</button>
         </div>
         <div>
-            <button onClick={createArea}>Create new area</button>
+            <button onClick={createArea} style={button}>Create new area</button>
         </div>
         <AreaList/>
     </TokenGuard>
