@@ -25,7 +25,7 @@ class Server(main: MainActivity) {
     private val SETTING_URL = "AREA_URL";
     private val SETTING_TOK = "AREA_TOKEN";
     var baseUrl: String = "http://10.0.2.2:8080"
-    private var queue: RequestQueue;
+    var queue: RequestQueue;
     private val settings: SharedPreferences
     private val editor: SharedPreferences.Editor
     private var token: String? = null
@@ -43,6 +43,11 @@ class Server(main: MainActivity) {
         if (tok != null) {
             setToken(tok);
         }
+    }
+
+    fun resetUrl() {
+        setUrl(null)
+        confirmUrl()
     }
 
     fun confirmUrl() {
@@ -63,7 +68,11 @@ class Server(main: MainActivity) {
         return token != null;
     }
 
-    fun setUrl(url: String) {
+    fun setUrl(url: String?) {
+        if (url == null ){
+            baseUrl = "http://localhost"
+            return
+        }
         if (url.startsWith("http")) {
             baseUrl = url;
         } else {
@@ -167,12 +176,17 @@ class Server(main: MainActivity) {
 
     fun errorhandling(textError: TextView) : ErrorListener {
         return ErrorListener { error ->
-            var str = String(error.networkResponse.data)
-            var body = Json.parseToJsonElement(str)
-            println(Json.encodeToString(body));
-            var errortext = body.jsonObject.get("message")
-            textError.setText(errortext.toString())
-            println(body)
+            if (error.networkResponse == null) {
+                textError.setText("Server not able to respond")
+                println("ERROR")
+            }else {
+                var str = String(error.networkResponse.data)
+                var body = Json.parseToJsonElement(str)
+                println(Json.encodeToString(body));
+                var errortext = body.jsonObject.get("message")
+                textError.setText(errortext.toString())
+                println(body)
+            }
         }
     }
 
