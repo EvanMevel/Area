@@ -51,7 +51,7 @@ class Server(main: MainActivity) {
         editor.commit()
     }
 
-    fun setToken(tok: String) {
+    fun setToken(tok: String?) {
         token = tok;
     }
 

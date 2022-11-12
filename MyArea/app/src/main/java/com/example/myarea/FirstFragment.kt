@@ -56,6 +56,7 @@ class FirstFragment : Fragment() { // fragment creation
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment) // if add action button is pressed --> move to the second fragment
         }
         binding.deconexion.setOnClickListener {
+            MainActivity.server.setToken(null);
             findNavController().navigate(R.id.action_FirstFragment_to_loginFragment) // if log out button is pressed --> move to the second fragment
         }
     }
