@@ -11,17 +11,36 @@ export default function LoginService({service, logged, userId}) {
         window.location.replace(url);
     }
 
-    const styles = {
-        width: 100
+    const containere = {
+        "display": "flex",
+        "alignItems": "center",
+        "flexDirection": "column",
+        "justifyContent": "space-between"
+    }
+
+    const font = {
+        "color": "#fff",
+        "stroke": "black",
+        "strokeWidth": ".5px"
+    }
+
+    const logo_img = {
+        "alignItems": "stretch",
+        "flexWrap": "wrap",
+        "alignContent": "space-between",
+        "flexDirection": "row",
+        "width":"20%"
     }
 
     if (userId != null) {
-        styles.background= (logged ? "green" : "red")
+        containere.background= (logged ? "green" : "red")
     }
 
-    return <div onClick={click} style={styles}>
-        <img src={service.files.logo} alt={service.name} width={50} height={50}/>
-        {service.displayName}
+    return <div onClick={click}>
+        <img src={service.files.logo} alt={service.name} style={logo_img} />
+        <div style={font} >
+            {service.displayName}
+        </div>
     </div>
 }
 
