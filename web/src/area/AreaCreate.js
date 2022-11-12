@@ -29,10 +29,23 @@ export default function AreaCreate() {
         navigate("/app");
     }
 
+    const button = {
+        "background-color": "#5D3FD3",
+        "border": "none",
+        "color": "white",
+        "padding": "10px 64px",
+        "text-align": "center",
+        "text-decoration": "none",
+        "display": "inline-block",
+        "font-size": "16px",
+        "margin": "4px 2px",
+        "cursor": "pointer"
+    }
+
     return  <TokenGuard>
         <AreaEditor setArea={setArea}/>
         <div>
-            <button type="submit" onClick={create}>Create</button>
+            <button type="submit" onClick={create} style={button}>Create</button>
         </div>
         <div>
             {err && <h2>{err.message}</h2>}
