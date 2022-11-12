@@ -55,7 +55,7 @@ export default function Login() {
         "display": "flex",
         "align-items": "center",
         "flex-direction": "column",
-        "width": "15%"
+        "width": "33.33%"
     }
 
     const button = {
@@ -80,7 +80,17 @@ export default function Login() {
         "border-bottom": "1px solid"
     }
 
+    const logo_img = {
+        "display": "flex",
+        "float": "left",
+        "padding": "5px",
+        "width": "10%"
+    }
+
     var logo = require ('./img/logo.png')
+    var deezer = require ('./img/deezer.png')
+    var spotify = require ('./img/spotify.png')
+    var youtube = require ('./img/youtube.png')
 
     return <div>
 
@@ -98,6 +108,18 @@ export default function Login() {
         </form>
 
         <a href="/register" style={containere}>Dont have an account? Register here</a>
+
+        <div class="row">
+            <div class="column">
+                <img src={deezer} style={logo_img}/>
+            </div>
+            <div class="column">
+                <img src={spotify} style={logo_img}/>
+            </div>
+            <div class="column">
+                <img src={youtube} style={logo_img}/>
+            </div>
+        </div>
 
         {err && <h2>{err.message}</h2>}
 
