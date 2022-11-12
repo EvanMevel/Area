@@ -50,17 +50,11 @@ services:
     networks:
       - phil
 
-  androidapp:
-    build: ./MyArea
-    tty: true
-    volumes:
-      - android-apk:/result
-
   web:
     image: node:18-alpine
     container_name: area-web
     working_dir: /app
-    command: sh -c "npm install; npm run dev"
+    command: sh -c "npm install; npm run start"
     volumes:
       - ./web/:/app
       - android-apk:/result
