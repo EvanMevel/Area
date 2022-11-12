@@ -45,8 +45,10 @@ class LogserviceFragment : Fragment(){
                 var servicesArray = response.getJSONObject("server").getJSONArray("services")
                 for (i in 0 until servicesArray.length()) {// dispaly a card for each area
                     var service = servicesArray.getJSONObject(i)
+                    var src = service.getJSONObject("files")
                     if(service.getBoolean("oauth")){
-                        addservice("http://10.0.2.2:8080/files/spotify/spotify.png", service.getString("name"));
+                        var logo= MainActivity.server.baseUrl +src.getString("logo")
+                        addservice(logo, service.getString("name"));
                     }
                 }
             }, { error ->
