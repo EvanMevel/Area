@@ -54,7 +54,7 @@ export default function Register() {
         "display": "flex",
         "align-items": "center",
         "flex-direction": "column",
-        "width": "15%"
+        "width": "33.33%"
     }
 
     const button = {
