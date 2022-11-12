@@ -3,8 +3,8 @@ const Endpoint = require("./endpoint");
 
 function getFiles(service) {
     return {
-        "logo": "http://localhost:8080/files/" + service + "/" + service + ".png",
-        "large": "http://localhost:8080/files/" + service + "/" + service + "-large.png"
+        "logo": "/files/" + service + "/" + service + ".png",
+        "large": "/files/" + service + "/" + service + "-large.png"
     }
 }
 

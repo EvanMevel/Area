@@ -7,7 +7,16 @@ const noSession = {session: false};
 
 module.exports.passport = passport;
 
-module.exports.jwt = passport.authenticate("jwt", noSession);
+module.exports.jwt = (req, res, next) => {
+    passport.authenticate("jwt", noSession, (err, user, info) => {
+        if (err || info || !user) {
+            console.log("[HTTP] >> Unauthorized: null or invalid token");
+            return res.status(401).json({message: "Unauthorized"});
+        }
+        req.user = user;
+        next();
+    })(req, res, next);
+};
 
 function callAuth(strategy, callback) {
     return (req, res, next) => {

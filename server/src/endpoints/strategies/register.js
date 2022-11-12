@@ -2,6 +2,8 @@
 const emaiRegex =
     /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 
+const nameRegex = /^[A-Za-z][A-Za-z0-9_]{7,29}$/
+
 const bcrypt = require("bcrypt");
 
 const saltRounds = 10;
@@ -17,8 +19,17 @@ module.exports = async function(req, res, server) {
     if (!email.toLowerCase().match(emaiRegex)) {
         return res.status(400).json({message: "Email is invalid!"});
     }
+    if (email.length > 30) {
+        return res.status(400).json({message: "Email is too long!"});
+    }
+    if (!name.match(nameRegex)) {
+        return res.status(400).json({message: "Name is invalid!"});
+    }
     if (name.length < 3) {
         return res.status(400).json({message: "Name is too short!"});
+    }
+    if (name.length > 30) {
+        return res.status(400).json({message: "Name is too long!"});
     }
     if (password.length < 3) {
         return res.status(400).json({message: "Password is too short!"});

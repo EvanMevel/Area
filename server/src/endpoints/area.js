@@ -42,10 +42,13 @@ class Create extends TokenEndpoint {
         if (!(await server.base.reactions.countBy({name: reactionId}))) {
             throw new BadRequest("No Reaction with such name \"" + reactionId + "\"");
         }
-        if (name.length < 3) {
+        if (name.trim().length < 3) {
             throw new BadRequest("AREA name should be at least 3 char long!");
         }
-        const resp = await server.base.area.save({user: user, name: name, action: {name: actionId}, reaction: {name: reactionId}});
+        if (name.trim().length > 30) {
+            throw new BadRequest("AREA name should be less than 30 char long!");
+        }
+        const resp = await server.base.area.save({user: user, name: name.trim(), action: {name: actionId}, reaction: {name: reactionId}});
         if (resp.id == null) {
             throw new Error("AREA creation sql should return a response, got an empty response instead!")
         } else {

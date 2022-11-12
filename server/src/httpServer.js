@@ -45,7 +45,11 @@ async function loadAll(server) {
     loadSwagger(app);
 
     app.use((req, res, next) => {
-        console.log("[HTTP] " + req.ip + " " + req.method + " at " + req.url);
+        console.log("[HTTP] << " + req.ip + " " + req.method + " at " + req.url);
+        const auth = req.headers.Authorization || req.headers.authorization;
+        if (auth) {
+            console.log("[HTTP] << With authorization " + auth);
+        }
         next();
     })
 
