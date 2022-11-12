@@ -8,6 +8,7 @@ const register = require("./swagger-register");
 const accounts = require("./swagger-accounts");
 const reactions = require("./swagger-reactions");
 const actions = require("./swagger-actions");
+const me = require("./swagger-me");
 
 module.exports = {
     "openapi": "3.0.3",
@@ -52,6 +53,7 @@ module.exports = {
     },
     "paths": {
         "/about.json": about,
+        "/api/me": me,
         "/auth/login": login,
         "/auth/register": register,
         "/api/actions": actions,
