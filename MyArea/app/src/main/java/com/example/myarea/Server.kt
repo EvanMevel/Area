@@ -15,6 +15,9 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.json.JSONArray
 import org.json.JSONObject
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+import java.util.concurrent.CountDownLatch
 
 
 class Server(main: MainActivity) {
@@ -26,6 +29,7 @@ class Server(main: MainActivity) {
     private val settings: SharedPreferences
     private val editor: SharedPreferences.Editor
     private var token: String? = null
+    val oauthCallback: CountDownLatch = CountDownLatch(1)
 
     init {
         queue = Volley.newRequestQueue(main)
@@ -147,6 +151,18 @@ class Server(main: MainActivity) {
             }
         }
         queue.add(jsonPostRequest)
+    }
+
+    fun getAuthUrl(service: String, userId: String?) : String {
+        return "$baseUrl/auth/$service?callback=" + URLEncoder.encode("area://app/callback/$service", StandardCharsets.UTF_8.name());
+    }
+
+    fun calledBack(service: String, query: String, success: Listener<JSONObject>, er :ErrorListener) {
+        val jsonGetRequest = JsonObjectRequest(
+            Request.Method.GET, "$baseUrl/auth/$service/callback?$query", null,
+            success,
+            er);
+        queue.add(jsonGetRequest)
     }
 
     fun errorhandling(textError: TextView) : ErrorListener {

@@ -23,6 +23,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+
+        val data = intent.data;
+
+        if (data != null) {
+            val service = data.pathSegments.get(data.pathSegments.size - 1);
+            val query = data.query
+            server.calledBack(service, query!!,
+                { response ->
+                    server.setToken(response.getString("token"));
+                    server.confirmToken();
+                    server.oauthCallback.countDown();
+                },
+                { error ->
+                    println(error);
+                }
+            )
+        }
+
     }
 
 }

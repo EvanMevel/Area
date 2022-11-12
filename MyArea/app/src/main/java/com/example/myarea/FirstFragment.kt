@@ -57,6 +57,7 @@ class FirstFragment : Fragment() { // fragment creation
         }
         binding.deconexion.setOnClickListener {
             MainActivity.server.setToken(null);
+            MainActivity.server.confirmToken();
             findNavController().navigate(R.id.action_FirstFragment_to_loginFragment) // if log out button is pressed --> move to the second fragment
         }
     }
