@@ -125,6 +125,10 @@ function callBack(server) {
         });
         if (userId == null) {
             if (account == null) {
+                console.log("[HTTP] >> " + JSON.stringify({
+                    message: "No user associated with this account!",
+                    noUser: service
+                }));
                 return res.status(401).json({
                     message: "No user associated with this account!",
                     noUser: service
@@ -139,6 +143,16 @@ function callBack(server) {
             const user = await server.base.users.findOneBy({id: userId});
             if (user == null) {
                 return res.status(500).json({message: "Could not find user!"});
+            }
+            let alreadyAccount = await server.base.accounts.findOne({
+                where: {service: {name: service}, user: user},
+                loadRelationIds: true
+            });
+            if (alreadyAccount != null) {
+                return res.json({
+                    message: "You already have linked an account!",
+                    service: service
+                });
             }
             if (account == null) {
                 account = {service: service, serviceUser: profile.id, user: user, refreshToken: refreshToken, accessToken: accessToken};

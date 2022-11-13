@@ -44,10 +44,10 @@ export default function Login() {
     }
 
     useEffect(() => {
-        const noUser = searchParams.get("noUser");
-        if (noUser) {
+        const message = searchParams.get("error");
+        if (message) {
             Store.addNotification({
-                message: "No area account linked with this " + noUser + " account!",
+                message: message,
                 type: "danger",
                 insert: "top",
                 container: "top-center",

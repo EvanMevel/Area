@@ -44,7 +44,7 @@ export function register(credentials) {
     return post("auth/register", credentials);
 }
 
-export function callback(service, searchParams) {
+export async function callback(service, searchParams) {
     let params = null;
     for(let entry of searchParams.entries()) {
         if (params == null) {
@@ -54,7 +54,7 @@ export function callback(service, searchParams) {
         }
         params += entry[0] + "=" + entry[1];
     }
-    return get("auth/" + service + "/callback" + params);
+    return await get("auth/" + service + "/callback" + params);
 }
 
 export function getAccounts() {

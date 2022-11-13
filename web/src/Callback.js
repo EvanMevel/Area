@@ -1,6 +1,7 @@
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {callback} from "./api";
 import {useEffect} from "react";
+import {AxiosError} from "axios";
 
 export default function Callback() {
     let navigate = useNavigate();
@@ -10,13 +11,18 @@ export default function Callback() {
     async function call() {
         const {data, error} = await callback(service, searchParams);
 
+        console.log(data);
+        console.log(error);
+        if (error) {
+            if (error instanceof AxiosError && error.response != null && error.response.data.message != null) {
+                return navigate("/login?error=" + encodeURIComponent(error.response.data.message));
+            }
+            return navigate("/login?error=" + encodeURIComponent(error.message));
+        }
         if (data.token) {
             localStorage.setItem("token", data.token);
         } else if (data.service) {
             return navigate("/app?connected=" + service);
-        } else if (data.noUser) {
-            return navigate("/login?noUser=" + service);
-
         }
         return navigate("/app");
     }

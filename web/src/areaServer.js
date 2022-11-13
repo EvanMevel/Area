@@ -16,11 +16,11 @@ async function execute(func) {
 
         return {data: data};
     } catch (err) {
-        return {err: err};
+        return {error: err};
     }
 }
 
-export async function get(endpoint) {
+export function get(endpoint) {
     const headers = getHeaders({
         Accept: "application/json"
     });
@@ -35,7 +35,7 @@ export async function get(endpoint) {
     });
 }
 
-export async function post(endpoint, body) {
+export function post(endpoint, body) {
     const headers = getHeaders({
         "Content-Type": 'application/json',
         Accept: "application/json"
