@@ -18,6 +18,7 @@ client = new Discord.Client({
     ]
 });
 
+client.login(process.env.DISCORD_BOT_TOKEN);
 console.log("[Discord] Discord bot started!");
 
 function stop() {
