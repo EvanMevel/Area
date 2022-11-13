@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                     var body = Json.parseToJsonElement(str)
                     println(Json.encodeToString(body));
                     var errortext = body.jsonObject.get("message")
-                    println(errortext)
+                    Toast.makeText(MainActivity.instance,errortext.toString(),Toast.LENGTH_LONG).show()
                     println(body)
                 }
             )

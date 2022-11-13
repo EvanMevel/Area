@@ -3,6 +3,8 @@ package com.example.myarea
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.TextView
+import android.widget.Toast
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response.ErrorListener
@@ -18,6 +20,7 @@ import org.json.JSONObject
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 
 class Server(main: MainActivity) {
@@ -30,6 +33,10 @@ class Server(main: MainActivity) {
     private val editor: SharedPreferences.Editor
     private var token: String? = null
     var oauthCallback: CountDownLatch = CountDownLatch(1)
+    val dontRetry = DefaultRetryPolicy(
+        TimeUnit.SECONDS.toMillis(20).toInt(),0,
+        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+    );
 
     init {
         queue = Volley.newRequestQueue(main)
@@ -91,6 +98,7 @@ class Server(main: MainActivity) {
                 return serverHeaders()
             }
         }
+        jsonPostRequest.setRetryPolicy(dontRetry)
         queue.add(jsonPostRequest)
     }
 
@@ -105,6 +113,7 @@ class Server(main: MainActivity) {
                 return serverHeaders()
             }
         }
+        jsonArrayRequest.setRetryPolicy(dontRetry)
         queue.add(jsonArrayRequest)
     }
 
@@ -114,6 +123,7 @@ class Server(main: MainActivity) {
             Request.Method.GET, "$baseUrl/about.json", null,
             success,
             er);
+        jsonArrayRequest.setRetryPolicy(dontRetry)
         queue.add(jsonArrayRequest)
     }
 
@@ -127,7 +137,7 @@ class Server(main: MainActivity) {
                 return serverHeaders()
             }
         }
-
+        jsonArrayRequest.setRetryPolicy(dontRetry)
         queue.add(jsonArrayRequest)
     }
 
@@ -175,6 +185,7 @@ class Server(main: MainActivity) {
                 return serverHeaders()
             }
         }
+        jsonPostRequest.setRetryPolicy(dontRetry)
         queue.add(jsonPostRequest)
     }
 
@@ -192,6 +203,7 @@ class Server(main: MainActivity) {
             Request.Method.GET, "$baseUrl/auth/$service/callback?$query", null,
             success,
             er);
+        jsonGetRequest.setRetryPolicy(dontRetry)
         queue.add(jsonGetRequest)
     }
 
@@ -205,7 +217,7 @@ class Server(main: MainActivity) {
                 var body = Json.parseToJsonElement(str)
                 println(Json.encodeToString(body));
                 var errortext = body.jsonObject.get("message")
-                textError.setText(errortext.toString())
+                Toast.makeText(MainActivity.instance,errortext.toString(), Toast.LENGTH_LONG).show()
                 println(body)
             }
         }

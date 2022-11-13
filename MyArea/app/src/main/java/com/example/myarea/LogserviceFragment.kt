@@ -29,12 +29,7 @@ class LogserviceFragment : Fragment(){
         return binding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        //get about
         getRequest()
-        //parse about get service with oauth = 1
-        // get in this specific service files = logo
-        var imageLogo = "http://10.0.2.2:8080/files/spotify/spotify.png"
         binding.logintoip.setOnClickListener {
             findNavController().navigate(R.id.action_logserviceFragment_to_LoginFragment) // if log out button is pressed --> move to the second fragment
         }
