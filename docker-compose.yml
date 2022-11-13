@@ -11,7 +11,9 @@ services:
     working_dir: /app
     volumes:
       - ./server/:/app
-    env_file: "database.env"
+    env_file:
+      - "database.env"
+      - "tokens.env"
     depends_on:
       - mysql
     networks:
