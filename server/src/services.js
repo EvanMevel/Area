@@ -11,6 +11,7 @@ class Services {
         this.add("news", "News", 0);
         this.add("youtube_noauth", "Youtube NoAuth", 0);
         this.add("youtube", "Youtube", 1);
+        this.add("timeapi", "TimeAPI", 0);
     }
 
     add(name, displayName, oauth) {
