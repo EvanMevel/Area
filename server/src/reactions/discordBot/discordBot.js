@@ -6,7 +6,9 @@ let client;
 const weather_channel_id = "1029318661950935071";
 
 async function writeMessage(message) {
-    client.channels.cache.get(weather_channel_id).send(message);
+    const channel = await client.channels.cache.get(weather_channel_id)
+    if (channel !== undefined)
+        await channel.send(message);
 }
 
 client = new Discord.Client({
