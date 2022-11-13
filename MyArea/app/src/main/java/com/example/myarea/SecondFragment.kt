@@ -128,8 +128,6 @@ class SecondFragment : Fragment(), AdapterView.OnItemSelectedListener {
         if (actionId != null) {
             populateReactions(actionId)
         };
-
-        println("p2: $p2 p3: $p3");
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

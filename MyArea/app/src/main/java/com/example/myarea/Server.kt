@@ -12,7 +12,6 @@ import com.android.volley.Response.Listener
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.json.JSONArray
@@ -211,11 +210,10 @@ class Server(main: MainActivity) {
         return ErrorListener { error ->
             if (error.networkResponse == null) {
                 textError.setText("Server not able to respond")
-                println("ERROR")
+                Toast.makeText(MainActivity.instance,"Server not able to respond".toString(), Toast.LENGTH_LONG).show()
             }else {
                 var str = String(error.networkResponse.data)
                 var body = Json.parseToJsonElement(str)
-                println(Json.encodeToString(body));
                 var errortext = body.jsonObject.get("message")
                 Toast.makeText(MainActivity.instance,errortext.toString(), Toast.LENGTH_LONG).show()
                 println(body)

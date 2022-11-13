@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.allViews
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -81,7 +80,6 @@ class FirstFragment : Fragment() { // fragment creation
     }
 
     fun addCard(name : String, id : Int) { // add card function which add a card (card is the layer where the area name and the delete button are)
-        println(layout.allViews.joinToString())
         var view = layoutInflater.inflate(R.layout.card, null);
         var nameView = view.findViewById<TextView>(R.id.name);
         var deleteButton = view.findViewById<Button>(R.id.delete);

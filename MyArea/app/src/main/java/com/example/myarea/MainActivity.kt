@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.myarea.databinding.ActivityMainBinding
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 
@@ -43,13 +42,11 @@ class MainActivity : AppCompatActivity() {
                     }else if (response.has("message")){
                         var message = response.getString("message")
                         Toast.makeText(MainActivity.instance,message,Toast.LENGTH_LONG).show()
-
                     }
                 },
                 { error ->
                     var str = String(error.networkResponse.data)
                     var body = Json.parseToJsonElement(str)
-                    println(Json.encodeToString(body));
                     var errortext = body.jsonObject.get("message")
                     Toast.makeText(MainActivity.instance,errortext.toString(),Toast.LENGTH_LONG).show()
                     println(body)

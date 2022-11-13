@@ -9,11 +9,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.volley.toolbox.ImageRequest
 import com.example.myarea.databinding.FragmentServiceregisterBinding
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 
 
 class ServiceregisterFragment : Fragment(){
@@ -64,7 +67,7 @@ class ServiceregisterFragment : Fragment(){
                     },binding.TextError
                 )
             }, { error ->
-                println("error")
+                Toast.makeText(MainActivity.instance,"Resquest failed", Toast.LENGTH_LONG).show()
             }
         )
     }
@@ -79,7 +82,7 @@ class ServiceregisterFragment : Fragment(){
                 logo.setImageBitmap(response)
             }, 100, 100, ImageView.ScaleType.CENTER_CROP, null,
             { error ->
-                println("ERROREUH")
+                Toast.makeText(MainActivity.instance,"Failed to load logo of :"+ displayName, Toast.LENGTH_LONG).show()
             })
         MainActivity.server.queue.add(imageRequest)
         nameView.setText(displayName);
@@ -94,7 +97,11 @@ class ServiceregisterFragment : Fragment(){
                     startActivity(i)
                 },
                 { er ->
-                    println("ERROREUH")
+                    var str = String(er.networkResponse.data)
+                    var body = Json.parseToJsonElement(str)
+                    var errortext = body.jsonObject.get("message")
+                    Toast.makeText(MainActivity.instance,errortext.toString(),Toast.LENGTH_LONG).show()
+                    println(body)
                 })
 
 

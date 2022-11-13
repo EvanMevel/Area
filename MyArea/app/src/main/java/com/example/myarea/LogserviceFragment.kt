@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.volley.toolbox.ImageRequest
@@ -49,7 +50,7 @@ class LogserviceFragment : Fragment(){
                     }
                 }
             }, { error ->
-                println("error")
+                Toast.makeText(MainActivity.instance,"Resquest failed",Toast.LENGTH_LONG).show()
             }
         )
     }
@@ -63,7 +64,7 @@ class LogserviceFragment : Fragment(){
                 logo.setImageBitmap(response)
             }, 100, 100, ImageView.ScaleType.CENTER_CROP, null,
             { error ->
-                println("ERROREUH")
+                Toast.makeText(MainActivity.instance,"Failed to load logo of :"+ displayName, Toast.LENGTH_LONG).show()
             })
         MainActivity.server.queue.add(imageRequest)
         nameView.setText(displayName);
