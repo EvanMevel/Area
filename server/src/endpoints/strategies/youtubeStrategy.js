@@ -8,8 +8,11 @@ module.exports = new YoutubeStrategy({
     //callbackURL: "http://localhost:8080/auth/youtube/callback",
     scope: "https://www.googleapis.com/auth/youtube.force-ssl"
 }, function(accessToken, refreshToken, expires_in, profile, done) {
-    if (profile.id == null)
-        return done('No userId', false);
+    if (profile.id == null) {
+        return done(null, {
+            error: "Google account doesn't have a youtube channel"
+        });
+    }
     done(null, {
         profile: profile,
         accessToken: accessToken,

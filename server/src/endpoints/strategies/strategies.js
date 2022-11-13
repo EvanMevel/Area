@@ -112,12 +112,18 @@ function authFunc(strategy, server) {
 
 function callBack(server) {
     return async function (req, res) {
-        const {profile, refreshToken, accessToken} = req.user;
+        const {profile, refreshToken, accessToken, error} = req.user;
         const service = profile.provider;
         let stateInfo = req.stateInfo;
         const userId = stateInfo.userId;
 
         server.base.states.remove(stateInfo);
+
+        if (error) {
+            return res.status(400).json({
+                message: error
+            })
+        }
 
         let account = await server.base.accounts.findOne({
             where: {service: {name: service}, serviceUser: profile.id},
