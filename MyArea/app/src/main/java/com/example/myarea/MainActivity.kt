@@ -1,6 +1,7 @@
 package com.example.myarea
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.myarea.databinding.ActivityMainBinding
@@ -39,6 +40,10 @@ class MainActivity : AppCompatActivity() {
                         server.setToken(response.getString("token"));
                         server.confirmToken();
                         server.oauthCallback.countDown();
+                    }else if (response.has("message")){
+                        var message = response.getString("message")
+                        Toast.makeText(MainActivity.instance,message,Toast.LENGTH_LONG).show()
+
                     }
                 },
                 { error ->
