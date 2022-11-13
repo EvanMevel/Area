@@ -55,6 +55,9 @@ class FirstFragment : Fragment() { // fragment creation
         binding.addaction.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment) // if add action button is pressed --> move to the second fragment
         }
+        binding.service.setOnClickListener {
+            findNavController().navigate(R.id.action_FirstFragment_to_ServiceregisterFragment) // if add action button is pressed --> move to the second fragment
+        }
         binding.deconexion.setOnClickListener {
             MainActivity.server.setToken(null);
             MainActivity.server.confirmToken();
@@ -68,6 +71,7 @@ class FirstFragment : Fragment() { // fragment creation
                 println("GET Request : ${response}")
                 if (layout.childCount == 1) {
                     layout.removeAllViews();
+                    binding.textviewFirst.isInvisible=false
                 } else {
                     layout.removeView(view)
                 }

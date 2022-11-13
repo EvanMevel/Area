@@ -25,7 +25,7 @@ class Server(main: MainActivity) {
     private val SETTING_URL = "AREA_URL";
     private val SETTING_TOK = "AREA_TOKEN";
     var baseUrl: String = "http://10.0.2.2:8080"
-    private var queue: RequestQueue;
+    var queue: RequestQueue;
     private val settings: SharedPreferences
     private val editor: SharedPreferences.Editor
     private var token: String? = null
@@ -43,6 +43,11 @@ class Server(main: MainActivity) {
         if (tok != null) {
             setToken(tok);
         }
+    }
+
+    fun resetUrl() {
+        setUrl(null)
+        confirmUrl()
     }
 
     fun confirmUrl() {
@@ -63,7 +68,11 @@ class Server(main: MainActivity) {
         return token != null;
     }
 
-    fun setUrl(url: String) {
+    fun setUrl(url: String?) {
+        if (url == null ){
+            baseUrl = "http://localhost"
+            return
+        }
         if (url.startsWith("http")) {
             baseUrl = url;
         } else {
@@ -101,12 +110,24 @@ class Server(main: MainActivity) {
 
     fun about_area(success: Listener<JSONObject>, er :ErrorListener)
     {
-        println("$baseUrl/about.json");
-        val queue = Volley.newRequestQueue(MainActivity.instance)
         val jsonArrayRequest = JsonObjectRequest(
             Request.Method.GET, "$baseUrl/about.json", null,
             success,
             er);
+        queue.add(jsonArrayRequest)
+    }
+
+    fun me_area(success: Listener<JSONObject>, er :ErrorListener)
+    {
+        val jsonArrayRequest = object :JsonObjectRequest(
+            Request.Method.GET, "$baseUrl/api/me", null,
+            success,
+            er){
+            override fun getHeaders(): MutableMap<String, String> {
+                return serverHeaders()
+            }
+        }
+
         queue.add(jsonArrayRequest)
     }
 
@@ -124,6 +145,10 @@ class Server(main: MainActivity) {
 
     fun reactions(action: String, success: Listener<JSONArray>, textError: TextView) {
         getArray("api/reactions?action=$action", success, textError);
+    }
+
+    fun accounts(success: Listener<JSONArray>, textError: TextView) {
+        getArray("api/accounts", success, textError)
     }
 
     fun createArea(action: String, reaction: String, name: String, success: Listener<JSONObject>, textError: TextView) {
@@ -154,7 +179,12 @@ class Server(main: MainActivity) {
     }
 
     fun getAuthUrl(service: String, userId: String?) : String {
-        return "$baseUrl/auth/$service?callback=" + URLEncoder.encode("area://app/callback/$service", StandardCharsets.UTF_8.name());
+        var url = "$baseUrl/auth/$service?callback=" + URLEncoder.encode("http://groupaphil.com/callback/$service", StandardCharsets.UTF_8.name());
+
+        if (userId != null) {
+            url +=  "&userId=$userId"
+        }
+        return url
     }
 
     fun calledBack(service: String, query: String, success: Listener<JSONObject>, er :ErrorListener) {
@@ -167,12 +197,17 @@ class Server(main: MainActivity) {
 
     fun errorhandling(textError: TextView) : ErrorListener {
         return ErrorListener { error ->
-            var str = String(error.networkResponse.data)
-            var body = Json.parseToJsonElement(str)
-            println(Json.encodeToString(body));
-            var errortext = body.jsonObject.get("message")
-            textError.setText(errortext.toString())
-            println(body)
+            if (error.networkResponse == null) {
+                textError.setText("Server not able to respond")
+                println("ERROR")
+            }else {
+                var str = String(error.networkResponse.data)
+                var body = Json.parseToJsonElement(str)
+                println(Json.encodeToString(body));
+                var errortext = body.jsonObject.get("message")
+                textError.setText(errortext.toString())
+                println(body)
+            }
         }
     }
 

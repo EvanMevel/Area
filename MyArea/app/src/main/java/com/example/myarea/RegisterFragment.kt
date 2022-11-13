@@ -26,6 +26,9 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.back.setOnClickListener {
+            findNavController().navigate(R.id.action_registerFragment_to_LoginFragment)
+        }
         binding.register.setOnClickListener {
             var username = binding.username.text.toString();
             var password = binding.password.text.toString();

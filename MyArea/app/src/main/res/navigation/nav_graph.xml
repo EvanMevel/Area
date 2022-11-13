@@ -21,6 +21,31 @@
     </fragment>
 
     <fragment
+        android:id="@+id/logservice"
+        android:name="com.example.myarea.LogserviceFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_logservice">
+
+
+        <action
+            android:id="@+id/action_logserviceFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/serviceregister"
+        android:name="com.example.myarea.ServiceregisterFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_serviceregister">
+
+        <action
+            android:id="@+id/action_ServideregisterFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+
+
+    </fragment>
+    <fragment
         android:id="@+id/LoginFragment"
         android:name="com.example.myarea.LoginFragment"
         android:label="@string/second_fragment_label"
@@ -32,6 +57,12 @@
         <action
             android:id="@+id/action_loginFragment_to_RegisterFragment"
             app:destination="@id/RegisterFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_LogserviceFragment"
+            app:destination="@id/logservice" />
+        <action
+            android:id="@+id/action_loginFragment_to_IpconfigFragment"
+            app:destination="@id/IpconfigFragement" />
     </fragment>
 
     <fragment
@@ -45,7 +76,6 @@
             app:destination="@id/LoginFragment" />
     </fragment>
 
-
     <fragment
         android:id="@+id/FirstFragment"
         android:name="com.example.myarea.FirstFragment"
@@ -55,6 +85,9 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_ServiceregisterFragment"
+            app:destination="@id/serviceregister" />
         <action
             android:id="@+id/action_FirstFragment_to_loginFragment"
             app:destination="@id/LoginFragment" />
@@ -70,8 +103,5 @@
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
-        <action
-            android:id="@+id/action_SecondFragment_to_LoginFragment"
-            app:destination="@id/LoginFragment" />
     </fragment>
 </navigation>

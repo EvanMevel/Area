@@ -1,6 +1,5 @@
 package com.example.myarea
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -47,15 +46,13 @@ class LoginFragment : Fragment() {
                 binding.TextError)
         }
 
-        binding.logoSpotify.setOnClickListener { // if spotify button is clicked we go on web to login on it and then go back to the app
-           /* val webIntent: Intent = Uri.parse("$BASE_URL/auth/spotify").let { webpage ->
-                Intent(Intent.ACTION_VIEW, webpage)
-            }
-            activity?.let { it1 -> ContextCompat.startActivity(it1, webIntent, null) }*/
-            val url = MainActivity.server.getAuthUrl("spotify", null);
-            val i = Intent(Intent.ACTION_VIEW)
-            i.data = Uri.parse(url)
-            startActivity(i)
+        binding.logintoip.setOnClickListener {
+            MainActivity.server.resetUrl()
+            findNavController().navigate(R.id.action_loginFragment_to_IpconfigFragment)
+        }
+
+        binding.logservicebutton.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_LogserviceFragment)
         }
 
         binding.register.setOnClickListener { // if register button is pressed we move to the register fragment
