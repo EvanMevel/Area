@@ -13,21 +13,28 @@ export default function LoginService({service, logged, userId}) {
 
     const logo_img = {
         "float": "left",
-        "display": "flex",
         "alignItems": "stretch",
         "flexWrap": "wrap",
         "alignContent": "space-between",
         "flexDirection": "row",
-        "width":"20%"
+        "width": "75px",
+        "border": "solid #fff"
+    }
+
+    const img_style = {
+        "display": "flex",
+        "justifyContent": "center"
     }
 
     if (userId != null) {
        logo_img.background= (logged ? "green" : "red")
     }
 
-    return <div onClick={click}>
-        <img src={service.files.logo} alt={service.name} style={logo_img} />
-        <div>
+    return <div onClick={click} style={logo_img}>
+        <div style={img_style}>        
+            <img src={service.files.logo} alt={service.name} style={img_style} width={50} height={50}/>
+        </div>
+        <div style={img_style}>
             {service.displayName}
         </div>
     </div>
