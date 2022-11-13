@@ -58,7 +58,7 @@ class ServiceregisterFragment : Fragment(){
                             var src = service.getJSONObject("files")
                             if(service.getBoolean("oauth")){
                                 var logo= MainActivity.server.baseUrl + src.getString("logo")
-                                addservice(logo, service.getString("name"),loggedServices.contains(service.getString("name")));
+                                addservice(logo, service.getString("name"),loggedServices.contains(service.getString("name")) , service.getString("displayName"));
                             }
                         }
                     },binding.TextError
@@ -69,7 +69,7 @@ class ServiceregisterFragment : Fragment(){
         )
     }
 
-    fun addservice(imageLogo : String, serviceName : String, isLog : Boolean) { // add card function which add a card (card is the layer where the area name and the delete button are)
+    fun addservice(imageLogo : String, serviceName : String, isLog : Boolean, displayName :String) { // add card function which add a card (card is the layer where the area name and the delete button are)
         var view = layoutInflater.inflate(R.layout.servicesbutton, null);
         var nameView = view.findViewById<TextView>(R.id.name);
         var logo = view.findViewById<ImageView>(R.id.logo);
@@ -82,7 +82,7 @@ class ServiceregisterFragment : Fragment(){
                 println("ERROREUH")
             })
         MainActivity.server.queue.add(imageRequest)
-        nameView.setText(serviceName);
+        nameView.setText(displayName);
         service.setOnClickListener {
             MainActivity.server.me_area(
                 { me ->
