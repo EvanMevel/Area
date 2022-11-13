@@ -25,12 +25,12 @@ class DeezerLike extends OAuthAction {
     }
 
     async oAuthEvent(server, account) {
-        const access_token = account.access_token;
+        const access_token = account.accessToken;
         const track = await getSong(server, access_token);
-        const oldLiked = await server.base.actionData.getString(this.areaId);
+        const oldLiked = await this.getDataString(server);
         if (track !== undefined && track.id !== oldLiked) {
             const sentence = getSentence(track);
-            await server.base.actionData.set(this.areaId, track.id);
+            await this.setData(server, track.id)
             return [sentence];
         } else {
             return [];
