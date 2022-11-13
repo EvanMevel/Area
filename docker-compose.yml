@@ -11,7 +11,8 @@ services:
       - "database.env"
       - "tokens.env"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - phil
 
@@ -25,6 +26,10 @@ services:
       - "6033:3306"
     networks:
       - phil
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
       
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -55,6 +60,9 @@ services:
       - android-apk:/result/
     ports:
       - 8081:8081
+    depends_on:
+      - server
+      - androidapp
 
 volumes:
   todo-mysql-data:
