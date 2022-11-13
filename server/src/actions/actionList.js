@@ -7,6 +7,7 @@ const Youtube = require("./youtubeTT");
 const Twitch = require('./followedStreamersLiveTwitch')
 const News = require("./newsHeadLines");
 const Time = require("./getTime");
+const TwitchTop = require("./twitchTopGames");
 
 class ActionList extends ARList {
 
@@ -19,6 +20,7 @@ class ActionList extends ARList {
         this.add(Twitch);
         this.add(News);
         this.add(Time);
+        this.add(TwitchTop);
     }
 
     getAll() {
