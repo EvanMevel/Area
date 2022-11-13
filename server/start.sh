@@ -1,5 +1,6 @@
 set -o allexport
 source ../database.env
+source ../tokens.env
 set +o allexport
 export MYSQL_HOST=localhost
 export MYSQL_PORT=6033

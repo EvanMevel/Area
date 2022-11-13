@@ -1,11 +1,10 @@
 const OAuthAction = require("./oAuthAction");
 const ActionDescription = require("./actionDescription");
 const EventType = require("../eventType");
-const NEWS_API_KEY = "3eceeb95cf64494497139b8a25370cb0";
 
 async function getHeadLine(server)
 {
-    let body = await server.request.get("https://newsapi.org/v2/top-headlines?country=fr&apiKey=" + NEWS_API_KEY);
+    let body = await server.request.get("https://newsapi.org/v2/top-headlines?country=fr&apiKey=" + process.env.NEWS_API_KEY);
     let article = JSON.parse(body.body).articles[0];
     return {
         type: EventType.HEADLINE,

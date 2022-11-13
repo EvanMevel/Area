@@ -2,10 +2,8 @@ const Action = require('./action');
 const EventType = require("../eventType");
 const ActionDescription = require("./actionDescription");
 
-const token = "ee775a81f3d9965a0bca1a2e0da2aa7e845b4a976eb0d955c53ea90a4e2efba8";
-
 async function getCity(server) {
-    const body = await server.request.get("https://api.meteo-concept.com/api/location/city?token=" + token).json();
+    const body = await server.request.get("https://api.meteo-concept.com/api/location/city?token=" + process.env.WEATHER_TOKEN).json();
     return body.city.insee;
 }
 
@@ -24,7 +22,7 @@ function getHeat(temp, rain) {
 
 async function getWeatherFromHour(server) {
     let city_code = await getCity(server);
-    const body = await server.request.get("https://api.meteo-concept.com/api/forecast/nextHours?token=" + token + "&insee=" + city_code).json();
+    const body = await server.request.get("https://api.meteo-concept.com/api/forecast/nextHours?token=" + process.env.WEATHER_TOKEN + "&insee=" + city_code).json();
     let fore = body.forecast;
     let temp = fore[0].temp2m;
     let rain = fore[0].probarain;
