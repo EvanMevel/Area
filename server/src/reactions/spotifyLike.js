@@ -25,7 +25,7 @@ class SpotifyLike extends OAuthReaction {
     }
 
     async oAuthIngest(event, server, account) {
-        const access_token = await this.getAccessToken(server, account.refresh_token);
+        const access_token = await this.getAccessToken(server, account.refreshToken);
         if (event.type === EventType.SONG) {
             await likeASong(event.artist + " - " + event.name, server, access_token);
         } else {
