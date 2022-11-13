@@ -1,5 +1,3 @@
-// reddit
-// news
 const TWITCH_CLIENT_ID = "kuc3fz5afh4odtlkkqe9mq5xmybkgq";
 const TWITCH_CLIENT_SECRET = "xte2bekynu69lhy2l70uaxc5i336te";
 const TwitchStrategy = require('passport-twitch-new').Strategy;

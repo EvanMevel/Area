@@ -7,7 +7,7 @@ class Services {
         this.add("deezer", "Deezer", 1);
         this.add("discord", "Discord", 0);
         this.add("meteo_concept", "Météo Concept", 0);
-        this.add("twitch", "Twitch", 0);
+        this.add("twitch", "Twitch", 1);
         this.add("news", "News", 0);
         this.add("youtube_noauth", "Youtube NoAuth", 0);
         this.add("youtube", "Youtube", 1);
