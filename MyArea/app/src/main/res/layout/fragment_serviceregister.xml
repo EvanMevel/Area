@@ -10,7 +10,7 @@
         android:id="@+id/TextError"
         android:layout_width="375dp"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text=" "
         android:textColor="@color/red"
         app:layout_anchor="@+id/scrollViewlogservice"
         app:layout_anchorGravity="center"
@@ -20,9 +20,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.63" />
-
-
-
 
     <ScrollView
         android:id="@+id/scrollViewlogservice"
@@ -57,4 +54,14 @@
         app:layout_constraintHorizontal_bias="0.045"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_menu_revert" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click here to join discord server"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/purple_700"
+        app:layout_anchor="@+id/scrollViewlogservice"
+        app:layout_anchorGravity="bottom|center" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
