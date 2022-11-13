@@ -2,20 +2,17 @@ version: "3.8"
 
 services:
   server:
-    image: node:18-alpine
     container_name: area-server
-    command: sh -c "echo 'Installing...'; npm install --no-optional --no-audit --no-fund --omit=optional; npm run dev"
+    build: ./server
     ports:
       - '8080:8080'
       - '9229:9229'
-    working_dir: /app
-    volumes:
-      - ./server/:/app
     env_file:
       - "database.env"
       - "tokens.env"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - phil
 
@@ -24,11 +21,15 @@ services:
     container_name: area-mysql
     volumes:
       - todo-mysql-data:/var/lib/mysql
-    env_file: "database.env"
+    env_file: "mysql.env"
     ports:
       - "6033:3306"
     networks:
       - phil
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
       
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -46,22 +47,22 @@ services:
     networks:
       - phil
 
-  # androidapp:
-  #   build: ./MyArea
-  #   tty: true
-  #   volumes:
-  #     - android-apk:/result
+  androidapp:
+    container_name: android-app
+    build: ./MyArea
+    volumes:
+      - android-apk:/result/
 
   web:
-    image: node:18-alpine
     container_name: area-web
-    working_dir: /app
-    command: sh -c "npm install; npm run start"
+    build: ./web
     volumes:
-      - ./web/:/app
-      - android-apk:/result
+      - android-apk:/result/
     ports:
       - 8081:8081
+    depends_on:
+      - server
+      - androidapp
 
 volumes:
   todo-mysql-data:

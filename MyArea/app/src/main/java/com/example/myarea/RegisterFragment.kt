@@ -43,7 +43,7 @@ class RegisterFragment : Fragment() {
                     MainActivity.server.setToken(response["token"].toString())
                     MainActivity.server.confirmToken()
                     println("POST Request : ${response}")
-                    findNavController().navigate(R.id.action_registerFragment_to_LoginFragment)
+                    findNavController().navigate(R.id.action_registerFragment_to_FirstFragment)
                 },
                 binding.TextError
             )
