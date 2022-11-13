@@ -9,7 +9,7 @@ async function getTrackId(track_name, server, access_token) {
 }
 
 async function likeASong(track_name, server, account) {
-    const access_token = account.access_token;
+    const access_token = account.accessToken;
     let track_id = await getTrackId(track_name, server, access_token);
     await server.request.post("https://api.deezer.com/user/" + account.serviceUser + "/tracks?track_id=" + track_id + "&access_token=" + access_token);
 }
