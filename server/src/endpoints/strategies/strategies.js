@@ -146,9 +146,13 @@ function callBack(server) {
                 if (resp.length === 0) {
                     return res.status(500).end();
                 }
+                return res.json({
+                    message: "Connected to " + service,
+                    service: service
+                });
             }
             return res.json({
-                message: "Connected to " + service,
+                message: "Account already linked to another user!",
                 service: service
             });
         }
