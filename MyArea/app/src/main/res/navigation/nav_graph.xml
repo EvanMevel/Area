@@ -74,6 +74,9 @@
         <action
             android:id="@+id/action_registerFragment_to_LoginFragment"
             app:destination="@id/LoginFragment" />
+        <action
+            android:id="@+id/action_registerFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
     </fragment>
 
     <fragment

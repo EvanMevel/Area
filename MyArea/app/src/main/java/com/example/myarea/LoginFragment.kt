@@ -1,6 +1,5 @@
 package com.example.myarea
 
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -10,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.myarea.databinding.FragmentLoginBinding
 import org.json.JSONObject
+import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
 
@@ -67,16 +67,10 @@ class LoginFragment : Fragment() {
                 findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
             };
             mainHandler.post(myRunnable);
+            MainActivity.server.oauthCallback = CountDownLatch(1)
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        val uri: Uri? = activity!!.intent.getData()
-
-        println("Uri: " + uri);
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

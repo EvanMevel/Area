@@ -29,7 +29,7 @@ class Server(main: MainActivity) {
     private val settings: SharedPreferences
     private val editor: SharedPreferences.Editor
     private var token: String? = null
-    val oauthCallback: CountDownLatch = CountDownLatch(1)
+    var oauthCallback: CountDownLatch = CountDownLatch(1)
 
     init {
         queue = Volley.newRequestQueue(main)
