@@ -16,7 +16,7 @@ async function getTop(server, access_token)
     data.forEach(game => topGames.push(game.name));
     return {
         name: topGames,
-        string: "Here are the top 3 most watched games at the moment: " + topGames
+        string: "Here are the 3 most watched games at the moment: " + topGames
     }
 }
 
@@ -28,7 +28,6 @@ class TwitchTopGames extends OAuthAction {
 
     async oAuthEvent(server, account) {
         let list = await getTop(server, account.accessToken);
-        console.log(list)
         if (list.length === 0)
             return [];
         else
