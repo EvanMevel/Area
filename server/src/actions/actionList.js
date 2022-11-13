@@ -6,6 +6,7 @@ const Deezer = require("./deezerLike");
 const Youtube = require("./youtubeTT");
 const Twitch = require('./followedStreamersLiveTwitch')
 const News = require("./newsHeadLines");
+const Time = require("./getTime");
 
 class ActionList extends ARList {
 
@@ -17,6 +18,7 @@ class ActionList extends ARList {
         this.add(Youtube);
         this.add(Twitch);
         this.add(News);
+        this.add(Time);
     }
 
     getAll() {
