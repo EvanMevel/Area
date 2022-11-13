@@ -1,24 +1,25 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {login} from "../api";
 import AuthLogins from "./AuthLogins";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import {AxiosError} from "axios";
+import {Store} from "react-notifications-component";
 
 async function loginUser(credentials) {
-    try {
-        const {data} = await login(credentials);
-
-        return {token: data.token};
-    } catch (err) {
-        if (err instanceof AxiosError) {
-            return {error: err.response.data};
+    const {data, error} = await login(credentials);
+    if (error) {
+        if (error instanceof AxiosError && error.response != null) {
+            return {error: error.response.data};
         }
-        return {error: err};
+        return {error: error};
     }
+
+    return {token: data.token};
 }
 
 export default function Login() {
     let navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [err, setErr] = useState();
     const [enabled, setEnabled] = useState(true);
 
@@ -41,6 +42,21 @@ export default function Login() {
             setErr(error);
         }
     }
+
+    useEffect(() => {
+        const noUser = searchParams.get("noUser");
+        if (noUser) {
+            Store.addNotification({
+                message: "No area account linked with this " + noUser + " account!",
+                type: "danger",
+                insert: "top",
+                container: "top-center",
+                dismiss: {
+                    duration: 5000
+                }
+            });
+        }
+    }, [])
 
     const containere = {
         "display": "flex",
