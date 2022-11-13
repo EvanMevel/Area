@@ -11,20 +11,9 @@ export default function LoginService({service, logged, userId}) {
         window.location.replace(url);
     }
 
-    const containere = {
-        "display": "flex",
-        "alignItems": "center",
-        "flexDirection": "column",
-        "justifyContent": "space-between"
-    }
-
-    const font = {
-        "color": "#fff",
-        "stroke": "black",
-        "strokeWidth": ".5px"
-    }
-
     const logo_img = {
+        "float": "left",
+        "display": "flex",
         "alignItems": "stretch",
         "flexWrap": "wrap",
         "alignContent": "space-between",
@@ -33,12 +22,12 @@ export default function LoginService({service, logged, userId}) {
     }
 
     if (userId != null) {
-        containere.background= (logged ? "green" : "red")
+       logo_img.background= (logged ? "green" : "red")
     }
 
     return <div onClick={click}>
         <img src={service.files.logo} alt={service.name} style={logo_img} />
-        <div style={font} >
+        <div>
             {service.displayName}
         </div>
     </div>
