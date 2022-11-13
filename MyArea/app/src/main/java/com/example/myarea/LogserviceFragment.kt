@@ -50,7 +50,7 @@ class LogserviceFragment : Fragment(){
                     var src = service.getJSONObject("files")
                     if(service.getBoolean("oauth")){
                         var logo= MainActivity.server.baseUrl +src.getString("logo")
-                        addservice(logo, service.getString("name"));
+                        addservice(logo, service.getString("name"), service.getString("displayName"));
                     }
                 }
             }, { error ->
@@ -58,7 +58,7 @@ class LogserviceFragment : Fragment(){
             }
         )
     }
-    fun addservice(imageLogo : String, serviceName : String) { // add card function which add a card (card is the layer where the area name and the delete button are)
+    fun addservice(imageLogo : String, serviceName : String, displayName :String) { // add card function which add a card (card is the layer where the area name and the delete button are)
         var view = layoutInflater.inflate(R.layout.servicesbutton, null);
         var nameView = view.findViewById<TextView>(R.id.name);
         var logo = view.findViewById<ImageView>(R.id.logo);
@@ -71,7 +71,7 @@ class LogserviceFragment : Fragment(){
                 println("ERROREUH")
             })
         MainActivity.server.queue.add(imageRequest)
-        nameView.setText(serviceName);
+        nameView.setText(displayName);
         service.setOnClickListener {
             val url = MainActivity.server.getAuthUrl(serviceName, null);
             val i = Intent(Intent.ACTION_VIEW)
