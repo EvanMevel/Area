@@ -3,8 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/LoginFragment">
+    app:startDestination="@id/IpconfigFragement">
 
+    <fragment
+        android:id="@+id/IpconfigFragement"
+        android:name="com.example.myarea.IpconfigFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_ipconfig">
+
+        <action
+            android:id="@+id/action_IpconfigFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
+        <action
+            android:id="@+id/action_IpconfigFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/logservice"
+        android:name="com.example.myarea.LogserviceFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_logservice">
+
+
+        <action
+            android:id="@+id/action_logserviceFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/serviceregister"
+        android:name="com.example.myarea.ServiceregisterFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_serviceregister">
+
+        <action
+            android:id="@+id/action_ServideregisterFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+
+
+    </fragment>
     <fragment
         android:id="@+id/LoginFragment"
         android:name="com.example.myarea.LoginFragment"
@@ -14,7 +54,28 @@
         <action
             android:id="@+id/action_loginFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_RegisterFragment"
+            app:destination="@id/RegisterFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_LogserviceFragment"
+            app:destination="@id/logservice" />
+        <action
+            android:id="@+id/action_loginFragment_to_IpconfigFragment"
+            app:destination="@id/IpconfigFragement" />
     </fragment>
+
+    <fragment
+        android:id="@+id/RegisterFragment"
+        android:name="com.example.myarea.RegisterFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_register">
+
+        <action
+            android:id="@+id/action_registerFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/FirstFragment"
         android:name="com.example.myarea.FirstFragment"
@@ -24,7 +85,15 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_ServiceregisterFragment"
+            app:destination="@id/serviceregister" />
+        <action
+            android:id="@+id/action_FirstFragment_to_loginFragment"
+            app:destination="@id/LoginFragment" />
     </fragment>
+
+
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.myarea.SecondFragment"

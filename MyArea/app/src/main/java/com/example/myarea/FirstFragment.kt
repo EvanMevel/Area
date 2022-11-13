@@ -7,30 +7,25 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import androidx.core.view.allViews
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.example.myarea.databinding.FragmentFirstBinding
 
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class FirstFragment : Fragment() { // fragment creation
 
     private var _binding: FragmentFirstBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
+    private val binding get() = _binding!! //get binding
 
-    var dialog: AlertDialog? = null
-    var layout: LinearLayout? = null
+    lateinit var layout: LinearLayout; // get layout
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -40,77 +35,61 @@ class FirstFragment : Fragment() {
         layout = binding.container;
         //get area list
         getRequest();
-        //display  return
         return binding.root
-
     }
-    fun getRequest() {
-        val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "http://10.0.2.2:8080/api/area_list"
-        val stringRequest = object:JsonArrayRequest(
-            Request.Method.GET, url,null,
+
+    fun getRequest() { // get resquest for the list of AREAs of the connected user
+        MainActivity.server.area_list(
             { response ->
                 println("GET Request : ${response}")
-                for (i in 0 until response.length()) {
+                for (i in 0 until response.length()) {// dispaly a card for each area
                     var element = response.getJSONObject(i);
                     addCard(element.getString("name"), element.getInt("id"));
                 }
-            },
-            { error ->
-                var body: String = String(error.networkResponse.data);
-                println(body)
-            })
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Authorization"] = "Bearer " + MainActivity.token;
-                return headers
-            }
-        }
-        queue.add(stringRequest)
+            }, binding.TextError
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        binding.addaction.setOnClickListener {
+            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment) // if add action button is pressed --> move to the second fragment
+        }
+        binding.service.setOnClickListener {
+            findNavController().navigate(R.id.action_FirstFragment_to_ServiceregisterFragment) // if add action button is pressed --> move to the second fragment
+        }
+        binding.deconexion.setOnClickListener {
+            MainActivity.server.setToken(null);
+            MainActivity.server.confirmToken();
+            findNavController().navigate(R.id.action_FirstFragment_to_loginFragment) // if log out button is pressed --> move to the second fragment
         }
     }
 
-    fun deleteRequest(id : Int, view : View) {
-        val queue = Volley.newRequestQueue(MainActivity.instance)
-        val url = "http://10.0.2.2:8080/api/area?id=" + id;
-        val jsonObjectRequest = object: JsonObjectRequest(
-            Request.Method.DELETE, url, null,
+    fun deleteRequest(id : Int, view : View) { // delete request function which delete the chosen AREA
+        MainActivity.server.delete_area(id,
             { response ->
-                //
                 println("GET Request : ${response}")
-                layout?.removeView(view);
-            },
-            { error ->
-                var body: String = String(error.networkResponse.data);
-                println(body)
-            })
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Authorization"] = "Bearer " + MainActivity.token;
-                return headers
-            }
-        }
-        queue.add(jsonObjectRequest)
+                if (layout.childCount == 1) {
+                    layout.removeAllViews();
+                    binding.textviewFirst.isInvisible=false
+                } else {
+                    layout.removeView(view)
+                }
+            }, binding.TextError
+        );
     }
 
-    fun addCard(name : String, id : Int) {
+    fun addCard(name : String, id : Int) { // add card function which add a card (card is the layer where the area name and the delete button are)
+        println(layout.allViews.joinToString())
         var view = layoutInflater.inflate(R.layout.card, null);
         var nameView = view.findViewById<TextView>(R.id.name);
         var deleteButton = view.findViewById<Button>(R.id.delete);
         binding.textviewFirst.isInvisible=true;
         nameView.setText(name);
-        deleteButton.setOnClickListener {
+        deleteButton.setOnClickListener { // if delete button pressed this card and the area on it will be deleted
             deleteRequest(id , view)
         }
-        layout?.addView(view);
+        layout.addView(view);
     }
 
     override fun onDestroyView() {

@@ -14,11 +14,13 @@ module.exports = new EntitySchema({
         },
         refreshToken: {
             type: "varchar",
-            nullable: true
+            nullable: true,
+            length: 500
         },
         accessToken: {
             type: "varchar",
-            nullable: true
+            nullable: true,
+            length: 500
         }
     },
     relations: {

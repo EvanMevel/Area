@@ -1,9 +1,12 @@
-
 const ARList = require("../arCommons/arList");
 const Action = require("./action");
 const SpotifyLike = require("./spotifyLike");
 const Weather = require("./weatherAction");
 const Deezer = require("./deezerLike");
+const Youtube = require("./youtubeTT");
+const Twitch = require('./followedStreamersLiveTwitch')
+const News = require("./newsHeadLines");
+const Time = require("./getTime");
 
 class ActionList extends ARList {
 
@@ -12,6 +15,19 @@ class ActionList extends ARList {
         this.add(SpotifyLike);
         this.add(Weather);
         this.add(Deezer);
+        this.add(Youtube);
+        this.add(Twitch);
+        this.add(News);
+        this.add(Time);
+    }
+
+    getAll() {
+        let ret = [];
+        for (let id in this.list) {
+            const action = this.list[id];
+            ret.push(structuredClone(action.description));
+        }
+        return ret;
     }
 
     async registerAR(server, desc) {

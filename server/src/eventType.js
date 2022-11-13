@@ -1,7 +1,11 @@
 const EventType = {
     ALL: -1,
     SONG: 0,
-    WEATHER: 1
+    WEATHER: 1,
+    VIDEO: 2,
+    CHANNELS: 3,
+    HEADLINE: 4,
+    TIME: 5
 }
 
 module.exports = EventType;

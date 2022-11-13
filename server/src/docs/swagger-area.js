@@ -45,7 +45,7 @@ const createAREA = {
     }
 }
 
-const modifyAREA = {
+/*const modifyAREA = {
     "type": "object",
     "properties": {
         "id": {
@@ -66,7 +66,7 @@ const modifyAREA = {
         "actionId": "fb_test",
         "reactionId": "fb_test_t"
     }
-}
+}*/
 
 const createAnswer = {
     "type": "object",
@@ -128,7 +128,7 @@ module.exports.area = {
             }
         }
     },
-    "put": {
+    /*"put": {
         "tags": [
             "ActionReaction"
         ],
@@ -155,7 +155,7 @@ module.exports.area = {
                 }
             }
         }
-    },
+    },*/
     "delete": {
         "tags": [
             "ActionReaction"
@@ -204,7 +204,9 @@ module.exports.list = {
                             "type": "array",
                             "items": area,
                             "example": [
-                                {"id":2,"name":"Discord like on Spotify","actionId":"spotify_action_like","reactionId":"discord_reaction_message"}
+                                {"id":2,"name":"Discord like on Spotify",
+                                    "actionName":"spotify_action_like",
+                                    "reactionName":"discord_reaction_message"}
                             ]
                         }
                     }

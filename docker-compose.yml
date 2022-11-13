@@ -7,11 +7,9 @@ services:
     ports:
       - '8080:8080'
       - '9229:9229'
-    environment:
-      MYSQL_HOST: mysql
-      MYSQL_USER: root
-      MYSQL_PASSWORD: secret
-      MYSQL_DB: area
+    env_file:
+      - "database.env"
+      - "tokens.env"
     depends_on:
       - mysql
     networks:
@@ -22,9 +20,7 @@ services:
     container_name: area-mysql
     volumes:
       - todo-mysql-data:/var/lib/mysql
-    environment: 
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: area
+    env_file: "database.env"
     ports:
       - "6033:3306"
     networks:
@@ -54,11 +50,11 @@ services:
 
   web:
     container_name: area-web
-    build: ./web/nextjs-blog
+    build: ./web
     volumes:
       - android-apk:/result/
     ports:
-      - 8081:3000
+      - 8081:8081
 
 volumes:
   todo-mysql-data:

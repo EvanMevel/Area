@@ -1,21 +1,18 @@
 package com.example.myarea
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import com.example.myarea.databinding.ActivityMainBinding
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
         lateinit var instance: MainActivity
-        lateinit var token: String
+        lateinit var server: Server
     }
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -23,41 +20,38 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         instance = this
+        server = Server(this);
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        val data = intent.data;
 
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Bon alors elle est ou cette action ", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        if (data != null) {
+            val service = data.pathSegments.get(data.pathSegments.size - 1);
+            val query = data.query
+            server.calledBack(service, query!!,
+                { response ->
+                    println(response.toString())
+                    if (response.has("token")) {
+                        server.setToken(response.getString("token"));
+                        server.confirmToken();
+                        server.oauthCallback.countDown();
+                    }
+                },
+                { error ->
+                    var str = String(error.networkResponse.data)
+                    var body = Json.parseToJsonElement(str)
+                    println(Json.encodeToString(body));
+                    var errortext = body.jsonObject.get("message")
+                    println(errortext)
+                    println(body)
+                }
+            )
         }
+
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
-    }
 }

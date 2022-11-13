@@ -12,9 +12,13 @@ class TokenEndpoint extends Endpoint {
         const userId = req.user;
 
         if (userId == null) {
-            throw new BadRequest("No Authorization header provided!");
+            return res.status(401).send({message: "No Authorization header provided"});
         }
         const user = await server.base.users.findOneBy({id: userId});
+        if (user == null) {
+            throw new BadRequest("Unknown user with this id!");
+        }
+        delete user["password"];
         return this.authCalled(req, res, server, user);
     }
 }

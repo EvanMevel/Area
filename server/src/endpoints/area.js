@@ -24,8 +24,8 @@ class Delete extends TokenEndpoint {
             if (actionData != null) {
                 await server.base.actionData.remove(actionData);
             }
-            await server.base.area.remove(area);
             server.areas.removeAREA(area.id);
+            await server.base.area.remove(area);
             this.message(res, "Deleted AREA with success", 200);
         }
     }
@@ -42,8 +42,13 @@ class Create extends TokenEndpoint {
         if (!(await server.base.reactions.countBy({name: reactionId}))) {
             throw new BadRequest("No Reaction with such name \"" + reactionId + "\"");
         }
-
-        const resp = await server.base.area.save({user: user, name: name, action: {name: actionId}, reaction: {name: reactionId}});
+        if (name.trim().length < 3) {
+            throw new BadRequest("AREA name should be at least 3 char long!");
+        }
+        if (name.trim().length > 30) {
+            throw new BadRequest("AREA name should be less than 30 char long!");
+        }
+        const resp = await server.base.area.save({user: user, name: name.trim(), action: {name: actionId}, reaction: {name: reactionId}});
         if (resp.id == null) {
             throw new Error("AREA creation sql should return a response, got an empty response instead!")
         } else {

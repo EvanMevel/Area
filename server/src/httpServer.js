@@ -38,7 +38,20 @@ async function loadAll(server) {
 
     const app = await load();
 
+    var cors = require('cors');
+
+    app.use(cors());
+
     loadSwagger(app);
+
+    app.use((req, res, next) => {
+        console.log("[HTTP] << " + req.ip + " " + req.method + " at " + req.url);
+        const auth = req.headers.Authorization || req.headers.authorization;
+        if (auth) {
+            console.log("[HTTP] << With authorization " + auth);
+        }
+        next();
+    })
 
     const endpoints = require("./endpoints/endpoints");
 
