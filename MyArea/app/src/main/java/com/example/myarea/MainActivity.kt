@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.myarea.databinding.ActivityMainBinding
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,12 +34,20 @@ class MainActivity : AppCompatActivity() {
             val query = data.query
             server.calledBack(service, query!!,
                 { response ->
-                    server.setToken(response.getString("token"));
-                    server.confirmToken();
-                    server.oauthCallback.countDown();
+                    println(response.toString())
+                    if (response.has("token")) {
+                        server.setToken(response.getString("token"));
+                        server.confirmToken();
+                        server.oauthCallback.countDown();
+                    }
                 },
                 { error ->
-                    println(error);
+                    var str = String(error.networkResponse.data)
+                    var body = Json.parseToJsonElement(str)
+                    println(Json.encodeToString(body));
+                    var errortext = body.jsonObject.get("message")
+                    println(errortext)
+                    println(body)
                 }
             )
         }

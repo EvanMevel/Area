@@ -1,5 +1,7 @@
 package com.example.myarea
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -60,7 +62,7 @@ class LogserviceFragment : Fragment(){
         var view = layoutInflater.inflate(R.layout.servicesbutton, null);
         var nameView = view.findViewById<TextView>(R.id.name);
         var logo = view.findViewById<ImageView>(R.id.logo);
-        println("ouiiiiiiiiiii")
+        var service = view.findViewById<androidx.cardview.widget.CardView>(R.id.card)
         var imageRequest = ImageRequest(imageLogo,
             { response ->
                 logo.setImageBitmap(response)
@@ -70,7 +72,12 @@ class LogserviceFragment : Fragment(){
             })
         MainActivity.server.queue.add(imageRequest)
         nameView.setText(serviceName);
-
+        service.setOnClickListener {
+            val url = MainActivity.server.getAuthUrl(serviceName, null);
+            val i = Intent(Intent.ACTION_VIEW)
+            i.data = Uri.parse(url)
+            startActivity(i)
+        }
         layout.addView(view);
     }
 

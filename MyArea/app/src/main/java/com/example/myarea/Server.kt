@@ -110,12 +110,24 @@ class Server(main: MainActivity) {
 
     fun about_area(success: Listener<JSONObject>, er :ErrorListener)
     {
-        println("$baseUrl/about.json");
-        val queue = Volley.newRequestQueue(MainActivity.instance)
         val jsonArrayRequest = JsonObjectRequest(
             Request.Method.GET, "$baseUrl/about.json", null,
             success,
             er);
+        queue.add(jsonArrayRequest)
+    }
+
+    fun me_area(success: Listener<JSONObject>, er :ErrorListener)
+    {
+        val jsonArrayRequest = object :JsonObjectRequest(
+            Request.Method.GET, "$baseUrl/api/me", null,
+            success,
+            er){
+            override fun getHeaders(): MutableMap<String, String> {
+                return serverHeaders()
+            }
+        }
+
         queue.add(jsonArrayRequest)
     }
 
@@ -133,6 +145,10 @@ class Server(main: MainActivity) {
 
     fun reactions(action: String, success: Listener<JSONArray>, textError: TextView) {
         getArray("api/reactions?action=$action", success, textError);
+    }
+
+    fun accounts(success: Listener<JSONArray>, textError: TextView) {
+        getArray("api/accounts", success, textError)
     }
 
     fun createArea(action: String, reaction: String, name: String, success: Listener<JSONObject>, textError: TextView) {
@@ -163,7 +179,12 @@ class Server(main: MainActivity) {
     }
 
     fun getAuthUrl(service: String, userId: String?) : String {
-        return "$baseUrl/auth/$service?callback=" + URLEncoder.encode("area://app/callback/$service", StandardCharsets.UTF_8.name());
+        var url = "$baseUrl/auth/$service?callback=" + URLEncoder.encode("http://groupaphil.com/callback/$service", StandardCharsets.UTF_8.name());
+
+        if (userId != null) {
+            url +=  "&userId=$userId"
+        }
+        return url
     }
 
     fun calledBack(service: String, query: String, success: Listener<JSONObject>, er :ErrorListener) {

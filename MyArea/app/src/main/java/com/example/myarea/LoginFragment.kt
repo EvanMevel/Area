@@ -1,6 +1,5 @@
 package com.example.myarea
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -54,10 +53,6 @@ class LoginFragment : Fragment() {
 
         binding.logservicebutton.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_LogserviceFragment)
-            val url = MainActivity.server.getAuthUrl("spotify", null);
-            val i = Intent(Intent.ACTION_VIEW)
-            i.data = Uri.parse(url)
-            startActivity(i)
         }
 
         binding.register.setOnClickListener { // if register button is pressed we move to the register fragment
