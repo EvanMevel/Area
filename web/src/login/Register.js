@@ -11,7 +11,7 @@ async function registerUser(credentials) {
         }
         return {error: error};
     }
-
+    console.log(JSON.stringify(data))
     return {token: data.token};
 }
 
@@ -43,29 +43,29 @@ export default function Register() {
 
     const containere = {
         "display": "flex",
-        "align-items": "center",
-        "flex-direction": "column",
-        "justify-content": "space-between"
+        "alignItems": "center",
+        "flexDirection": "column",
+        "justifyContent": "space-between"
     }
 
     const img = {
-        "margin-left": "auto",
-        "margin-right": "auto",
+        "marginLeft": "auto",
+        "marginRight": "auto",
         "display": "flex",
-        "align-items": "center",
-        "flex-direction": "column",
+        "alignItems": "center",
+        "flexDirection": "column",
         "width": "33.33%"
     }
 
     const button = {
-        "background-color": "#5D3FD3",
+        "backgroundColor": "#5D3FD3",
         "border": "none",
         "color": "white",
         "padding": "10px 64px",
-        "text-align": "center",
-        "text-decoration": "none",
+        "textAlign": "center",
+        "textDecoration": "none",
         "display": "inline-block",
-        "font-size": "16px",
+        "fontSize": "16px",
         "margin": "4px 2px",
         "cursor": "pointer"
     }
@@ -74,9 +74,9 @@ export default function Register() {
         "width": "100%",
         "padding": "10px 20px",
         "margin": "8px 0",
-        "box-sizing": "border-box",
+        "boxSizing": "border-box",
         "border": "none",
-        "border-bottom": "1px solid"
+        "borderBottom": "1px solid"
     }
 
     var logo = require ('./img/logo.png')

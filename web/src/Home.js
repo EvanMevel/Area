@@ -33,23 +33,31 @@ export default function Home() {
     }, [])
 
     const button = {
-        "background-color": "#5D3FD3",
+        "backgroundColor": "#5D3FD3",
         "border": "none",
         "color": "white",
-        "padding": "10px 64px",
-        "text-align": "center",
-        "text-decoration": "none",
+        "padding": "10px 50px",
+        "textAlign": "center",
+        "textDecoration": "none",
         "display": "inline-block",
-        "font-size": "16px",
+        "fontSize": "16px",
         "margin": "4px 2px",
-        "cursor": "pointer"
+        "cursor": "pointer",
+        "width": "250px"
+    }
+
+    const containere = {
+        "display": "flex",
+        "alignItems": "center",
+        "flexDirection": "column",
+        "justifyContent": "space-between"
     }
 
     return <TokenGuard>
-        <div>
+        <div style={containere}>
             <button onClick={logout} style={button}>Logout</button>
         </div>
-        <div>
+        <div style={containere}>
             <button onClick={createArea} style={button}>Create new area</button>
         </div>
         <AreaList/>

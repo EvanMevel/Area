@@ -12,14 +12,14 @@ export default function Area({area, refresh}) {
     }
 
     const button = {
-        "background-color": "#5D3FD3",
+        "backgroundColor": "#5D3FD3",
         "border": "none",
         "color": "white",
         "padding": "10px 64px",
-        "text-align": "center",
-        "text-decoration": "none",
+        "textAlign": "center",
+        "textDecoration": "none",
         "display": "inline-block",
-        "font-size": "16px",
+        "fontSize": "16px",
         "margin": "4px 2px",
         "cursor": "pointer"
     }

@@ -16,10 +16,27 @@ export default function AreaEditor({setArea}) {
         })
     }, [action, reaction, name])
 
-    return <div id="create-area">
+    const containere = {
+        "display": "flex",
+        "alignItems": "center",
+        "flexDirection": "column",
+        "justifyContent": "space-between"
+    }
+
+    const input = {
+        "width": "100%",
+        "padding": "10px 20px",
+        "margin": "8px 0",
+        "boxSizing": "border-box",
+        "border": "none",
+        "borderBottom": "1px solid",
+        "width": "300px"
+    }
+
+    return <div id="create-area" style={containere}>
         <ActionSelect setValue={setAction}/>
         <ReactionSelect setValue={setReaction} action={action}/>
-        <input type="text" name="name" placeholder="Area name" onChange={event => setName(event.target.value)}/>
+        <input type="text" name="name" placeholder="Area name" onChange={event => setName(event.target.value)} style={input}/>
     </div>
 
 }

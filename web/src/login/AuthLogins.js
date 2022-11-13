@@ -41,9 +41,16 @@ export default function AuthLogins({userId}) {
         console.log("loadServices")
     }, [])
 
+    const containere = {
+        "display": "flex",
+        "alignItems": "center",
+        "flexDirection": "column",
+        "justifyContent": "space-between"
+    }
+
     return <div>
         {services.length > 0 && (
-            <div>
+            <div style={containere} >
                 {services}
             </div>
         )}
