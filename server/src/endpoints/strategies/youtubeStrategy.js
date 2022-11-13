@@ -5,7 +5,7 @@ const YOUTUBE_CLIENT_SECRET = "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";
 module.exports = new YoutubeStrategy({
     clientID: YOUTUBE_CLIENT_ID,
     clientSecret: YOUTUBE_CLIENT_SECRET,
-    callbackURL: "http://localhost:8080/auth/youtube/callback",
+    //callbackURL: "http://localhost:8080/auth/youtube/callback",
     scope: "https://www.googleapis.com/auth/youtube.force-ssl"
 }, function(accessToken, refreshToken, expires_in, profile, done) {
     done(null, {

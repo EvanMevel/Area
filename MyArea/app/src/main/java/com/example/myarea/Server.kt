@@ -179,7 +179,7 @@ class Server(main: MainActivity) {
     }
 
     fun getAuthUrl(service: String, userId: String?) : String {
-        var url = "$baseUrl/auth/$service?callback=" + URLEncoder.encode("http://groupaphil.com/callback/$service", StandardCharsets.UTF_8.name());
+        var url = "$baseUrl/auth/$service?callback=" + URLEncoder.encode("https://groupaphil.com/callback/$service", StandardCharsets.UTF_8.name());
 
         if (userId != null) {
             url +=  "&userId=$userId"

@@ -26,7 +26,7 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="groupaphil.com" android:pathPattern=".*" />
+                <data android:scheme="https" android:host="groupaphil.com" android:pathPattern=".*" />
             </intent-filter>
             <meta-data
                 android:name="android.app.lib_name"
