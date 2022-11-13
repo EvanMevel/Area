@@ -5,7 +5,8 @@ const ReactionDescription = require("./reactionDescription");
 
 async function getTrackId(track_name, server, access_token) {
     const body = await server.request.get("https://api.deezer.com/search?acces_token=" + access_token + "&q=" + track_name).json();
-    return body.data[0].id;
+    if (body.data.length !== 0)
+        return body.data[0].id;
 }
 
 async function likeASong(track_name, server, account) {
