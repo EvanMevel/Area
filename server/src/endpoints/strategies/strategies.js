@@ -5,9 +5,20 @@ const passport = require("passport");
 const register = require("./register");
 const noSession = {session: false};
 
+const crypto = require("crypto");
+
 module.exports.passport = passport;
 
-module.exports.jwt = passport.authenticate("jwt", noSession);
+module.exports.jwt = (req, res, next) => {
+    passport.authenticate("jwt", noSession, (err, user, info) => {
+        if (err || info || !user) {
+            console.log("[HTTP] >> Unauthorized: null or invalid token");
+            return res.status(401).json({message: "Unauthorized"});
+        }
+        req.user = user;
+        next();
+    })(req, res, next);
+};
 
 function callAuth(strategy, callback) {
     return (req, res, next) => {
@@ -25,6 +36,15 @@ function callAuth(strategy, callback) {
     }
 }
 
+function login(server) {
+    return callAuth("local", (req, res, user) => {
+        res.json({
+            userId: user,
+            token: server.tokens.generate(user)
+        });
+    })
+}
+
 module.exports.registerAll = function (app, express, server) {
 
     app.use(passport.initialize());
@@ -38,22 +58,13 @@ module.exports.registerAll = function (app, express, server) {
 
     const auth = express.Router();
 
-    auth.get("/login", callAuth("local", (req, res, user) => {
-        res.json({
-            token: server.tokens.generate(user)
-        });
-    }));
-    auth.post("/login", callAuth("local", (req, res, user) => {
-        res.json({
-            token: server.tokens.generate(user)
-        });
-    }));
-    auth.get("/register", function (req, res) {
-        register(req, res, server);
-    });
-    auth.post("/register", function (req, res) {
-        register(req, res, server);
-    });
+    auth.route("/login")
+        .get(login(server))
+        .post(login(server));
+
+    auth.route("/register")
+        .get(register(server))
+        .post(register(server));
 
     registerStrategy(auth, "deezer", server);
     registerStrategy(auth, "spotify", server);
@@ -61,16 +72,6 @@ module.exports.registerAll = function (app, express, server) {
     registerStrategy(auth, "twitch", server);
 
     app.use("/auth", auth);
-}
-
-function makeid(length) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
 }
 
 function authFunc(strategy, server) {
@@ -82,7 +83,7 @@ function authFunc(strategy, server) {
         }
         let state;
         do {
-            state = makeid(20);
+            state = crypto.randomBytes(8).toString("hex");
         } while (await server.base.states.findOneBy({state: state}));
         const stateObj = {
             state: state,

@@ -1,6 +1,9 @@
 package com.example.myarea
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.myarea.databinding.FragmentLoginBinding
 import org.json.JSONObject
+import kotlin.concurrent.thread
 
-class LoginFragment : Fragment(){
+
+class LoginFragment : Fragment() {
+
     private var _binding: FragmentLoginBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -33,7 +39,8 @@ class LoginFragment : Fragment(){
             MainActivity.server.login_area(
                 json,
                 { response -> // if it works we get the token and move to the first fragment
-                    MainActivity.token = response["token"].toString();
+                    MainActivity.server.setToken(response["token"].toString())
+                    MainActivity.server.confirmToken()
                     println("POST Request : ${response}")
                     findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
                 },
@@ -45,11 +52,33 @@ class LoginFragment : Fragment(){
                 Intent(Intent.ACTION_VIEW, webpage)
             }
             activity?.let { it1 -> ContextCompat.startActivity(it1, webIntent, null) }*/
+            val url = MainActivity.server.getAuthUrl("spotify", null);
+            val i = Intent(Intent.ACTION_VIEW)
+            i.data = Uri.parse(url)
+            startActivity(i)
         }
 
         binding.register.setOnClickListener { // if register button is pressed we move to the register fragment
             findNavController().navigate(R.id.action_loginFragment_to_RegisterFragment)
         }
+
+        val mainHandler = Handler(context!!.mainLooper);
+
+        thread {
+            MainActivity.server.oauthCallback.await();
+            val myRunnable = Runnable {
+                findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
+            };
+            mainHandler.post(myRunnable);
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val uri: Uri? = activity!!.intent.getData()
+
+        println("Uri: " + uri);
     }
 
     override fun onDestroyView() {

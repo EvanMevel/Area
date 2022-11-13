@@ -45,7 +45,7 @@ const createAREA = {
     }
 }
 
-const modifyAREA = {
+/*const modifyAREA = {
     "type": "object",
     "properties": {
         "id": {
@@ -66,7 +66,7 @@ const modifyAREA = {
         "actionId": "fb_test",
         "reactionId": "fb_test_t"
     }
-}
+}*/
 
 const createAnswer = {
     "type": "object",
@@ -128,7 +128,7 @@ module.exports.area = {
             }
         }
     },
-    "put": {
+    /*"put": {
         "tags": [
             "ActionReaction"
         ],
@@ -155,7 +155,7 @@ module.exports.area = {
                 }
             }
         }
-    },
+    },*/
     "delete": {
         "tags": [
             "ActionReaction"
