@@ -5,7 +5,8 @@ const EventType = {
     VIDEO: 2,
     CHANNELS: 3,
     HEADLINE: 4,
-    TIME: 5
+    TIME: 5,
+    GAME: 6
 }
 
 module.exports = EventType;
