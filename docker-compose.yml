@@ -20,7 +20,7 @@ services:
     container_name: area-mysql
     volumes:
       - todo-mysql-data:/var/lib/mysql
-    env_file: "database.env"
+    env_file: "mysql.env"
     ports:
       - "6033:3306"
     networks:
