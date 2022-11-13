@@ -30,14 +30,15 @@ class ServiceregisterFragment : Fragment(){
         return binding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        //get about
         getRequest()
-        //parse about get service with oauth = 1
-        // get in this specific service files = logo
-        var imageLogo = "http://10.0.2.2:8080/files/spotify/spotify.png"
         binding.logintoip.setOnClickListener {
             findNavController().navigate(R.id.action_ServideregisterFragment_to_FirstFragment) // if add action button is pressed --> move to the second fragment
+        }
+        binding.textView.setOnClickListener {
+            val url = "https://discord.gg/GxPf9ZXuXW";
+            val i = Intent(Intent.ACTION_VIEW)
+            i.data = Uri.parse(url)
+            startActivity(i)
         }
     }
 
@@ -53,27 +54,21 @@ class ServiceregisterFragment : Fragment(){
                             loggedServices.add(account.getJSONObject(i).getString("service"))
                         }
                         for (i in 0 until servicesArray.length()) {// dispaly a card for each area
-                        var service = servicesArray.getJSONObject(i)
-                        var src = service.getJSONObject("files")
-                        if(service.getBoolean("oauth")){
-                            var logo= MainActivity.server.baseUrl +src.getString("logo")
-                            addservice(logo, service.getString("name"),loggedServices.contains(service.getString("name")));
+                            var service = servicesArray.getJSONObject(i)
+                            var src = service.getJSONObject("files")
+                            if(service.getBoolean("oauth")){
+                                var logo= MainActivity.server.baseUrl + src.getString("logo")
+                                addservice(logo, service.getString("name"),loggedServices.contains(service.getString("name")));
+                            }
                         }
-                    }
                     },binding.TextError
                 )
-
             }, { error ->
                 println("error")
             }
         )
     }
 
-    fun getLoggedAccount()
-    {
-
-
-    }
     fun addservice(imageLogo : String, serviceName : String, isLog : Boolean) { // add card function which add a card (card is the layer where the area name and the delete button are)
         var view = layoutInflater.inflate(R.layout.servicesbutton, null);
         var nameView = view.findViewById<TextView>(R.id.name);
