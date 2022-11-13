@@ -5,7 +5,7 @@ export default function LoginService({service, logged, userId}) {
     function click() {
         let url = "http://localhost:8080/auth/" + service.name +
             "?callback=" +
-            encodeURIComponent("http://localhost:3000/callback/" + service.name) +
+            encodeURIComponent("http://localhost:8081/callback/" + service.name) +
             (userId ? "&userId=" + userId : "");
 
         window.location.replace(url);
@@ -20,7 +20,7 @@ export default function LoginService({service, logged, userId}) {
     }
 
     return <div onClick={click} style={styles}>
-        <img src={service.files.logo} alt={service.name} width={50} height={50}/>
+        <img src={"http://localhost:8080" + service.files.logo} alt={service.name} width={50} height={50}/>
         {service.displayName}
     </div>
 }

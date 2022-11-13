@@ -3,9 +3,9 @@
 
 const passport = require("passport");
 const register = require("./register");
-const noSession = {session: false};
-
 const crypto = require("crypto");
+const deezer = require("./deezerStategy");
+const noSession = {session: false};
 
 module.exports.passport = passport;
 
@@ -50,7 +50,8 @@ module.exports.registerAll = function (app, express, server) {
     app.use(passport.initialize());
 
     passport.use(require("./jwtStrategy"));
-    passport.use(require("./deezerStategy"));
+    passport.use("deezer", deezer.Strategy);
+    passport.use("deezerapp", deezer.StrategyApp);
     passport.use(require("./spotifyStrategy"));
     passport.use(require("./localStrategy")(server));
     passport.use(require("./youtubeStrategy"));
@@ -96,6 +97,15 @@ function authFunc(strategy, server) {
             callbackURL: callback,
             state: state
         };
+        if (strategy === "deezer") {
+            if (callback.includes("localhost")) {
+                passport.authenticate(strategy, opts)(req, res);
+            } else {
+                console.log("[HTTP] << Changing service to be deezerapp");
+                passport.authenticate(strategy + "app", opts)(req, res);
+            }
+            return;
+        }
         passport.authenticate(strategy, opts)(req, res);
     }
 }
@@ -165,6 +175,15 @@ function preCallBack(server, strategy) {
             callbackURL: stateInfo.callback,
             state: state
         };
+        if (strategy === "deezer") {
+            if (stateInfo.callback.includes("localhost")) {
+                passport.authenticate(strategy, opts)(req, res, next);
+            } else {
+                console.log("[HTTP] << Changing service to be deezerapp");
+                passport.authenticate(strategy + "app", opts)(req, res, next);
+            }
+            return;
+        }
         passport.authenticate(strategy, opts)(req, res, next);
     }
 }
