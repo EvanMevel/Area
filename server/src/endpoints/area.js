@@ -48,6 +48,10 @@ class Create extends TokenEndpoint {
         if (name.trim().length > 30) {
             throw new BadRequest("AREA name should be less than 30 char long!");
         }
+        const already = await server.base.area.findOneBy({user: user, name: name.trim()});
+        if (already != null) {
+            throw new BadRequest("AREA with this name already exists");
+        }
         const resp = await server.base.area.save({user: user, name: name.trim(), action: {name: actionId}, reaction: {name: reactionId}});
         if (resp.id == null) {
             throw new Error("AREA creation sql should return a response, got an empty response instead!")
