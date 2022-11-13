@@ -60,7 +60,12 @@ const service = {
             }
         },
         "oauth": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "If the service uses oauth"
+        },
+        "authUrl": {
+            "type": "string",
+            "description": "Url to authenticate"
         }
     }
 };
@@ -98,23 +103,28 @@ const about = {
         "server": {
             "current_time": 1005454151,
             "services": [{
-                "name": "facebook",
-                "displayName": "Facebook",
-                "oauth": 1,
-                "actions": [{
-                    "name": "facebook_action_post",
-                    "displayName": "Facebook listen post",
-                    "description": "Listen when a user make a post on facebook"
-                }],
-                "reactions":[{
-                    "name": "facebook_reaction_post",
-                    "displayName": "Facebook post post",
-                    "description": "Post a Facebook post"
-                }],
+                "name": "deezer",
+                "displayName": "Deezer",
+                "oauth": true,
+                "actions": [
+                    {
+                        "name": "deezer_action_like",
+                        "displayName": "Deezer Listen Likes",
+                        "description": "Listen to user liking a track on Deezer"
+                    }
+                ],
+                "reactions": [
+                    {
+                        "name": "deezer_reaction_like",
+                        "displayName": "Deezer Like",
+                        "description": "Likes the track on Deezer"
+                    }
+                ],
                 "files": {
-                    "logo":"http://localhost:8080/files/spotify/spotify.png",
-                    "large":"http://localhost:8080/files/spotify/spotify-large.png"
-                }
+                    "logo": "/files/deezer/deezer.png",
+                    "large": "/files/deezer/deezer-large.png"
+                },
+                "authUrl": "/auth/deezer"
             }]
         }
     }

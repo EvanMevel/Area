@@ -16,6 +16,9 @@ async function getService(base, service) {
     resp["actions"] = actions;
     resp["reactions"] = reactions;
     resp.files = getFiles(service.name);
+    if (service.oauth) {
+        resp.oauthUrl = "/auth/" + service.name;
+    }
     return resp;
 }
 
