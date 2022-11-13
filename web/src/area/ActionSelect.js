@@ -24,13 +24,26 @@ export default function ActionSelect({setValue}) {
         }
     }
 
+    const button = {
+        "background-color": "#5D3FD3",
+        "border": "none",
+        "color": "white",
+        "padding": "10px 64px",
+        "text-align": "center",
+        "text-decoration": "none",
+        "display": "inline-block",
+        "font-size": "16px",
+        "margin": "4px 2px",
+        "cursor": "pointer"
+    }
+
     useEffect(() => {
         populateList();
     }, [])
 
     return <div>
         {list && (
-            <select onChange={event => {setValue(event.target.value)}}>
+            <select onChange={event => {setValue(event.target.value)}} style={button}>
                 {list}
             </select>
         )}
